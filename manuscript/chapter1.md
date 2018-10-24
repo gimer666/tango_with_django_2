@@ -5,21 +5,22 @@
 
 
 
-# Overview 
-The aim of this book is to provide you with a practical guide to web development using *Django 2* and *Python 3*. The book is designed primarily for students, providing a walkthrough of the steps involved in getting a web application up and running with Django.
+# Введение
+Цель этой книги - стать Вашим практическим руководством по веб разработке, используя *Django 2* и *Python 3*. Эта книга создана главным образом для студентов и представляет собой пошаговое руководство, необходимое для создания и запуска веб приложений с помощью Django.
 
-This book seeks to complement the [official Django Tutorials]([tutorial01]) and many of the other excellent tutorials available online. By putting everything together in one place, this book fills in many of the gaps in the official Django documentation providing an example-based design driven approach to learning the Django framework. Furthermore, this book provides an introduction to many of the aspects required to master web application development (e.g. HTML, CSS, JavaScript, etc.). 
+Эта книга создана, чтобы дополнить [официальное руководство по Django]([tutorial01]) и многие другие прекрасные руководства доступные онлайн. Собрав всё необходимое в одном месте, эта книга заполняет многие пробелы в официальной документации по Django, что позволяет изучить фреймворк Django, используя метод обучения, основанный на примерах. Более того, эта книга является введением во многие особенности, необходимые, чтобы стать специалистом в области разработки веб приложений (например, HTML, CSS, JavaScript и т.д.).
 
-## Why Work with this Book?
-**This book will save you time.** On many occasions we've seen clever students get stuck, spending hours trying to fight with Django and other aspects of web development. More often than not, the problem was usually because a key piece of information was not provided, or something was not made clear. While the occasional blip might set you back 10-15 minutes, sometimes they can take hours to resolve. We've tried to remove as many of these hurdles as possible. This will mean you can get on with developing your application instead of stumbling along.
+## Почему стоит использовать эту книгу?
+**Эта книга съэкономит Ваше время.** Часто мы видели как способные студенты не найдя решение какой-то проблемы, тратили часы, пытаясь бороться Django и другими особенностями веб разработки. Чаще всего проблема связана с тем, что им не известна какая-либо важная информация или что-то было не понятно. Хотя большинство таких проблем решаются за 10-15 минут, на некоторые из них может уйти до нескольких часов. Мы попытались избавиться от как можно большего числа таких проблем. Это означает, что Вы сможете сосредоточиться на разработке Вашего приложения и не тратить время на решение проблем возникающих при его создании.
 
-**This book will lower the learning curve.** Web application frameworks can save you a lot of hassle and lot of time. Well, that is if you know how to use them in the first place! Often the learning curve is steep. This book tries to get you going - and going fast by explaining how all the pieces fit together and how to build your web app in a logical manner.
 
-**This book will improve your workflow.** Using web application frameworks requires you to pick up and run with particular design patterns - so you only have to fill in certain pieces in certain places. After working with many students, we heard lots of complaints about using web application frameworks - specifically about how they take control away from the software engineer (i.e. [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control)).  To help you, we've created a number of *workflows* to focus your development process so that you can regain that sense of control and build your web application in a disciplined manner.
+**Эта книга уменьшит необходимый начальный порог вхождения, требуеммый для проектирования веб приложений.** Фреймворки для разработки веб приложений избавят Вас от многих трудностей и съэкономят Ваше время. Последнее предложение верно, если Вы знаете как их использовать! Часто процесс усвоения знаний происходит медленно. Эта книга должна Вам помочь в усвоении и ускорить этот процесс, объясняя как взаимодействуют друг с другом различные части фреймворка и как следует правильно создавать Ваше веб приложение.
+
+**Эта книга улучшит Вашу последовательность операций над проектом.** Using web application frameworks requires you to pick up and run with particular design patterns - so you only have to fill in certain pieces in certain places. After working with many students, we heard lots of complaints about using web application frameworks - specifically about how they take control away from the software engineer (i.e. [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control)).  To help you, we've created a number of *workflows* to focus your development process so that you can regain that sense of control and build your web application in a disciplined manner.
 
 **This book is not designed to be read.** Whatever you do, *do not read this book!* It is a hands-on guide to building web applications in Django. Reading is not doing. To increase the value you gain from this experience, go through and develop the application. When you code up the application, *do not just cut and paste the code.* Type it in, think about what it does, then read the explanations we have provided. If you still do not understand, then check out the Django documentation, go to [Stack Overflow](http://stackoverflow.com/questions/tagged/django) or other helpful websites and fill in this gap in your knowledge. If you are really stuck, get in touch with us, so that we can improve the book - we've already had contributions from [numerous other readers](#chapter-acks)!
 
-## What you will Learn
+## Чему Вы научитесь
 In this book, we will be taking an exampled-based approach to web application development. In the process, we will show you how to design a web application called *Rango* ([see the Design Brief below](#overview-design-brief-label)), and take a step by step in setting up, developing and deploying the application. Along the way, we'll show you how to perform the following key tasks which are common to most software engineering and web based projects.
 
 * How to  **setup your development environment** - including how to use the terminal, your virtual environment, the `pip` installer, how to work with Git, and more.
@@ -36,11 +37,11 @@ In this book, we will be taking an exampled-based approach to web application de
 * How to include more advanced functionality like *AJAX* into your application.
 * How to **Deploy your application** to a web server using *PythonAnywhere.*
 
-And, new to **How To Tango with Django 2.0**:
+Кроме того в эту часть **How To Tango with Django 2.0** были добавлены следующие разделы:
 
-* How to **include logging with a web application**
-* How to **write class based views** 
-* How to **use an external database** 
+* Как **добавить логирование в веб приложение**
+* Как **написать представление, используя класс** 
+* Как **использовать внешнюю базу данных** 
 
 
 
@@ -164,8 +165,6 @@ D> Get into the habit of noting down any working assumptions that you make, just
 With this assumption, we can produce a series of tables that describe each entity in more detail. The tables contain information on what fields are contained within each entity.  We use Django `ModelField` types to define the type of each field (i.e. `IntegerField`, `CharField`, `URLField` or `ForeignKey`). Note that in Django *primary keys* are implicit such that Django adds an `id` to each Model, but we will talk more about that later in the Models and Database chapter.
 
 
-
-
 #### Category Model
 
 | Field   | Type            |
@@ -185,7 +184,7 @@ With this assumption, we can produce a series of tables that describe each entit
 
 We will also have a model for the `User` so that they can register and login. We have not shown it here, but shall introduce it later in the book when we discuss User Authentication. In the following chapters, will we see how to instantiate these models in Django and how to use the built-in ORM to connect to the database.
 
-## Summary
+## Резюме
 These high level design and specifications will serve as a useful reference point when building our Web application. While we will be focusing on using specific technologies, these steps are common to most database driven websites. It's a good idea to become familiar with reading and producing such specifications and designs so that you can communicate your designs and ideas with others. Here we will be focusing on using Django and the related technologies to implement this specification.
 
 
