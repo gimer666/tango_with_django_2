@@ -1,96 +1,92 @@
-# Getting Ready to Tango
-Before we get down to coding, it's really important that we get our development environment setup so that you can *Tango with Django!* You'll need to ensure that you have all the necessary components installed on your computer. This chapter outlines the five key components that you need to be aware of, setup and use. These are listed below.
+# Подготовка к Танго
+Прежде чем мы перейдем непосредственно к написанию кода, очень важно настроить нашу среду для разработки, чтобы Вы могли *Станцевать танго с Django!* Вам необходимо убедиться, что Вы установили все необходимые компоненты на Ваш компьютер. В этой главе пошагово рассматриваются пять основных компонентов, о которых нужно знать, уметь настраивать и использовать. Они перечислены ниже.
 
-* Working with the [terminal](https://en.wikipedia.org/wiki/Terminal_emulator) or [Command Prompt](https://en.wikipedia.org/wiki/Cmd.exe).
-* *Python* and your *Python* installation.
-* The Python Package Manager *pip* and *virtual environments*.
-* Your *Integrated Development Environment (IDE)*, if you choose to use one.
-* A *Version Control System (VCS)*, *Git*.
+* Работа с [терминалом](https://en.wikipedia.org/wiki/Terminal_emulator) или [командной строкой](https://en.wikipedia.org/wiki/Cmd.exe).
+* *Python* и программа для установки *Python* на Ваш компьютер.
+* Менеджер пакетов Python *pip* и *виртуальные окружения*.
+* Ваша *интегрированная среда разработки (IDE)*, если вы решите ее использовать.
+* *Система контроля версий (VCS)*, *Git*.
 
-If you already have Python 3 and Django 2 installed on your computer, and are familiar with the technologies mentioned, then you can skip straight to the [Django Basics chapter](#chapter-django-basics). Otherwise, below we provide an overview of the different components and why they are important. We also provide a series of pointers on how to setup the various components.
+Если Вы уже установили Python 3 и Django 2 на Ваш компьютер и знакомы с упомянутыми технологиями, вы можете перейти непосредственно к [главе Основы Django](#chapter-django-basics). В противном случае ниже мы рассмотрим различные компоненты и расскажем почему они важны. Мы также дадим по несколько ссылок на то как настраивать различные компоненты.
 
-I> ### Your Development Environment
-I> Setting up your development environment is pretty tedious and often frustrating. It's not something that you'd do everyday. Below, we have put together the list of core technologies you need to get started and pointers on how to install them.
-I>
-I> From experience, we can also say that it's a good idea when setting your development environment up to note down the steps you took. You'll need them again one day - whether because you have purchased a new computer, or you have been asked to help someone else set their computer up! Taking a note of everything you do will save you time and effort in the future. Don't just think short term!
+> ### Ваша среда для разработки
+> Настройка среды для разработки достаточно утомительная задача и не редко может заводить в тупик. Это не то, чем Вы занимаетесь ежедневно. Ниже мы сформировали список основных технологий, необходимых для начала работы и привели ссылки на то как их истановить.
+>
+> Исходя из нашего опыта мы также можем сказать, что при настройке среды разработки было бы не плохо делать заметки о тех шагах, которые Вы предприняли. Вам они могут понадобиться когда-то - например, если Вы купите новый компьютер или вас попросят помочь кому-то настроить их компьютер! Записывая всё что Вы делаете, позволит Вам сэкономить Ваше время и силы в будущем. Думайте об этом в долгосрочной перспективе!
 
 ## Python
-To work with Tango with Django, we require you to have installed on your computer a copy of the Python programming language. Any version from the `2.7` family - with a minimum of `2.7.5` - or version `3.4+` will work fine. If you're not sure how to install Python and would like some assistance, have a look at [the chapter dealing with installing Python](#section-system-setup-python).
+Чтобы работать с Tango with Django, нам нужно, чтобы Вы установили на Ваш компьютер копию языка программирования Python. Любая версия из семейства `2.7` - начиная с `2.7.5` - или версия `3.4+` будет работать нормально. Если Вы не знаете как установить Python и Вам требуется помощь, просмотрите [раздел, посвященный установке Python](#section-system-setup-python).
 
-I> ### Not sure how to use Python?
-I> If you haven't used Python before - or you simply wish to brush up on your skills - then we highly recommend that you check out and work through one or more of the following guides:
-I> 
-I> * [**Learn Python in 10 Minutes**](http://www.korokithakis.net/tutorials/python/) by Stavros;
-I> * [**The Official Python Tutorial**](http://docs.python.org/2/tutorial/);
-I> * [**Think Python: How to Think like a Computer Scientist**](http://www.greenteapress.com/thinkpython/) by Allen B. Downey; or
-I> * [**Learn to Program**](https://www.coursera.org/course/programming1) by Jennifer Campbell and Paul Gries.
-I>
-I> These will get you familiar with the basics of Python so you can start developing using Django. Note you don't need to be an expert in Python to work with Django. Python is awesome and you can pick it up as you go, if you already know another programming language.
+> ### Не знакомы с Python?
+> Если вы раньше не использовали Python - или просто хотите освежить свои знания - то мы настоятельно рекомендуем Вам ознакомиться с одним или несколькими из следующих руководств:
+> 
+> * [**Изучаем Python за 10 минут**](http://www.korokithakis.net/tutorials/python/) от Stavros;
+> * [**Официальное руководство по Python**](http://docs.python.org/2/tutorial/);
+> * [**Думаем как питонист: Как начать думать как специалист по компьютерным наукам**](http://www.greenteapress.com/thinkpython/) от Аллена Б. Дауни (Allen B. Downey); или
+> * [**Учимся программировать**](https://www.coursera.org/course/programming1), авторы Дженнифер Кэмбел (Jennifer Campbell) и Пол Гриез (Paul Gries).
+>
+> Они познакомят вас с основами Python, чтобы вы могли начать разработку с использованием Django. Учтите, что Вам не нужно быть экспертом в Python, чтобы работать с Django. Python - это замечательный язык и Вы можете изучать его по ходу чтения книги, если Вы уже знаете другой язык программирования.
 
+## Менеджер пакетов Python
+Pip - это [менеджер пакетов](https://en.wikipedia.org/wiki/Package_manager) Python. Менеджер пакетов позволяет Вам устанавливать различные библиотеки для язывка программирования Python, чтобы расширить его возможности.
 
+Менеджер пакетов, в не зависимости для чего он предназначен - языка Python, Вашей [операционной системы](https://en.wikipedia.org/wiki/Advanced_Packaging_Tool) или [какой-либо среды](https://docs.npmjs.com/cli/install), - это программный инструмент, который автоматизирует процесс установки, обновления, настройки и удаления *пакетов* - то есть пакета программного обеспечения, который Вы можете использовать на Вашем компьютере. Этим он отличается от загрухки, установки и поддержки программного обеспечения вручную. Поддержка Python пакетов довольно сложный процесс. У большинства пакетов часто есть *зависимости*, которые тоже нужно установить. Кроме того эти пакеты могут конфликтовать или требовать определенные версии, что также необходимо решить. Также необходимо указать и изменять в случае необходимости системный путь к этим пакетам. К счастью, *pip* делает всё это за Вас - поэтому Вы можете откинуться на спунку кресла и расслабиться.
 
-## The Python Package Manager
-Pip is the python [package manager](https://en.wikipedia.org/wiki/Package_manager). The package manager allows you install various libraries for the Python programming language to enhance its functionality.
-
-A package manager, whether for Python, your [operating system](https://en.wikipedia.org/wiki/Advanced_Packaging_Tool) or [some other environment](https://docs.npmjs.com/cli/install), is a software tool that automates the process of installing, upgrading, configuring and removing *packages* - that is, a package of software which you can use on your computer. This is opposed to downloading, installing and maintaining software manually. Maintaining Python packages is pretty painful. Most packages often have *dependencies* so these need to be installed too. Then these packages may conflict or require particular versions which need to be resolved. Also, the system path to these packages needs to be specified and maintained. Luckily *pip* handles all this for you - so you can sit back and relax.
-
-Try and run pip with the command `$ pip`. If the command is not found, you'll need to install pip itself - check out the [system setup chapter](#chapter-system-setup) for more information. You should also ensure that the following packages are installed on your system. Run the following commands to install Django and [pillow](https://pillow.readthedocs.io/en/5.0.0/) (an image manipulation library for Python).
+Попробуйте запустить pip с помощью команды `$ pip`. Если команда не найдена, то Вам необходимо установить сам pip - перейдите к главе [настройка системы](#chapter-system-setup) для получения дополнительной информации. Также убедитесь, что следующие пакеты установлены на Вашей системе. Запустите следующие команды, чтобы установить Django и [pillow](https://pillow.readthedocs.io/en/5.0.0/)(библиотеку для работы с изображениями в Python).
 
 {lang="bash",linenos=off}
 	$ pip install -U django==1.9.10
 	$ pip install pillow
 
-I> ### Problems Installing `pillow`?
-I> When installing Pillow, you may receive an error stating that the installation failed due to a lack of JPEG support.
-I> This error is shown as the following:
-I> 
-I> {lang="text",linenos=off}
-I> 	ValueError: jpeg is required unless explicitly disabled using
-I> 	            --disable-jpeg, aborting
-I>
-I> If you receive this error, try installing Pillow *without* JPEG support enabled, with the following command.
-I>
-I> {lang="text",linenos=off}
-I> 	pip install pillow --global-option="build_ext"
-I> 	                   --global-option="--disable-jpeg"
-I>
-I> While you obviously will have a lack of support for handling JPEG images, Pillow should then install without problem. Getting Pillow installed is enough for you to get started with this tutorial. For further information, check out the [Pillow documentation](http://pillow.readthedocs.io/en/3.2.x/installation.html).
+> ### Не получается установить `pillow`?
+> При установке Pillow, Вы можете получить ошибку, связанную с отсутствием поддержки JPEG.
+> Эта ошибка отображается следующим образом:
+> 
+> {lang="text",linenos=off}
+> 	ValueError: jpeg is required unless explicitly disabled using
+> 	            --disable-jpeg, aborting
+>
+> Если Вы получили эту ошибку, попробуйте установить Pillow *без* поддержки JPEG, с помощью следующей команды.
+>
+> {lang="text",linenos=off}
+> 	pip install pillow --global-option="build_ext"
+> 	                   --global-option="--disable-jpeg"
+>
+> Хотя очевидно, что у Вас не будут поддерживаться JPEG изображения, Pillow должен установиться без проблем. Установки Pillow достаточно для начала работы с этой книгой. Для получения дополнительной информации ознакомьтесь с [документацией Pillow](http://pillow.readthedocs.io/en/3.2.x/installation.html).
 
+## Виртуальные окружения
 
-## Virtual Environments
+Мы почти закончили! Но прежде чем продолжить стоит отметить, что хотя текущих настроек достаточно для начала работы, у неё есть некоторые недостатки. Что если у Вас было другое приложение на языке Python, для запуска которого нужна другая версия или Вы хотите перейти на новую версию Django, но всё же хотите иметь возможность работать с проектом на Django 1.9?
 
-We're almost all set to go! However, before we continue, it's worth pointing out that while this setup is fine to begin with, there are some drawbacks. What if you had another Python application that requires a different version to run, or you wanted to switch to the new version of Django, but still wanted to maintain your Django 1.9 project?
+Для решения этих проблем используйте [виртуальные окружения](http://simononsoftware.com/virtualenv-tutorial/). Виртуальные окружения позволяют установить несколько версий Python и необходимые пакеты, не конфликтуя друг с другом. Это общепринятый подход используемый при работе с Python проектами в настоящее время.
 
-The solution to this is to use [virtual environments](http://simononsoftware.com/virtualenv-tutorial/). Virtual environments allow multiple installations of Python and their relevant packages to exist in harmony. This is the generally accepted approach to configuring a Python setup nowadays.
+Устанавливать вирутальное окружение не обязательно, но настоятельно рекомендуется. В [главе Виртуальные окружения](#chapter-virtual-environments) подробно описывается как установить, создать и использовать виртуальные окружения.
 
-Setting up a virtual environment is not necessarily but it is highly recommended. The [virtual environment chapter](#chapter-virtual-environments) details how to setup, create and use virtual environments.
+## Интегрированная среда разработки (ИСР)
+Несмотря на то, что использовать её необязательно, хорошая интегрированная среда разработки может помочь Вам в процессе разработки. Их существует несколько, но [*PyCharm*](http://www.jetbrains.com/pycharm/) от JetBrains и *PyDev* (плагин для [Eclipse IDE](http://www.eclipse.org/downloads/)) являются самыми популярными. В [Python Wiki](http://wiki.python.org/moin/IntegratedDevelopmentEnvironments) можно найти наиболее актуальный список ИСР для Python.
 
+Выберите из них ту, который подходит Вам, но имейте ввиду, что для использования некоторых Вам потребуется приобрести лицензию. В идеале Вам нужно выбрать такую ИСР, которая поддерживает интеграцию с Django.
 
-## Integrated Development Environment
-While not absolutely necessary, a good Python-based IDE can be very helpful to you during the development process. Several exist, with perhaps [*PyCharm*](http://www.jetbrains.com/pycharm/) by JetBrains and *PyDev* (a plugin of the [Eclipse IDE](http://www.eclipse.org/downloads/)) standing out as popular choices. The [Python Wiki](http://wiki.python.org/moin/IntegratedDevelopmentEnvironments) provides an up-to-date list of Python IDEs.
+Мы используем PyCharm, поскольку она поддерживает виртуальные окружения и интеграцию с Django - но для этого Вам придется настроить ИСР соответствующим образом. Мы не рассматриваем этот вопрос здесь - вы можете найти [руководство по настройке PyCharm](https://www.jetbrains.com/help/pycharm/2016.1/creating-and-running-your-first-django-project.html) на сайте JetBrains.
 
-Research which one is right for you, and be aware that some may require you to purchase a licence. Ideally, you'll want to select an IDE that supports integration with Django.
+## Репозиторий с кодом
+Следует также отметить, что при разработке кода, Вы всегда должны размещать свой код в репозитории системы контроля версий, например, [SVN](http://subversion.tigris.org/) или [Git](http://git-scm.com/). Мы не будем пояснять как работать с ней прямо сейчас, чтобы мы могли приступить к разработке приложения в Django. Тем не менее мы написали [главу, посвященную краткому курсу по Git](#chapter-git), которую вы можете изучить позднее. ** Мы настоятельно рекомендуем Вам создать Git репозиторий для ваших собственных проектов. **
 
-We use PyCharm as it supports virtual environments and Django integration - though you will have to configure the IDE accordingly. We don't cover that here - although JetBrains do provide a [guide on setting PyCharm up](https://www.jetbrains.com/help/pycharm/2016.1/creating-and-running-your-first-django-project.html).
+> ### Упражнения
+> 
+> Для вашего дальнейшего удобства настройте среду разработки, выполнив следующие упражнения.
+> 
+>  - Установите Python 3.4+ и Pip3.
+>  - Поэкспериментируйте с Вашим *интерфейсом командной строки (CLI)* и создайте директорию под названием `code`, в которой мы будем создавать наши проекты.
+>  - Настройте Ваше виртуальное окружение (не обязательно)
+>  - Установите пакеты Django и Pillow
+>  - Создайте учетную запись на сайте с Git репозиториями, например: GitHub, BitBucket и т.д., если у Вас её ещё нет.
+>  - Загрузите и настройте ИСР, например, [PyCharm](https://www.jetbrains.com/pycharm/)
+> 
+>  Как было сказано ранее, текст книги и код приложения доступы на нашем [GitHub репозитории](https://github.com/leifos/tango_with_django_19/).
+> 
+>  - Если Вы обнаружили какие-либо ошибки или замечания, сообщите нам, сделав запрос на изменение в GitHub.
+>  - Если у Вас возникли проблемы при выполнении упражнений, воспользуйтесь репозиторием, чтобы узнать как мы решили их.
 
-## Code Repository
-We should also point out that when you develop code, you should always house your code within a version-controlled repository such as [SVN](http://subversion.tigris.org/) or [Git](http://git-scm.com/). We won't be explaining this right now, so that we can get stuck into developing an application in Django. We have however written a [chapter providing a crash course on Git](#chapter-git) for your reference that you can refer to later on. **We highly recommend that you set up a Git repository for your own projects.**
-
-X> ###Exercises
-X> 
-X> To get comfortable with your environment, try out the following exercises.
-X> 
-X>  - Install Python 3.4+ and Pip3.
-X>  - Play around with your *command line interface (CLI)* and create a directory called `code`,  which we use to create our projects in.
-X>  - Setup your Virtual Environment (optional)
-X>  - Install the Django and Pillow packages
-X>  - Setup an account on a Git Repository site like: GitHub, BitBucket, etc if you haven't already done so.
-X>  - Download and setup an Integrated Development Environment like [PyCharm](https://www.jetbrains.com/pycharm/)
-X> 
-X>  As previously stated, we've made the code for the book and application available on our [GitHub repository](https://github.com/leifos/tango_with_django_19/).
-X> 
-X>  - If you spot any errors or problem, please let us know by making a change request on GitHub.
-X>  - If you have any problems with the exercises, you can check out the repository to see how we completed them.
-
-D> ### What is a Directory?
-D> In the text above, we refer to creating a *directory*. But what exactly is a *directory*? If you have used a Windows computer up until now, you'll know a directory as a *folder*. The concept of a folder is analogous to a directory - it is a cataloguing structure that contains references to other files and directories.
+> ### Что такое директория?
+> В вышепрвиеденном тексте, мы используем такое понятие как *директория*, а именно создаём её. Но чем же является *директория*? Если Вы до сих пор использовали компьютер под управлением ОС Windows, то в ней директирии называются *папками*. Термин "папка" аналогичен термину директория - каталогизированная структура, содержащая ссылки на другие файлы и директории.

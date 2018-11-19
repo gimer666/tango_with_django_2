@@ -4,7 +4,6 @@
 [tutorial01]: https://docs.djangoproject.com/en/2.0/intro/tutorial01/
 
 
-
 # Введение
 Цель этой книги - стать Вашим практическим руководством по веб разработке, используя *Django 2* и *Python 3*. Эта книга создана главным образом для студентов и представляет собой пошаговое руководство, необходимое для создания и запуска веб приложений с помощью Django.
 
@@ -13,29 +12,28 @@
 ## Почему стоит использовать эту книгу?
 **Эта книга съэкономит Ваше время.** Часто мы видели как способные студенты не найдя решение какой-то проблемы, тратили часы, пытаясь бороться Django и другими особенностями веб разработки. Чаще всего проблема связана с тем, что им не известна какая-либо важная информация или что-то было не понятно. Хотя большинство таких проблем решаются за 10-15 минут, на некоторые из них может уйти до нескольких часов. Мы попытались избавиться от как можно большего числа таких проблем. Это означает, что Вы сможете сосредоточиться на разработке Вашего приложения и не тратить время на решение проблем возникающих при его создании.
 
-
 **Эта книга уменьшит необходимый начальный порог вхождения, требуеммый для проектирования веб приложений.** Фреймворки для разработки веб приложений избавят Вас от многих трудностей и съэкономят Ваше время. Последнее предложение верно, если Вы знаете как их использовать! Часто процесс усвоения знаний происходит медленно. Эта книга должна Вам помочь в усвоении и ускорить этот процесс, объясняя как взаимодействуют друг с другом различные части фреймворка и как следует правильно создавать Ваше веб приложение.
 
-**Эта книга улучшит Вашу последовательность операций над проектом.** Using web application frameworks requires you to pick up and run with particular design patterns - so you only have to fill in certain pieces in certain places. After working with many students, we heard lots of complaints about using web application frameworks - specifically about how they take control away from the software engineer (i.e. [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control)).  To help you, we've created a number of *workflows* to focus your development process so that you can regain that sense of control and build your web application in a disciplined manner.
+**Эта книга улучшит Вашу последовательность операций над проектом.** При использовании фреймворков для создания веб приложений Вам нужно соблюдать  определенные шаблоны проектирования - т. е. Вы пишите только необходимые фрагементы кода в четко определенных местах. После работы со многими студентами, мы получили мого жалоб, касающихся использования фреймворков для создания веб приложений - особенно о том как они теряют над ними управление (так называемая [инверсия управления] (https://en.wikipedia.org/wiki/Inversion_of_control)). Чтобы помочь Вам, мы создали ряд *последовательностей действий*, позволяющих Вам сосредоточиться на процессе разработки, не терять это чувство контроля и проектировать Ваше веб приложение, придерживаясь определенного порядка.
 
-**This book is not designed to be read.** Whatever you do, *do not read this book!* It is a hands-on guide to building web applications in Django. Reading is not doing. To increase the value you gain from this experience, go through and develop the application. When you code up the application, *do not just cut and paste the code.* Type it in, think about what it does, then read the explanations we have provided. If you still do not understand, then check out the Django documentation, go to [Stack Overflow](http://stackoverflow.com/questions/tagged/django) or other helpful websites and fill in this gap in your knowledge. If you are really stuck, get in touch with us, so that we can improve the book - we've already had contributions from [numerous other readers](#chapter-acks)!
+**Эта книга не создана ТОЛЬКО для чтения.** Что бы Вы не делали, не надо *ТОЛЬКО читать эту книгу!* Это практическое руководство по созданию веб приложений в Django. Чтение никогда не заменит практический опыт. Чтобы получить больше опыта, пройдите через показанную в этой книге последовательность шагов и разработайте приложение. При программировании приложения, не просто *вырезайте и вставляйте код. Вводите его, думайте о том, что он деляет, затем читайте пояснения, которые мы дали, чтобы понять что происходит. Если Вы после этого все равно что-то не понимаете, обратитесь к документации по Django, задайте вопрос на [Stack Overflow](http://stackoverflow.com/questions/tagged/django) или на других полезных сайтах и заполните этот пробел в своих знаниях. Если проблему не удалось решить даже после этого, свяжитесь с нами, чтобы мы могли улучшить книгу - несколько наших [читателей](#chapter-acks) уже внесли свой вклад!
 
 ## Чему Вы научитесь
-In this book, we will be taking an exampled-based approach to web application development. In the process, we will show you how to design a web application called *Rango* ([see the Design Brief below](#overview-design-brief-label)), and take a step by step in setting up, developing and deploying the application. Along the way, we'll show you how to perform the following key tasks which are common to most software engineering and web based projects.
+Эта книга использует метод обучения, основанный на примерах, для разработки веб приложений. В процессе обучения мы покажем Вам как спроектировать веб приложение, названное *Rango* ([смотри ТЗ ниже](#overview-design-brief-label)) и пошагово расскажем как растроить, разработать и развернуть приложение на сервере. По ходу повествования, мы покажем как решить следующие ключевые задачи часто встречающиеся при разработке программного обеспечения и веб проектов.
 
-* How to  **setup your development environment** - including how to use the terminal, your virtual environment, the `pip` installer, how to work with Git, and more.
-* How to  **setup a Django project** and create a basic Django application.
-* How to  **configure the Django project** to serve static media and other media files.
-* How to  work with Django's *Model-View-Template* design pattern.
-* How to  **work with database models** and use the [*object relational mapping (ORM)*](https://en.wikipedia.org/wiki/Object-relational_mapping) functionality provided by Django.
-* How to **create forms** that can utilise your database models to create dynamically generated webpages.
-* How to use the **user authentication** services provided by Django.
-* How to incorporate **external services** into your Django application.
-* How to include *Cascading Styling Sheets (CSS)* and *JavaScript* within a web application.
-* How to **apply CSS** to give your application a professional look and feel.
-* How to work with **cookies and sessions** with Django.
-* How to include more advanced functionality like *AJAX* into your application.
-* How to **Deploy your application** to a web server using *PythonAnywhere.*
+* Как **настроить Вашу локальную среду окружения** - включая то как использовать терминал, Ваше вирутальное окружение, `pip` инсталятор, как работать с Git и  т. д.
+* Как **настроить Django проект** и создать базовое Django приложение.
+* Как **сконфигурировать Django проект**, чтобы использовать статические медиа и другие медиа файлы.
+* Как работать с шаблоном проектирования Django *Модель-Представление-Шаблон*.
+* Как **работать с моделями баз данных** и использовать [*объектно-реляционное отображение (ORM)*](https://en.wikipedia.org/wiki/Object-relational_mapping), предоставляемое Django.
+* Как **создавать формы**, которые могут использовать Ваши модели из базы данных для получения динамически генерируемых страниц.
+* Как использовать службы **аутентификации пользователя**, предоставляемые Django.
+* Как добавить **внешние службы** в Ваше приложение Django.
+* Как добавить *Каскадные таблицы стилей (CSS)* и *JavaScript* в веб приложение.
+* Как **использовать CSS**, чтобы улучшить внешний вид и впечатление о веб приложении.
+* Как работать с **cookies и сессиями** в Django.
+* Как добавить дополнительные функциональные возможности, например, *AJAX*, в Ваше приложение.
+* Как **развернуть Ваше приложение** на веб сервере, используя *PythonAnywhere.*
 
 Кроме того в эту часть **How To Tango with Django 2.0** были добавлены следующие разделы:
 
@@ -43,157 +41,147 @@ In this book, we will be taking an exampled-based approach to web application de
 * Как **написать представление, используя класс** 
 * Как **использовать внешнюю базу данных** 
 
+В конце каждой главы мы добавили ряд упражнений, предназначенных мотивировать Вас применить знания, полученные во время изучения главы. Чтобы ещё сильнее Вас мотивировать, мы добавили множество задач, для решения которых Вам потребуются значения из многих предыдущих глав. Но не волнуйтесь для каждой задачи мы добавили решение и пояснение к ней!
 
+> Упражнения будут обозначены вот так!
 
+> В каждую главу мы добавили множество приложений, чтобы Вы могли проверить свои знания и навыки.
 
+> *Вам нужно будет выполнить эти упражнения, поскольку последующие главы зависят от них.*
 
-At the end of each chapter, we have also included a number of exercises designed to push you to apply what you have learnt during the chapter. Then to push you harder, we've included a number of open development challenges, which require you to use many of the lessons from the previous chapters - but don't worry we've also included solutions and explanations too!
+> Не волнуйтесь, если у Вас что-то не будет получаться, Вы всегда можете свериться с нашим решением всех упражнений из [*GitHub* репозитория](https://github.com/leifos/tango_with_django_2).
 
-X> ### Exercises will be clearly delineated like this!
-X> In each chapter we have added a number of exercises to test your knowledge and skill.
-X>
-X> *You will need to complete these exercises as the subsequent chapters are dependent on them.*
-X>
-X> Don't worry if you get stuck, though, as you can always check out our solutions to all the exercises on our [*GitHub* repository](https://github.com/leifos/tango_with_django_2).
+## Технологии и сервисы
+В этой книге мы будем использовать различные технологии и внешние сервисы, включая:
 
-
-{pagebreak}
-
-## Technologies and Services
-Through the course of this book, we will used various technologies and external services including:
-
-* the [Python](http://www.python.org) programming language;
-* the [Pip package manager](http://www.pip-installer.org);
+* язык программирования [Python](http://www.python.org);
+* [менеджер пакетов Pip](http://www.pip-installer.org);
 * [Django](https://www.djangoproject.com);
-* the [Git](http://git-scm.com) version control system;
+* систему котроля версий [Git](http://git-scm.com);
 * [GitHub](https://github.com);
 * [HTML](http://www.w3.org/html/);
 * [CSS](http://www.w3.org/Style/CSS/);
-* the [JavaScript](https://www.javascript.com/) programming language;
-* the [JQuery](http://jquery.com) library;
-* the [Twitter Bootstrap](http://getbootstrap.com/) framework;
-* the [Webhose API](https://webhose.io/) (referred to as the *search API*); and
-* the [PythonAnywhere](https://www.pythonanywhere.com) hosting service;
+* язык программирования [JavaScript](https://www.javascript.com/);
+* библиотеку [JQuery](http://jquery.com);
+* фреймворк [Twitter Bootstrap](http://getbootstrap.com/);
+* [Webhose API](https://webhose.io/) (также называемая *поисковым API*); и
+* хостинг сервис [PythonAnywhere](https://www.pythonanywhere.com);
 
-We've selected these technologies and services as they are either fundamental to web development, and/or enable us to provide examples on how to integrate your web application with CSS toolkits like *Twitter Bootstrap*, external services like those provided by the *Webhose API* and deploy your application quickly and easily with *PythonAnywhere*. Ok, let's get started!
+Мы выбрали эти технологии и сервесы, поскольку они либо являются фундаментальными для веб разработки и/или используются в качестве примера того как интегрировать Ваше веб приложение с CSS инструментариями (таким как *Twitter Bootstrap*), внешними сервисами (например, предоставляемыми *Webhose API*) и быстро и легко развернуть Ваше приложение, используя *PythonAnywhere*. Хорошо, давайте начнём!
 
-{pagebreak}
+## Rango: Первоначальное ТЗ и характеристики проекта {#overview-design-brief-label}
+Основной задачей этой книги будет разработка приложения под названием *Rango*. При разработке этого приложения будут рассмотрены основные компоненты, которые должны быть спроектированы при создании любого веб-приложения. Полностью рабочую версию приложения можно найти на нашем сайте [How to Tango with Django](http://www.tangowithdjango.com/).
 
-## Rango: Initial Design and Specification {#overview-design-brief-label}
-The focus of this book will be to develop an application called *Rango*. As we develop this application, it will cover the core components that need to be developed when building any web application. To see a fully functional version of the application, you can visit our [How to Tango with Django website](http://www.tangowithdjango.com/).
+### Техническое задание
 
-### Design Brief
+Представим, что мы хотим создать веб-сайт под названием *Rango*, который позволит пользователям просматривать категории, создаваемые пользователями, для доступа к различным веб-страницам. [В переводе с испанского слово rango](https://www.vocabulary.com/dictionary/es/rango) означает *"группа, упорядоченная по определенному свойству"* или *"место в социальной иерархии"* - поэтому можно сказать, что в некотором смысле мы хотим упорядочить веб-страницы в Rango.
 
-Let's imagine that we would like to create a website called *Rango* that lets users browse through user-defined categories to access various web pages. In [Spanish, the word rango](https://www.vocabulary.com/dictionary/es/rango) is used to mean *"a league ranked by quality"* or *"a position in a social hierarchy"* - so we can imagine that at some point we will want to rank the web pages in Rango.
+* На **главной странице** сайта Rango, клиент хочет, чтобы пользователи могли видеть:
+    * *5 самых просматриваемых страниц*;
+    * *пять наиболее просматриваемых (или наивысших по рангу) категорий*; and
+    * *способ, с помощью которого пользователи могли бы просматривать или осуществлять поиск* по категориям.
+* Когда пользователь просматривает **страницу категории**,клиент хотел бы, чтобы на ней отображалось:
+    * *название категории, количество посещений, число лайков*, а также список связанных с этой категорией страниц (отображается название страницы и ссылка на её URL); и
+    * *инструменты, позволяющие осуществлять поиск (через поисковое API)*, чтобы найти другие страницы, которые можно связать с этой категорией.
+* Для конкретной категории, клиент хотел бы хранить: *название категории*, *коилчетсво посещений каждой категории* и сколько пользователей *нажало на кнопку "like"* (т. е., сколько раз страница подняла свой ранг и поднялась по социальной иерархии).
+* *Каждая категория должна быть доступна через читаемый URL* - например, `/rango/books-about-django/`.
+* Только *зарегистрированные пользователи могут искать и добавлять страницы к категориям*. Также у посетителей сайта должна быть возможность зарегистрировать аккаунт.
 
-* For the **main page** of the Rango website, your client would like visitors to be able to see:
-	* the *five most viewed pages*;
-	* the *five most viewed (or rango'ed) categories*; and
-	* *some way for visitors to browse or search* through categories.
-* When a user views a **category page**, your client would like Rango to display:
-	* the *category name, the number of visits, the number of likes*, along with the list of associated pages in that category (showing the page's title, and linking to its URL); and
-	* *some search functionality (via the search API)* to find other pages that can be linked to this category.
-* For a particular category, the client would like: the *name of the category to be recorded*; the *number of times each category page has been visited*; and how many users have *clicked a "like" button* (i.e. the page gets rango'ed, and voted up the social hierarchy).
-* *Each category should be accessible via a readable URL* - for example, `/rango/books-about-django/`.
-* Only *registered users will be able to search and add pages to categories*. Visitors to the site should therefore be able to register for an account.
+На первый взгляд разрабатываемое приложение кажется довольно простым. По существу это просто список категорий, со ссылками на страницы. Тем не менее, существует множество сложностей и проблем, которые необходимо решить. Во-первых, давайте попытаемся получить более полную картину того, что нам необходимо разработать, сформулировав некоторые высокоуровневые концепции.
 
-At first glance, the specified application to develop seems reasonably straightforward. In essence, it is just a list of categories that link to pages. However, there are a number of complexities and challenges that need to be addressed. First, let's try and build up a better picture of what needs to be developed by laying down some high-level designs.
+> ### Упражнения
+> Перед тем как продолжить, подумайте о требованиях клиента и создайте следующие составляющие проекта. 
 
-X> ### Exercises
-X> Before going any further, think about these specifications and draw up the following design artefacts. 
-X>
-X> * What is the high level architecture going be? Draw up **N-Tier or System Architecture** diagram to represent the high level system components.
-X> * What is the interface going to look like?  Draw up some **Wireframes** of the main and category pages.
-X> * What are the URLs that users visit going to look like? Write down a series of **URL mappings** for the application.
-X> * What data are we going to have to store or represent? Construct an [***Entity-Relationship (ER)***](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model) diagram to describe the data model that we'll be implementing.
-X>
-X> Try these exercises out before moving on - even if you aren't familiar with system 
-X> architecture diagrams, wireframes or ER diagrams, how would you explain and describe, formally, what 
-X> you are going to build so that someone else can understand it.
+> * Как будет выглядеть высокоуровневая архитектура? Изобразите **N-уровневую или системную** схему, описывающую высокоуровневые системные составляющие.
+> * Как будет выглядеть интервфейс? Изобразите **каркасы** главной страницы и страницы категории.
+> * Какой вид должны иметь URLы, посещаемые пользователями? Запишите ряд **URL отображений** для приложения.
+> * Какие данные мы должны сохранять или отображать? Создайте диаграмму [***сущность-связь***](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model) для описания модели данных, которую мы будем реализовывать.
+>
+> Прежде чем продолжить чтение попытайтесь выполнить эти упражнения - даже если вы не знакомы со схемой системной архитектуры, каркасами или 
+> диаграммной сущность-связь, как бы Вы формально объяснили и описали то, что Вам нужно спроектировать, так, чтобы он понял Вас.
 
 {pagebreak}
 
-### N-Tier Architecture
+### N-уровневая архитектура
 
-The high-level architecture for most web applications is based around a *3-Tier architecture.* Rango will be a variant on this architecture as also interfaces with an external service.
+Высокоуровневой архитектурой для большинства веб приложений считается *3-уровневая архитектура*. Rango будет разновидностью этой архитектуры, поскольку он также взаимодействует с внешним сервисом.
 
 {id="fig-ntier"}
-![Overview of the 3-tier system architecture for our Rango application.](images/rango-ntier-architecture.png)
+![Обзор 3-уровневой архитектуры системы для нашего приложения Rango.](images/rango-ntier-architecture.png)
 
+Для каждого элемента в этой высокоуровневой архитектуре мы должны выбрать технологию, которая будет использоваться для его реализации. Поскольку мы создаем веб приложение с помощью Django, мы будем использовать следующие технологии для следующих уровней.
 
-Given the different boxes within the high level architecture, we need to start making some decisions about the technologies that will be going into each box. Since we are building a web application with Django, we will use the following technologies for the following tiers.
+* **Клиентом** будет веб браузер (например, *Chrome*, *Firefox* и *Safari*), который будет отображать HTML/CSS страницы.
+* **ПО промежуточного слоя** будет приложение *Django*, и взаимодействие с ним будет происходить через встроенный в Django веб сервер для разработки во время разработки (и затем через веб-сервер, например, *nginx* или *apache web server*).
+* **Базой данных** будет, основанный на Python, драйвер базы данных **SQLite3**.
+* **Поисковым API** будет поисковое API.
 
-* The **client** will be a Web browser (such as *Chrome*, *Firefox*, and *Safari*) which will render HTML/CSS pages.
-* The **middleware** will be a *Django* application, and will be dispatched through Django's built-in development Web server while we develop (and then later a web server like *nginx* or *apache web server*).
-* The **database** will be the Python-based *SQLite3* Database engine.
-* The **search API** will be the search API.
+В большей степени эта книга будет посвящена разработке ПО промежуточного слоя. хотя должно быть видно из [схемы системной архитектуры](#fig-ntier), что мы должны взаимодействовать со всеми компонентами.
 
-For the most part, this book will focus on developing the middleware. It should however be quite evident from the [system architecture diagram](#fig-ntier) that we will have to interface with all the other components.
-
-### Wireframes
-Wireframes are great way to provide clients with some idea of what the application is going to look like and what features it will provide. They save a lot of time, and can vary from hand drawn sketches to exact mockups depending on the tools that you have at your disposal. For our Rango application, we'd like to make the index page of the site look like the [screenshot below](#fig-index-page). Our category page is also [shown below](#fig-cat-page).
+### Каркасы
+Каркасы позволяют клиентам понять как будет выглядеть приложение и какие возможности оно будет предоставлять. Они экономят кучу времени, и могут быть как от руки нарисованными эскизами, так и точными макетами, в зависимости от доступных Вам инструментов. Для нашего приложения Rango мы хотим, чтобы главная страница сайта выглядела как [снимок экрана, показанный ниже](#fig-index-page). Наша страница категорий также [показана ниже](#fig-cat-page).
 
 {id="fig-index-page"}
-![The index page with a categories search bar on the left, also showing the top five pages and top five categories.](images/ch1-rango-index.png)
+![Главная страница с панелью для поиска категорий слева, на которой также показаны пять самых просматриваемых страниц и пять самых просматриваемых категорий.](images/ch1-rango-index.png)
 
 {id="fig-cat-page"}
-![The category page showing the pages in the category (along with the number of views). Below, a search for *Python* has been conducted, with the results shown underneath.](images/ch1-rango-cat-page.png)
+![Страница категорий, на которой показаны страницы в категории (вместе с числом просмотров). Ниже изображен результат выполнения поиска по слову *Python*.](images/ch1-rango-cat-page.png)
 
-### Pages and URL Mappings
-From the specification, we have already identified two pages that our application will present to the user at different points in time. To access each page we will need to describe URL mappings. Think of a URL mapping as the text a user would have to enter into a browser's address bar to reach the given page. The basic URL mappings for Rango are shown below.
+### Страницы и URL отображения
+Из ТЗ мы уже определили две страницы, которые наше приложение будет выдавать пользователю в разные моменты времени. Чтобы получить доступ к каждой из этих страниц нам необходимо описать URL отображения. Думайте об URL отображении как о тексте, который должен ввести в адресной строке браузера пользователь, чтобы перейти на заданную страницу. Основные URL отображения для Rango показаны ниже.
 
-* ``/`` or ``/rango/`` will point to the main / index page.
-* ``/rango/about/`` will point to the about page.
-* ``/rango/category/<category_name>/`` will point to the category page for ``<category_name>``, where the category might be:
-	* games;
-	* python-recipes; or
-	* code-and-compilers.
+* ``/`` или ``/rango/`` будет выводить главную / индексную страницу.
+* ``/rango/about/`` будет выводить страницу about.
+* ``/rango/category/<category_name>/`` будет выводить страницу категории ``<category_name>``, где категорией могут быть:
+    * игры;
+    * рецепты python; или
+    * код и компиляторы.
 
-As we build our application, we will probably need to create other URL mappings. However, the ones listed above will get us started and give us an idea of the different pages. Also, as we progress through the book, we will flesh out how to construct these pages using the Django framework and use its [Model-View-Template]([django2]) design pattern. However, now that we have a gist of the URL mappings and what the pages are going to look like, we need to define the data model that will house the data for our Web application.
+При создании нашего приложения нам вероятно понадобится создавать другие URL отображения. Тем не менее мы начнем с перечисленных выше, что даст нам представление о том как должны выглядеть URL для других страниц. Также по ходу чтения книги, мы выясним как создавать эти страницы, используя фреймворк Django, и использовать его шаблон проектирования [Модель-Представление-Шаблон]([django2]). Однако сейчас, имея представление о URL отображении и о том как будут выглядеть страницы, нам нужно определить модель данных, которая будет содержать данные нашего веб приложения.
 
 ### Entity-Relationship Diagram {#overview-er}
-Given the specification, it should be clear that we have at least two entities: a *category* and a *page*. It should also be clear that a *category* can house many *pages*. We can formulate the following ER Diagram to describe this simple data model.
+Учитывая ТЗ должно быть понятно, что мы имеем по крайней мере две сущности: *категория* и *страница*. Должно быть также ясно, что *категория* может содержать много *страниц*. Мы можем создать следующую диаграмму сущность-связь, чтобы описать эту простую модель данных. 
 
 {id="fig-rango-erd"}
-![The Entity Relationship Diagram of Rango's two main entities.](images/rango-erd.png)
+![Диаграмма сущность-связь для двух основных сущностей Rango.](images/rango-erd.png)
 
-Note that this specification is rather vague. A single page could in theory exist in one or more categories. Working with this assumption, we could model the relationship between categories and pages as a [many-to-many relationship](https://en.wikipedia.org/wiki/Many-to-many_(data_model)). This approach however introduces a number of complexities, so we will make the simplifying assumption that *one category contains many pages, but one page is assigned to one category.* This does not preclude that the same page can be assigned to different categories - but the page would have to be entered twice. While this is not ideal, it does reduce the complexity of the models.
+Обратите внимание, что это ТЗ является нечетким. Одна страница в теории может находится в одной или нескольких категориях. С учётом этого, мы можем моделировать связь между категориями и страницами как [связь много-ко-многим](https://en.wikipedia.org/wiki/Many-to-many_(data_model)). Этот подход, однако, приводит к ряду сложностей, поэтому мы сделаем упрощающее предположение, что *одна категория содержит много страниц, но одна страница связана только с одной категорией.* Это не исключает варианта, когда одна и та же страница может быть связана с различными категориями - но страница должна быть введена дважды. Хотя это не идеальный вариант, но это уменьшит сложность моделей.
 
-D> ### Take Note!
-D> Get into the habit of noting down any working assumptions that you make, just like the one-to-many relationship assumption that we assume above. You never know when they may come back to bite you later on! By noting them down, this means you can communicate it with your development team and make sure that the assumption is sensible and that they are happy to proceed under such an assumption. 
+> ### Обратите внимание!
+> Возьмите в привычку записывать любые упрощения, сделанные в проекте, как например, предположение о связи один-ко-многим, сделанное выше. Вы 
+> никогда не знаете, когда это выйдет боком! Записывая их, Вы таким образом сообщаете о них своей команде разработчиков и можете убедиться, что это 
+> предположение целесообразно и они не против работать с этим предположением.
 
-With this assumption, we can produce a series of tables that describe each entity in more detail. The tables contain information on what fields are contained within each entity.  We use Django `ModelField` types to define the type of each field (i.e. `IntegerField`, `CharField`, `URLField` or `ForeignKey`). Note that in Django *primary keys* are implicit such that Django adds an `id` to each Model, but we will talk more about that later in the Models and Database chapter.
+Учитывая это предположение, мы можем создать ряд таблиц, которые описывают каждую сущность более подробно. Таблицы содержат информацию о том какие поля содержатся в каждой сущности. Мы используем тип Django `ModelField` для определения типа каждого поля (например, `IntegerField`, `CharField`, `URLField` или `ForeignKey`). Обратите внимание, что в Django *первичные ключи* определяются неявно, поскольку Django добавляет поле `id` к каждой модели, но мы поговорим подробнее об этом позднее в главе Модели и База Данных.
 
+#### Модель Категория
 
-#### Category Model
-
-| Field   | Type            |
+| Поле    | Тип             |
 |---------|-----------------|
 | `name`  | `CharField`     | 
 | `views` | `IntegerField`  |
 | `likes` | `IntegerField`  |
 
-#### Page Model
+#### Модель Страница
 
-| Field      | Type           |
+| Поле       | Тип            |
 |------------|----------------|
 | `category` | `ForeignKey`   | 
 | `title`    | `CharField`    |
 | `url`      | `URLField`     |
 | `views`    | `IntegerField` |
 
-We will also have a model for the `User` so that they can register and login. We have not shown it here, but shall introduce it later in the book when we discuss User Authentication. In the following chapters, will we see how to instantiate these models in Django and how to use the built-in ORM to connect to the database.
+У нас также будет модель для `Пользователя`, чтобы они могли регистрироваться и входить в систему. Мы не показываем её здесь, а введём её позднее в книге, когда будем обсуждать аутентификацию пользователя. В следующих главах, мы увидим как создавать экземпляры этих моделей в Django и как объектно-реляционное отображение для связи с базой данных.
 
 ## Резюме
-These high level design and specifications will serve as a useful reference point when building our Web application. While we will be focusing on using specific technologies, these steps are common to most database driven websites. It's a good idea to become familiar with reading and producing such specifications and designs so that you can communicate your designs and ideas with others. Here we will be focusing on using Django and the related technologies to implement this specification.
+При проектировании нашего веб приложения мы будем ссылаться на это высокоуровневое проектирование и ТЗ. Хотя мы будем концентрироваться на использовании специальных технологий, эти шаги являются общими для большинства веб сайтов, использующих базы данных. Хорошо, когда Вы знаете как работать и создавать такие ТЗ и схемы, потому что в этом случае рассказать о своём проекте и идеях с другими. В этой книге мы будем использовать Django и связанные с ней технологии для реализации этого ТЗ.
 
-
-T> ### Cut and Paste Coding
-T>
-T> As you progress through the tutorial, you'll most likely be tempted to cut and paste the code from the book to your code editor.
-T> **However, it is better to type in the code.** We know that this is a hassle, but it will help you to remember the process and get a feel for the commands that you will be using again and again.
-T>
-T> Furthermore, cutting and pasting Python code is asking for trouble. Whitespace can end up being interpreted as spaces, tabs or a mixture of spaces and tabs. This will lead to all sorts of weird errors, and not necessarily indent errors. If you do cut and paste code be wary of this. Pay particular attention to this if you're using Python 3 - inconsistent use of tabs and spaces in your code's indentation will lead to a `TabError`.
-T> 
-T> Most code editors will show the whitespace and whether it is tabs or spaces. If so, turn it on and save yourself a lot of confusion. 
+> ### Вырезание и вставка кода
+>
+> По мере чтения учебного пособия, Вы скорее всего захотите вырезать и вставить код из книги в Ваш редактор кода.
+> **Но лучше вводить код вручную.** Мы понимаем, что вводить код вручную дольше, но это поможет Вам лучше запомнить пройденный материал и прочувствовать команды, которые Вы будете часто использовать.
+>
+> Более того, вырезание и вставка кода на языке Python может приводить к проблемам. Отстут может быть интерпретирован как несколько пробелов, табуляций или смеси пробелов и табуляций. Это приведет к различным странным ошибкам, которые не всегда будут ошибками отступа. Если вы вырезаете и вставляете код - будьте готовы к появлению таких ошибок. Обратите особое внимание на это, если вы используете Python 3 - непоследовательное использование  табуляций и пробелов в Вашем коде приведет к `TabError`.
+> 
+> Большинство редакторов кода показывают являются ли отступы табуляциями или пробелами. Если Ваш редактор поддерживает эту возможность - включите её - это позволит Вам съэкономить время и нервы. 
 

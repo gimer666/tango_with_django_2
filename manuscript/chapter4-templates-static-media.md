@@ -1,25 +1,26 @@
-# Templates and Media Files {#chapter-templates-static}
-In this chapter, we'll be introducing the Django template engine, as well as showing how to serve both *static* files and *media* files. Rather than crafting each page, we can use templates to provide the skeleton structure of the page, and then in the view we can provide the template with the neccessary data to render that page. To incorporate javascript and css, along with images and other media content, we will use the machinery provided by Django to include and dispath such files to provide added functionality (in the case of javascript) or to provide styles to our pages. 
+# Шаблоны и медиа файлы {#chapter-templates-static}
+В этой главе мы начнём введение в механизм шаблонов Django, а также покажем как работать со *статическими* и *медиа* файлами. Вместо того, чтобы создавать каждую страницу с нуля, мы будем использовать шаблоны, создавая базовую структуру страницы, а в представлении будем передавать шаблону необходимые данные для отображения этой страницы. Для добавления javascript и css, а также изображений и другого мультимедийного контента, мы будем использовать механизм, предоставляемый Django, отвечающий за добавление и диспетчирезацию таких файлов, позволющих расширить функциональные возможности страницы (в случае javascript) или стилизировать наши страницы.
 
-## Using Templates
-Up until this point, we have only connected a URL mapping to a view. The Django framework, however, is based around the *Model-View-Template* architecture. In this section, we will go through the mechanics of how *Templates* work with *Views*, then in the next couple of chapters we will put these together with *Models*.
+## Использование шаблонов
+до сих пор мы только сопоставляли URL-адрес представлению. Но Django фреймворк основан на архитектуре *Модель-представление-Шаблон*. В этом разделе, мы рассмотрим как *Шаблоны* работают с представлениями *Views*, а в нескольких следующих главах объединим их с *Моделями*.
 
-Why templates? The layout from page to page within a website is often the same. Whether you see a common header or footer on a website's pages, the [repetition of page layouts](http://www.techrepublic.com/blog/web-designer/effective-design-principles-for-web-designers-repetition/) aids users with navigation, promotes organisation of the website and reinforces a sense of continuity. [Django provides templates](https://docs.djangoproject.com/en/1.2/ref/templates/) to make it easier for developers to achieve this design goal, as well as separating application logic (code within your views) from presentational concerns (look and feel of your app). In this chapter, you'll create a basic template that will be used to create a HTML page. This template will then be dispatched via a Django view. In the [chapter concerning databases and models](#chapter-models), we will take this a step further by using templates in conjunction with models to dispatch dynamically generated data.
+Почему стоит использовать шаблоны? Структура страницы внутри одного и того же сайта при переходе от одной страницы к другой часто совпадает. [Повторение макета страницы](http://www.techrepublic.com/blog/web-designer/effective-design-principles-for-web-designers-repetition/) - одинаковый хедер или футер на страницах веб сайта -  помогает пользователям при навигации, способствует организации веб сайта и усиливает чувство приемственности. [Django использует шаблоны](https://docs.djangoproject.com/en/1.2/ref/templates/), чтобы облегчить достижение этой дизайнерской цели разработчикам, а также для разделения логики приложения (кода внутри представлений) от его внешнего вида (того как выглядит и воспринимается Ваше приложение). В этой главе Вы создадите базовый шаблон, который будет использоваться для создания HTML страницы. Этот шаблон будет передаваться через Django представление. В [главе, касающейся баз данных и моделей](#chapter-models), мы пойдем ещё дальше и будем использовать шаблоны вместе с моделями для передачи динамически генерируемых данных.
 
-Q> ### Summary: What is a Template?
-Q> In the world of Django, think of a *template* as the scaffolding that is required to build a complete HTML webpage. A template contains the *static parts* of a webpage (that is, parts that never change), complete with special syntax (or *template tags*) which can be overridden and replaced with *dynamic content* that your Django app's views can replace to produce a final HTML response.
+> ### Резюме: Что же такое Шаблон?
+> В Django, представляйте *шаблон* в виде строительных лесов, необходимых для создания полноценной HTML страницы. Шаблон состоит из *статических частей* страницы (то есть, частей, которые не меняются), а также специального синтаксиса (или *тегов шаблона*), которые могут быть переопределены и заменены *динамическим содержимым* Вашими Django представлениями, для получения окончательного HTML ответа.
 
-### Configuring the Templates Directory
-To get templates up and running with your Django app, you'll need to create two directories in which template files are stored.
+### Настройка каталога с шаблонами
+Чтобы настроить шаблоны в Вашем Django приложении, нужно создать два каталога, в которых будут хранится временные файлы.
 
-In your Django project's directory (e.g. `<workspace>/tango_with_django_project/`), create a new directory called `templates`. Remember, this is the directory that contains your project's `manage.py` script! Within the new templates directory, create another directory called `rango`. This means that the path `<workspace>/tango_with_django_project/templates/rango/` will be the location in which we will store templates associated with our `rango` application.
+В каталоге Вашего Django проекта (например, `<workspace>/tango_with_django_project/`), создайте новый каталог `templates`. Помните, что `<workspace>/tango_with_django_project/` - это каталог, в котором находится скрипт `manage.py`! Внутри нового каталога `templates`, создайте другой каталог с названием `rango`. Таким образом путь `<workspace>/tango_with_django_project/templates/rango/` будет использоваться для хранения шаблонов, связанных с нашим приложением `rango`.
 
-T> ### Keep your Templates Organised
-T> It's good practice to separate out your templates into subdirectories for each app you have. This is why we've created a `rango` directory within our `templates` directory. If you package your app up to distribute to other developers, it'll be much easier to know which templates belong to which app!
+> ### Всегда структурируйте свои шаблоны
+> Хорошей практикой является разделение шаблонов, так, чтобы шаблоны для каждого используемого приложения находились в отдельном каталоге. Поэтому мы создали каталог `rango` внутри нашего каталога `templates`. Если Вы захотите создать пакет из Вашего приложения для передачи другим разработчикам, гораздо проще будет понять какие шаблоны принадлежат этому приложению!
 
-To tell the Django project where templates will be stored, open your project's `settings.py` file. Next, locate the `TEMPLATES` data structure. By default, when you create a new Django project, it will look like the following.
+Чтобы сообщить Вашему Django проекту, где будут находится шаблоны, откройте файл `settings.py` проекта. Затем найдите в нём структуру данных `TEMPLATES`. По умолчанию, когда Вы создаёте новый Django проект, она будет выглядеть следующим образом.
 
 {lang="python",linenos=off}
+
 	TEMPLATES = [
 	    {
 	        'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -36,25 +37,27 @@ To tell the Django project where templates will be stored, open your project's `
 	    },
 	]
 
-What we need to do to is tell Django where our templates will be stored by modifying the `DIRS` list, which is set to an empty list by default. Change the dictionary key/value pair to look like the following.
+Теперь нам нужно сообщить Django где находятся наши шаблоны изменив список `DIRS`, который по умолчанию является пустым. Добавьте в него строку, чтобы он выглядел следующим образом.
 
 {lang="python",linenos=off}
+
 	'DIRS': ['<workspace>/tango_with_django_project/templates']
 
-Note that you are *required to use absolute paths* to locate the `templates` directory. If you are collaborating with team members or working on different computers, then this will become a problem. You'll have different usernames and different drive structures, meaning the paths to the `<workspace>` directory will be different. One solution would be to add the path for each different configuration. For example:
+Учтите, что Вы *должны использовать абсолютные пути* при указании каталога `templates`. Если Вы являетесь частью команды или работаете на разных компьютерах, это может привести к проблеме в будущем. Проблема заключается в различных путях к Вашему каталогу `<workspace>`. Одним из решений будет добавить путь для каждой из различных конфигураций. Например:
 	
 {lang="python",linenos=off}
+
 	'DIRS': [ '/Users/leifos/templates',
 	          '/Users/maxwelld90/templates',
 	          '/Users/davidm/templates', ]
 
 	
-However, there are a number of problems with this. First you have to add in the path for each setting, each time. Second, if you are running the app on different operating systems the backslashes have to be constructed differently.
+Тем не менее это связано с рядом проблем. Во-первых, Вы должны будете каждый раз добавлять путь для каждой новой конфигурации. Во-вторых, если Вы запускаете приложение на разных операционных системах, то для указания путей там могут использоваться не прямой, а обратный слэш.
 
-W> ### Don't hard code Paths!
-W> The road to hell is paved with hard coded paths. [Hard-coding paths](http://en.wikipedia.org/wiki/Hard_coding) is a [software engineering anti-pattern](http://sourcemaking.com/antipatterns), and will make your project [less portable](http://en.wikipedia.org/wiki/Software_portability) - meaning that when you run it on another computer, it probably won't work!
+> ### Не используйте жестко заданные пути!
+Жестко-заданными путями вымощена дорога в ад. [Жестко-заданные пути](http://en.wikipedia.org/wiki/Hard_coding) - это [антимоделью при проектировании программного обеспечения](http://sourcemaking.com/antipatterns), и они уменьшат [переносимость](http://en.wikipedia.org/wiki/Software_portability) Вашего проекта - т. е., если Вы запустите его на другом компьютере, то он возможно не заработает!
 
-### Dynamic Paths
+### Динамические пути
 A better solution is to make use of built-in Python functions to work out the path of your `templates` directory automatically. This way, an absolute path can be obtained regardless of where you place your Django project's code. This in turn means that your project becomes more *portable.* 
 
 At the top of your `settings.py` file, there is a variable called `BASE_DIR`. This variable stores the path to the directory in which your project's `settings.py` module is contained. This is obtained by using the special Python `__file__` attribute, which is [set to the absolute path of your settings module](http://stackoverflow.com/a/9271479). The call to `os.path.dirname()` then provides the reference to the absolute path of the directory containing the `settings.py` module. Calling `os.path.dirname()` again removes another layer, so that `BASE_DIR` contains `<workspace>/tango_with_django_project/`. You can see this process in action, if you are curious, by adding the following lines to your `settings.py` file.
@@ -74,13 +77,13 @@ Here we make use of `os.path.join()` to mash together the `BASE_DIR` variable an
 {lang="python",linenos=off}
 	'DIRS': [TEMPLATE_DIR, ]
 
-I> ### Why `TEMPLATE_DIR`?
-I> You've created a new variable called `TEMPLATE_DIR` at the top of your `settings.py` file because it's easier to access should you ever need to change it. For more complex Django projects, the `DIRS` list allows you to specify more than one template directory - but for this book, one location is sufficient to get everything working.
+> ### Why `TEMPLATE_DIR`?
+> You've created a new variable called `TEMPLATE_DIR` at the top of your `settings.py` file because it's easier to access should you ever need to change it. For more complex Django projects, the `DIRS` list allows you to specify more than one template directory - but for this book, one location is sufficient to get everything working.
 
-W> ### Concatenating Paths
-W> **When concatenating system paths together, always use `os.path.join()`.** Using this built-in function ensures that the correct path separators are used. On a UNIX operating system (or derivative of), forward slashes (`/`) would be used to separate directories, whereas a Windows operating system would use backward slashes (`\`). If you manually append slashes to paths, you may end up with path errors when attempting to run your code on a different operating system, thus reducing your project's portability.
+> ### Concatenating Paths
+> **When concatenating system paths together, always use `os.path.join()`.** Using this built-in function ensures that the correct path separators are used. On a UNIX operating system (or derivative of), forward slashes (`/`) would be used to separate directories, whereas a Windows operating system would use backward slashes (`\`). If you manually append slashes to paths, you may end up with path errors when attempting to run your code on a different operating system, thus reducing your project's portability.
 
-### Adding a Template
+### Добавление шаблона
 With your template directory and path now set up, create a file called `index.html` and place it in the `templates/rango/` directory. Within this new file, add the following HTML code.
 
 {lang="html",linenos=off}
@@ -128,9 +131,9 @@ You can then update the `index()` view function as follows. Check out the inline
 
 First, we construct a dictionary of key/value pairs that we want to use within the template. Then, we call the `render()` helper function. This function takes as input the user's `request`, the template filename, and the context dictionary. The `render()` function will take this data and mash it together with the template to produce a complete HTML page that is returned with a *HttpResponse*. This response is then returned and dispatched to the user's web browser.
 
-I> ### What is the Template Context?
-I> {#section-templates-static-context}
-I> When a template file is loaded with the Django templating system, a *template context* is created. In simple terms, a template context is a Python dictionary that maps template variable names with Python variables. In the template we created above, we included a template variable name called `boldmessage`. In our updated `index(request)` view example, the string `Crunchy, creamy, cookie, candy, cupcake!` is mapped to template variable `boldmessage`. The string `Crunchy, creamy, cookie, candy, cupcake!` therefore replaces *any* instance of `{{ boldmessage }}` within the template.
+> ### What is the Template Context?
+> {#section-templates-static-context}
+> When a template file is loaded with the Django templating system, a *template context* is created. In simple terms, a template context is a Python dictionary that maps template variable names with Python variables. In the template we created above, we included a template variable name called `boldmessage`. In our updated `index(request)` view example, the string `Crunchy, creamy, cookie, candy, cupcake!` is mapped to template variable `boldmessage`. The string `Crunchy, creamy, cookie, candy, cupcake!` therefore replaces *any* instance of `{{ boldmessage }}` within the template.
 
 Now that you have updated the view to employ the use of your template, start the Django development server and visit `http://127.0.0.1:8000/rango/`. You should see your simple HTML template rendered, just like the [example screenshot shown below](#fig-ch4-first-template).
 
@@ -176,11 +179,11 @@ Finally, check that the `STATIC_URL` variable is defined within your `settings.p
 
 With everything required now entered, what does it all mean? Put simply, the first two variables `STATIC_DIR` and `STATICFILES_DIRS` refers to the locations on your computer where static files are stored. The final variable `STATIC_URL` then allows us to specify the URL with which static files can be accessed when we run our Django development server. For example, with `STATIC_URL` set to `/static/`, we would be able to access static content at `http://127.0.0.1:8000/static/`. *Think of the first two variables as server-side locations, and the third variable as the location with which clients can access static content.*
 
-X> ### Test your Configuration
-X> As a small exercise, test to see if everything is working correctly. Try and view the `rango.jpg` image in your browser when the Django development server is running.
-X> If your `STATIC_URL` is set to `/static/` and `rango.jpg` can be found at `images/rango.jpg`, what is the URL you enter into your Web browser's window?
-X>
-X> **Try to figure this out before you move on! The answer is coming up if you get stuck.**
+> ### Test your Configuration
+> As a small exercise, test to see if everything is working correctly. Try and view the `rango.jpg` image in your browser when the Django development server is running.
+> If your `STATIC_URL` is set to `/static/` and `rango.jpg` can be found at `images/rango.jpg`, what is the URL you enter into your Web browser's window?
+>
+> **Try to figure this out before you move on! The answer is coming up if you get stuck.**
 
 W> ### Don't Forget the Slashes!
 W> When setting `STATIC_URL`, check that you end the URL you specify with a forward slash (e.g. `/static/`, not `/static`). As per the [official Django documentation](https://docs.djangoproject.com/en/1.9/ref/settings/#std:setting-STATIC_URL), not doing so can open you up to a world of pain. The extra slash at the end ensures that the root of the URL (e.g. `/static/`) is separated from the static content you want to serve (e.g. `images/rango.jpg`).
@@ -356,33 +359,33 @@ The steps for serving media files are similar to those for serving static media.
 1. Place a file within your project's `media` directory. The `media` directory is specified by your project's `MEDIA_ROOT` variable. 
 2. Link to the media file in a template through the use of the `{{ MEDIA_URL }}` context variable. For example, referencing an uploaded image `cat.jpg` would have an `<img />` tag like `<img src="{{ MEDIA_URL}}cat.jpg" />`.
 
-X> ### Exercises
-X>
-X> Give the following exercises a go to reinforce what you've learnt from this chapter.
-X> 
-X> * Convert the about page to use a template as well, using a template called `about.html`.
-X> * Within the new `about.html` template, add a picture stored within your project's static files.
-X> * On the about page, include a line that says, `This tutorial has been put together by <your-name>`.
-X> * In your Django project directory, create a new directory called `media`, download a picture of a cat and save it to the `media` directory as `cat.jpg`. 
-X> * In your **about page**, add in the `<img>` tag to display the picture of the cat, to ensure that your media is being served correctly. Keep the static image of Rango in your index page so that your app has working examples of both static and media files.
+> ### Упражнения
+>
+> Выполните следующие упражнения, чтобы закрепить то, что Вы узнали из этой главы.
+> 
+> * Convert the about page to use a template as well, using a template called `about.html`.
+> * Within the new `about.html` template, add a picture stored within your project's static files.
+> * On the about page, include a line that says, `This tutorial has been put together by <your-name>`.
+> * In your Django project directory, create a new directory called `media`, download a picture of a cat and save it to the `media` directory as `cat.jpg`. 
+> * In your **about page**, add in the `<img>` tag to display the picture of the cat, to ensure that your media is being served correctly. Keep the static image of Rango in your index page so that your app has working examples of both static and media files.
 
-T> ### Static and Media Files
-T> Remember: static files, as the name implies, do not change. These files form the core components of your website. Media files are user defined; and as such, they may change often!
-T>
-T> An example of a static file could be a stylesheet file (css), which determines the appearance of your app's webpages. An example of a media file could be a user profile image, which is uploaded by the user when they create an account on your app.
+> ### Static and Media Files
+> Remember: static files, as the name implies, do not change. These files form the core components of your website. Media files are user defined; and as such, they may change often!
+>
+> An example of a static file could be a stylesheet file (css), which determines the appearance of your app's webpages. An example of a media file could be a user profile image, which is uploaded by the user when they create an account on your app.
 
 
-I> ### Tests
-I>
-I> We have written a few tests to check if you have completed the exercises. To check your work so far, [download the `tests.py` script](https://github.com/leifos/tango_with_django_2/blob/master/code/tango_with_django_project/rango/tests.py) from our [GitHub repository](https://github.com/leifos/tango_with_django_2/), and save it within your `rango` app directory.
-I>
-I> It is good practice to write tests as you go to make sure the application is working as expected.
-I> To run the tests, issue the following command in the terminal or Command Prompt.
-I>
-I> {lang="text",linenos=off}
-I>     $ python manage.py test rango
-I>
-I> If you are interested in learning about automated testing, now is a good time to check out the [chapter on testing](#chapter-testing). The chapter runs through some of the basics on how you can write tests to automatically check the integrity of your code.
-I>
-I> However for the time being you can see if you pass the tests. If you don't check carefully the test out put and see what tests you fail on - then go back to your code and update it to meet the test requirements.
+> ### Тесты
+>
+> We have written a few tests to check if you have completed the exercises. To check your work so far, [download the `tests.py` script](https://github.com/leifos/tango_with_django_2/blob/master/code/tango_with_django_project/rango/tests.py) from our [GitHub repository](https://github.com/leifos/tango_with_django_2/), and save it within your `rango` app directory.
+>
+> It is good practice to write tests as you go to make sure the application is working as expected.
+> To run the tests, issue the following command in the terminal or Command Prompt.
+>
+> {lang="text",linenos=off}
+>     $ python manage.py test rango
+>
+> If you are interested in learning about automated testing, now is a good time to check out the [chapter on testing](#chapter-testing). The chapter runs through some of the basics on how you can write tests to automatically check the integrity of your code.
+>
+> However for the time being you can see if you pass the tests. If you don't check carefully the test out put and see what tests you fail on - then go back to your code and update it to meet the test requirements.
 
