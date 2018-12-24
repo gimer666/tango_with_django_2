@@ -181,6 +181,7 @@ To access the shell, we need to call ``manage.py`` from within your Django proje
 This will start an instance of the Python interpreter and load in your project's settings for you. You can then interact with the models, with the following terminal session demonstrating this functionality. Check out the inline commentary that we added to see what each command achieves. Note there are slight differences between what Django 1.9 and Django 1.10 return -- these are both demonstrated below, complete with commentary.
 
 {lang="python",linenos=off}
+
 	# Import the Category model from the Rango application
 	>>> from rango.models import Category
 	
