@@ -23,32 +23,30 @@
 	from rango.models import Category
 
 ### Изменяем представление Index
-Here we will complete step two and step three, where we need to modify the view `index()` function. Remember that the `index()` function is responsible for the main page view.  Modify `index()` as follows:
+В этом разделе мы реализуем шаги 2 и 3, где нам нужно изменить функцию представления `index()`. Помните, что функция `index()` отвечает за представление главной страницы. Измените `index()` следующим образом:
 
 {lang="python",linenos=off}
 	def index(request):
-	    # Query the database for a list of ALL categories currently stored.
-	    # Order the categories by no. likes in descending order.
-	    # Retrieve the top 5 only - or all if less than 5.
-	    # Place the list in our context_dict dictionary
-	    # that will be passed to the template engine.
+	    # Осуществляем запрос к базе данных для получения списка ВСЕХ категорий, хранящихся в ней на текущий момент.
+	    # Упорядочиваем категории по количеству лайков в порядке убывания.
+	    # Извлекаем только первые 5 - или все, если их число меньше 5.
+	    # Помещаем список в наш словарь контекста, который будет передан механизму шаблонов.	    
 	    
 	    category_list = Category.objects.order_by('-likes')[:5]
 	    context_dict = {'categories': category_list}
 	    
-	    # Render the response and send it back!
+	    # Формируем ответ для клиента по шаблону и отправляем обратно!
 	    return render(request, 'rango/index.html', context_dict)
 
-Here, the expression `Category.objects.order_by('-likes')[:5]`  queries the `Category` model to retrieve the top five categories. You can see that it uses the `order_by()` method to sort by the number of `likes` in descending order. The `-` in `-likes` denotes that we would like them in descending order (if we removed the `-` then the results would be returned in ascending order). Since a list of `Category` objects will be returned, we used Python's list operators to take the first five objects from the list (`[:5]`) to return a subset of `Category` objects.
+Здесь выражение `Category.objects.order_by('-likes')[:5]` использует модель `Category` для получения первых пяти категорий. Вы видите, что в нём используется метод `order_by()` для сортировки по количеству лайков - `likes` - в порядке убывания. Знак `-` в `-likes` означает, что мы хотим, чтобы они были отсортированы в порядке убывания (если мы уберём `-`, то результат запроса будет возвращен в порядке возрастания). Поскольку возвращается список объектов `Category`, мы использовали операторы списка языка Python для извлечения первых пяти объектов из списка (`[:5]`) для формирования подмножества объектов `Category`.
 
-With the query complete, we passed a reference to the list (stored as variable `category_list`) to the dictionary, `context_dict`. This dictionary is then passed as part of the context for the template engine in the `render()` call.
+Когда запрос выполнен, мы передаём ссылку на список (хранящийся в виде переменной `category_list`) в словарь, `context_dict`. Этот словарь затем передается как часть контекста в движок шаблона при вызове `render()`.
 
 W> ###Замечание
-W> For this to work, you will have had to complete the exercises in the previous chapter where you need to add the field `likes` to the `Category` model.
-
+W> Чтобы вышеприведенный фрагмент кода работал как надо, Вам нужно выполнить упражнения из предыдущей части, где Вам нужно было добавить поле `likes` в модель `Category`.
 
 ### Изменяем шаблон Index
-With the view updated, we can complete the fourth step and update the template `rango/index.html`, located within your project's `templates` directory. Change the HTML so that it looks like the example shown below.
+После обновления представления мы можем осуществить четвертый шаг и обновить шаблон `rango/index.html`, расположенный в каталоге `templates` Вашего проекта. Измените HTML-код, чтобы он выглядел так, как показано ниже.
 
 {lang="html",linenos=off}
 	<!DOCTYPE html>
@@ -63,7 +61,7 @@ With the view updated, we can complete the fourth step and update the template `
 	    <div>
 			hey there partner! <br/>
 			<strong>{{ boldmessage }}</strong>
-		</div>
+	    </div>
 	
 	    <div>
 	    {% if categories %}
@@ -84,42 +82,42 @@ With the view updated, we can complete the fourth step and update the template `
 	</body>
 	</html>
 
-Here, we make use of Django's template language to present the data using `if` and `for` control statements. Within the `<body>` of the page, we test to see if `categories` - the name of the context variable containing our list - actually contains any categories (`{% if categories %}`).
+Здесь мы использовали язык шаблонов Django для представления данных, используя управляющик операторы `if` и `for`. Внутри тега `<body>` страницы мы проверяем содержит ли `categories` - название переменной контекста с нашим списком категорий - какаие-либо категории (`{% if categories %}`).
 
-If so, we proceed to construct an unordered HTML list (within the `<ul>` tags). The `for` loop (`{% for category in categories %}`) then iterates through the list of results, and outputs each category's name (`{{ category.name }})` within a pair of `<li>` tags to indicate a list element.
+Если да - то мы приступаем к созданию неупорядоченного списка (внутри тегов `<ul>`). Затем используется цикл `for` (`{% for category in categories %}`) для итераций по списку результатов и выводится каждое название категории (`{{ category.name }})` внутри пары тегов `<li>` для создания элемента списка.
 
-If no categories exist, a message is displayed instead indicating that no categories are present.
+Если категорий не существует, то отображается сообщение о том, что категории отсутствуют.
 
-As the example shows in Django's template language, all commands are enclosed within the tags `{%` and `%}`, while variables are referenced within `{{` and `}}` brackets.
+Как видно из примера в языке шаблонов Django все команды заключаются в теги `{%` и `%}`, а на переменные ссылаются с помощью скобок {{ и }}.
 
-If you now visit Rango's homepage at `<http://127.0.0.1:8000/rango/>`, you should see a list of categories underneath the page title just like in the [figure below](#figch6-rango-categories-index).
+Если Вы теперь посетите домашнюю страницу Rango по адресу `<http://127.0.0.1:8000/rango/>`, Вы должны увидеть список категорий под заголовком страницы как показано на [рисунке ниже](#figch6-rango-categories-index).
 
 {id="fig-ch6-rango-categories-index"}
-![The Rango homepage - now dynamically generated - showing a list of categories.](images/ch6-rango-categories-index.png)
+![Домашняя страница Rango - теперь генерирующаяся динамически - отображающая список категорий.](images/ch6-rango-categories-index.png)
 
 ## Создание страницы с подробной информацией о категории
-According to the [specifications for Rango](#overview-design-brief-label), we also need to show a list of pages that are associated with each category. We have a number of challenges here to overcome. A new view must be created, which should be parameterised. We also need to create URL patterns and URL strings that encode category names.
+В соответствии с [ТЗ приложения Rango](#overview-design-brief-label), нам также необходимо показать список страниц, которые связаны с каждой категорией. При этом нам придется решить несколько проблем. Необходимо создать новое представление, которое должно принимать параметры. Нам также необходимо создать шаблоны URL и URL строки для кодирования названий категорий.
 
 ### URL настройка и сопоставление
-Let's start by considering the URL problem. One way we could handle this problem is to use the unique ID for each category within the URL. For example, we could create URLs like `/rango/category/1/` or `/rango/category/2/`, where the numbers correspond to the categories with unique IDs 1 and 2 respectively. However, it is not possible to infer what the category is about just from the ID.
+Сначала решим задачу, связанную с URL. Одним из способов решения этой проблемы является использование уникального идентификатора (ID) для каждой категории в URL. Например, мы можем создать URLы вида `/rango/category/1/` или `/rango/category/2/`, где числа соответствуют категориям с уникальными идентификаторами 1 и 2 соответственно. Тем не менее, невозможно определить, что это за категория, только по идентификатору.
 
-Instead, we could use the category name as part of the URL. For example, we can imagine that the URL `/rango/category/python/` would lead us to a list of pages related to Python. This is a simple, readable and meaningful URL. If we go with this approach, we'll also have to handle categories that have multiple words, like 'Other Frameworks', etc.
+Вместо этого мы могли бы использовать название категории как часть URL. Например, мы можем представить, что URL `/rango/category/python/` выдаст нам список страниц, связанных с Python. Это простой, читаемый и понятный URL. Если мы хотим использовать этот метод, то необходимо обрабатывать категории, которые будут состоять из нескольких слов, например, 'Other Frameworks', и т.д..
 
-T> ### Clean your URLs
-T> Designing clean and readable URLs is an important aspect of web design. See [Wikipedia's article on Clean URLs](http://en.wikipedia.org/wiki/Clean_URL) for more details.
+T> ### Используйте человекопонятные URLs
+T> Разработка человекопонятных и читаемых URL-адресов - это важный аспект веб проектирования. Смотри [статью на Википедии о человекопонятных URLах](http://en.wikipedia.org/wiki/Clean_URL) для более подробной информации.
 
-To handle this problem we are going to make use of the `slugify` function provided by Django. 
+Чтобы решить эту проблему мы будем использовать функцию `slugify`, предоставляемую Django. 
 
 <!-->
 <http://stackoverflow.com/questions/837828/how-do-i-create-a-slug-in-django>
 -->
-### Update Category Table with a Slug Field
-To make readable URLs, we need to include a slug field in the `Category` model. First we need to import the function `slugify` from Django that will replace whitespace with hyphens - for example, `"how do i create a slug in django"` turns into `"how-do-i-create-a-slug-in-django"`.
+### Добавления поля Slug в таблицу категорий
+Для того, чтобы создать читабельные URL-адреса, нам нужно добавить поле `slug` в модель `Category`. Сначала нам необходимо импортировать функцию `slugify` из Django, которая заменит пробелы на дефисы - например, выражение `"how do i create a slug in django"` превращается в `"how-do-i-create-a-slug-in-django"`.
 
-W> ### Unsafe URLs
-W> While you can use spaces in URLs, it is considered to be unsafe to use them. Check out the [Internet Engineering Task Force Memo on URLs](http://www.ietf.org/rfc/rfc1738.txt) to read more.
+W> ### Небезопасные URL-адреса
+W> Хотя Вы можете использовать пробелы в URL адресах, это считается не безопасным. Прочитайте IETF памятку по URLам, чтобы узнать больше.
 
-Next we need to override the `save()` method of the `Category` model, which we will call the `slugify` method and update the `slug` field with it. Note that every time the category name changes, the slug will also change. Update your model, as shown below, and add in the import.
+Затем нам надо переопределить метод `save()` модели `Category`, в котором мы вызовем метод `slugify` и обновим поле `slug` с помощью него. Обратите внимание, что каждый раз при изменении названия категории, slug также изменится. Измените Вашу модель как показано ниже и не забудьте импортировать метод slugify.
 
 {lang="python",linenos=off}
 	from django.template.defaultfilters import slugify
@@ -140,59 +138,59 @@ Next we need to override the `save()` method of the `Category` model, which we w
 	    def __str__(self):
 	        return self.name
 
-Now that the model has been updated, the changes must now be propagated to the database. However, since data already exists within the database, we need to consider the implications of the change. Essentially, for all the existing category names, we want to turn them into slugs (which is performed when the record is initially saved). When we update the models via the migration tool, it will add the `slug` field and provide the option of populating the field with a default value. Of course, we want a specific value for each entry - so we will first need to perform the migration, and then re-run the population script. This is because the population script will explicitly call the `save()` method on each entry, triggering the 'save()' as implemented above, and thus update the slug accordingly for each entry.
+Теперь, когда модель была обновлена, изменения должны быть переданы в базу данных. Но поскольку данные уже существуют в базе данных, нам нужно учитывать последствия изменений. В частности, для всех существующих названий категорий мы хотим преобразовать их, используя функцию `slugify` (что осуществляется при первоначальном сохранении записи). Когда мы обновляем модели с помощью инструмента миграции, он добавляет поле `slug` и предоставляет возможность заполнения поля значением по умолчанию. Конечно, нам нужно определенное значение для каждой записи - поэтому сначала нам нужно выполнить миграцию, а затем повторно запустить скрипт для заполнения базы. Это связано с тем, что скрипт будет явно вызывать метод `save()` для каждой записи, запуская реализованный выше метод 'save()' и, таким образом, обновлять поле slug соответствующим образом для каждой записи.
 
-To perform the migration, issue the following commands (as detailed in the [Models and Databases Workflow](#section-models-databases-workflow)).
+Чтобы выполнить миграцию введите следующие команды (как подробно описано в разделе [Основные последовательности действий из главы Модели и базы данных](#section-models-databases-workflow)).
 
 {lang="text",linenos=off}
 	$ python manage.py makemigrations rango
 	$ python manage.py migrate
 
-Since we did not provide a default value for the slug and we already have existing data in the model, the `migrate` command will give you two options. Select the option to provide a default, and enter an empty string -- denoted by two quote marks (i.e. `''`).  Run the population script again, which will then update the slug fields.
+Поскольку мы не задали значение по умолчанию для slug и у нас уже существуют данные в модели, команда `migrate` предоставит Вам два варианта. Выберите вариант, в котором предлагается задать значение по умолчанию и введите пустую строку илил две кавычки (т. е. ''). Снова запустите скрипт для заполнения, который обновит поля slug.
 
 {lang="text",linenos=off}
 	$ python populate_rango.py
 
-Now run the development server with the command `$ python manage.py runserver`, and inspect the data in the models with the admin interface at `http://127.0.0.1:8000/admin/`.
+Теперь запустите сервер для разработки с помощью команды `$ python manage.py runserver`, и просмотрите данные в моделях с помощью интерфейса администратора по адресу `http://127.0.0.1:8000/admin/`.
 
-If you go to add in a new category via the admin interface you may encounter a problem, or two!
+Если Вы захотите добавить новую категорию через интерфейс администратора, то столкнетесь с одной или двумя проблемами!
 
-1. Let's say we added in the category, `Python User Groups`. If you do so, and try to save the record Django will not let you save it unless you also fill in the slug field too. While we could type in `python-user-groups` this is error prone. It would be better to have the slug automatically generated.
+1. Допустим мы хотим добавить категорию `Python User Groups`. Если вы сделаете это и попытаетесь сохранить запись, Django не позволит вам сохранить её пока Вы не заполните также поле slug. Хотя мы можем набрать в нём `python-user-groups`, ручной ввод может приводить к генерации небезопасных URL-адресов. Поэтому лучше генерировать slug автоматически.
 
-2. The next problem arises if we have one category called `Django` and one called `django`. Since the `slugify()` makes the slugs lower case it will not be possible to identify which category corresponds to the `django` slug.
+2. Следующая проблема возникает, если одна категория называется `Django`, а другая - `django`. Поскольку `slugify()` преобразует всё к нижнему регистру символов будет невозможно определить какая категория соответствует URL `django`.
 
-To solve the first problem, we can either update our model so that the slug field allows blank entries, i.e.: 
+Для решения первой проблемы, мы можем или обновить нашу модель, чтобы поле slug можно было оставлять пустым, например:
 
 {lang="python",linenos=off}
 	slug = models.SlugField(blank=True) 
 
-**or** we can customise the admin interface so that it automatically pre-populates the slug field as you type in the category name. To do this, update `rango/admin.py` with the following code.
+**или** мы можем изменить интерфейс администратора так, чтобы он автоматически заполнял поле slug при вводе названия категории. Для этого обновите `rango/admin.py`, добавив следующий код.
 
 {lang="python",linenos=off}
 	from django.contrib import admin
 	from rango.models import Category, Page
 	...
-	# Add in this class to customise the Admin Interface
+	# Добавляем этот класс для изменения интерфейса администратора
 	class CategoryAdmin(admin.ModelAdmin):
 	    prepopulated_fields = {'slug':('name',)}
 	
-	# Update the registration to include this customised interface
+	# Обновляем регистр, чтобы она включала этот измененный интерфейс
 	admin.site.register(Category, CategoryAdmin)
 	...
 
-Try out the admin interface and add in a new category.
+Опробуйте измененный интерфейс администратора и добавьте новую категорию.
 
-Now that we have addressed the first problem, we can ensure that the slug field is also unique, by adding the constraint to the slug field.
+Теперь для решения второй проблемы, мы можем сделать поле slug также уникальным, добавив ограничение к полю slug.
 
 {lang="python",linenos=off}
 	slug = models.SlugField(unique=True)
 
-Now that we have added in the slug field we can now use the slugs to uniquely identify each category. We could have added the unique constraint earlier, but if we performed the migration and set everything to be an empty string by default it would have raised an error. This is because the unique constraint would have been violated. We could have deleted the database and then recreated everything - but that is not always desirable. 
+После добавления этого ограничения, мы можем использовать поле slug для уникальной идентификации каждой категории. Мы могли бы добавить ограничение уникальности ранее, но если бы мы выполнили миграцию и использовали бы пустую строку в качестве значения по умолчанию, то получили бы ошибку. Это было бы связано с тем, что нарушилось бы условие уникальности. Мы могли бы удалить базу данных и воссоздать её заново - но такое не всегда выполнимо.
 
-W> ### Migration Woes
-W> It's always best to plan out your database in advance and avoid changing it. Making a population script means that you easily recreate your database if you need to delete it.
+W> ### Проблемы при миграциях
+W> Всегда лучше заранее спроектировать свою базу данных и стараться не изменять её. Создание сценария для заполнения позволяет Вам легко воссоздать свою базу данных, если нужно удалить её.
 W>
-W> Sometimes it is just better to just delete the database and recreate everything than try and work out where the conflict is coming from. A good exercise is to write a script to output the data in the database so that any changes you make can be saved out into a file that can be read in later.
+W> Иногда лучше просто удалить базу данных и воссоздать всё с нуля, чем пытаться понять из-за чего возник конфликт. Хорошим упражнением является написание сценария для вывода данных из базы, чтобы любые сделанные Вами изменения могли быть сохранены в файл, который можно будет просмотреть в случае необходимости.
 
 ### Последовательность действий для создания страницы с категориями
 To implement the category pages so that they can be accessed via `/rango/category/<category-name-slug>/` we need to make a number of changes and undertake the following steps:
