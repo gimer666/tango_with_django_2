@@ -1,28 +1,28 @@
-# Models, Templates and Views {#chapter-mtv}
-Now that we have the models set up and populated the database with some sample data, we can now start connecting the models, views and templates to serve up dynamic content. In this chapter, we will go through the process of showing categories on the main page, and then create dedicated category pages which will show the associated list of links.
+# Модели, шаблоны и представления {#chapter-mtv}
+Теперь когда мы настроили модели и заполнили базу данных некоторыми тестовыми данными, можно объединить наши знания о моделях, шаблонах и представлениях для выдачи динамического содержимого. В этой главе мы рассмотрим как отобразить категории на главной странице и затем создадим отдельные страницы для категорий, на которых будут показаны связанные с ними список ссылок.
 
-## Workflow: Data Driven Page 
-To do this there are five main steps that you must undertake to create a data driven webpage in Django.
+## Основная последовательность действий: Создание страниц с изменяемыми данными
+Чтобы создать страницу с изменяемыми данными в Django, необходимо выполнить последовательность действий из пяти основных этапов.
 
-1.  In `views.py` file import the models you wish to use.
-2.  In the view function, query the model to get the data you want to present.
-3.  Then pass the results from your model into the template's context.
-4.  Create/modify the template so that it displays the data from the context.
-5.  If you have not done so already, map a URL to your view.
+1.  В файле `views.py` импортировать модели, которые Вы хотите использовать.
+2.  В функции представления вызвать модель, чтобы получить данные, необходимые для отображения.
+3.  Затем передать результаты из Вашей модели в контекст шаблона.
+4.  Создайте/измените шаблон таким образом, чтобы он выдавал данные из контекста.
+5.  Если Вы ещё этого не сделали, сопоставьте URL Вашему представлению.
 
-These steps highlight how we need to work within Django's framework to bind models, views and templates together.
+Эти шаги показывают как нам нужно работать с фреймворком Django, чтобы связать вместе модели, представления и шаблоны.
 
-## Showing Categories on Rango's Homepage
-One of the requirements regarding the main page was to show the top five rango'ed categories. To fulfil this requirement, we will go through each of the above steps.
+## Показываем категории на главной странице Rango
+Одним из требований к главной странице было отображение первых пяти категорий по рангу. Для выполнения этого требования мы осуществим каждый из вышеприведенных этапов.
 
-### Importing Required Models
-First, we need to complete step one. Open `rango/views.py` and at the top of the file, after the other imports, import the `Category` model from Rango's `models.py` file.
+### Импортируем требуемые модели
+Во-первых, нам нужно осуществить первый шаг. Откройте файл `rango/views.py` и в начало файла, после других импортов, импортируйте модель `Category` из файла Rango `models.py`.
 
 {lang="python",linenos=off}
-	# Import the Category model
+	# Импорт модели Category
 	from rango.models import Category
 
-### Modifying the Index View
+### Изменяем представление Index
 Here we will complete step two and step three, where we need to modify the view `index()` function. Remember that the `index()` function is responsible for the main page view.  Modify `index()` as follows:
 
 {lang="python",linenos=off}
@@ -43,11 +43,11 @@ Here, the expression `Category.objects.order_by('-likes')[:5]`  queries the `Cat
 
 With the query complete, we passed a reference to the list (stored as variable `category_list`) to the dictionary, `context_dict`. This dictionary is then passed as part of the context for the template engine in the `render()` call.
 
-W> ###Warning
+W> ###Замечание
 W> For this to work, you will have had to complete the exercises in the previous chapter where you need to add the field `likes` to the `Category` model.
 
 
-### Modifying the Index Template
+### Изменяем шаблон Index
 With the view updated, we can complete the fourth step and update the template `rango/index.html`, located within your project's `templates` directory. Change the HTML so that it looks like the example shown below.
 
 {lang="html",linenos=off}
@@ -97,10 +97,10 @@ If you now visit Rango's homepage at `<http://127.0.0.1:8000/rango/>`, you shoul
 {id="fig-ch6-rango-categories-index"}
 ![The Rango homepage - now dynamically generated - showing a list of categories.](images/ch6-rango-categories-index.png)
 
-##Creating a Details Page
+## Создание страницы с подробной информацией о категории
 According to the [specifications for Rango](#overview-design-brief-label), we also need to show a list of pages that are associated with each category. We have a number of challenges here to overcome. A new view must be created, which should be parameterised. We also need to create URL patterns and URL strings that encode category names.
 
-### URL Design and Mapping
+### URL настройка и сопоставление
 Let's start by considering the URL problem. One way we could handle this problem is to use the unique ID for each category within the URL. For example, we could create URLs like `/rango/category/1/` or `/rango/category/2/`, where the numbers correspond to the categories with unique IDs 1 and 2 respectively. However, it is not possible to infer what the category is about just from the ID.
 
 Instead, we could use the category name as part of the URL. For example, we can imagine that the URL `/rango/category/python/` would lead us to a list of pages related to Python. This is a simple, readable and meaningful URL. If we go with this approach, we'll also have to handle categories that have multiple words, like 'Other Frameworks', etc.
@@ -194,7 +194,7 @@ W> It's always best to plan out your database in advance and avoid changing it. 
 W>
 W> Sometimes it is just better to just delete the database and recreate everything than try and work out where the conflict is coming from. A good exercise is to write a script to output the data in the database so that any changes you make can be saved out into a file that can be read in later.
 
-### Category Page Workflow
+### Последовательность действий для создания страницы с категориями
 To implement the category pages so that they can be accessed via `/rango/category/<category-name-slug>/` we need to make a number of changes and undertake the following steps:
 
 1. Import the `Page` model into `rango/views.py`.
@@ -205,7 +205,7 @@ To implement the category pages so that they can be accessed via `/rango/categor
 
 We'll also need to update the `index()` view and `index.html` template to provide links to the category page view.
 
-### Category View
+### Представление Category
 In `rango/views.py`, we first need to import the `Page` model. This means we must add the following import statement at the top of the file.
 
 {lang="python",linenos=off}
@@ -247,7 +247,7 @@ Next, we can add our new view, `show_category()`.
 
 Our new view follows the same basic steps as our `index()` view. We first define a context dictionary and then attempt to extract the data from the models, and add the relevant data to the context dictionary. We determine which category by using the value passed as parameter `category_name_slug` to the `show_category()` view function. If the category slug is found in the `Category` model, we can then pull out the associated pages, and add this to the context dictionary, `context_dict`.
 
-### Category Template
+### Шаблон Category
 Now let's create our template for the new view. In `<workspace>/tango_with_django_project/templates/rango/` directory, create `category.html`. In the new file, add the following code.
 
 {lang="html",linenos=on}
@@ -285,7 +285,7 @@ I> The Django template conditional tag - `{% if %}` - is a really neat way of de
 I>
 I> Placing conditional checks in your templates - like `{% if category %}` in the example above - also makes sense semantically. The outcome of the conditional check directly affects the way in which the rendered page is presented to the user. Remember, presentational aspects of your Django appls should be encapsulated within templates.
 
-### Parameterised URL Mapping
+### URL сопоставление с параметрами
 Now let's have a look at how we actually pass the value of the `category_name_url` parameter to the `show_category()` function. To do so, we need to modify Rango's `urls.py` file and update the `urlpatterns` tuple as follows.
 
 {lang="python",linenos=off}
@@ -323,7 +323,7 @@ I> [Jamie Zawinski](http://blog.codinghorror.com/regular-expressions-now-you-hav
 I>
 I> Django's `path()` method means you can generally avoid Regex Hell - but if you need to use a regular expression this [cheat sheet](http://cheatography.com/davechild/cheat-sheets/regular-expressions/) is really useful.
 
-### Modifying the Index Template
+### Изменяем шаблон Index
 Our new view is set up and ready to go - but we need to do one more thing. Our index page template needs to be updated so that it links to the category pages that are listed. We can update the `index.html` template to now include a link to the category page via the slug.
 
 {lang="html",linenos=off}
@@ -366,7 +366,7 @@ Our new view is set up and ready to go - but we need to do one more thing. Our i
 
 Again, we used the HTML tag `<ul>` to define an unordered list. Within the list, we create a series of list elements (`<li>`), each of which in turn contains a HTML hyperlink (`<a>`). The hyperlink has an `href` attribute, which we use to specify the target URL defined by `/rango/category/{{ category.slug }}` which, for example, would turn into `/rango/category/python-books/` for the category `Python Books`.
 
-### Demo
+### Пример работы
 Let's try everything out now by visiting the Rango homepage. You should see up to five categories on the index page. The categories should now be links. Clicking on `Django` should then take you to the `Django` category page, as shown in the [figure below](#fig-ch6-rango-links). If you see a list of links like `Official Django Tutorial`, then you've successfully set up the new page. 
 
 What happens when you visit a category that does not exist? Try navigating a category which doesn't exist, like `/rango/category/computers/`. Do this by typing the address manually into your browser's address bar. You should see a message telling you that the specified category does not exist.
@@ -374,7 +374,7 @@ What happens when you visit a category that does not exist? Try navigating a cat
 {id="fig-ch6-rango-links"}
 ![The links to Django pages. Note the mouse is hovering over the first link -- you can see the corresponding URL for that link at the bottom left of the Google Chrome window.](images/ch6-rango-links.png)
 
-X> ## Exercises
+X> ## Упражнения
 X> Reinforce what you've learnt in this chapter by trying out the following exercises.
 X> 
 X> * Update the population script to add some value to the `views` count for each page.
