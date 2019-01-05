@@ -321,7 +321,7 @@ I>
 I> Использование Django метода `path()` позволяет Вам в большинстве случаев избежать проблем с регулярными выражениями - но если  необходимо использовать их - эта [шпаргалка](http://cheatography.com/davechild/cheat-sheets/regular-expressions/) может быть Вам полезна [cheat sheet].
 
 ### Изменяем шаблон Index
-Our new view is set up and ready to go - but we need to do one more thing. Our index page template needs to be updated so that it links to the category pages that are listed. We can update the `index.html` template to now include a link to the category page via the slug.
+Наше новое представление настроено и готово к работе - но нам необходимо сделать ещё кое-что. Наш шаблон для главной страницы нужно изменить, чтобы пользователь смог просмотреть перечисленные страницы с категориями. Теперь мы можем обновить шаблон `index.html` так, чтобы в нём была ссылка на страницу с категорией, используя slug.
 
 {lang="html",linenos=off}
 	<!DOCTYPE html>
@@ -343,7 +343,7 @@ Our new view is set up and ready to go - but we need to do one more thing. Our i
 	        {% if categories %}
 	        <ul>
 	            {% for category in categories %}
-	            <!-- Following line changed to add an HTML hyperlink -->
+	            <!-- Следующая строка была изменена и в неё была добавлена HTML гиперссылка -->
 	            <li>
 	            <a href="/rango/category/{{ category.slug }}">{{ category.name }}</a>
 	            </li>
@@ -361,41 +361,41 @@ Our new view is set up and ready to go - but we need to do one more thing. Our i
 	    </body>
 	</html>
 
-Again, we used the HTML tag `<ul>` to define an unordered list. Within the list, we create a series of list elements (`<li>`), each of which in turn contains a HTML hyperlink (`<a>`). The hyperlink has an `href` attribute, which we use to specify the target URL defined by `/rango/category/{{ category.slug }}` which, for example, would turn into `/rango/category/python-books/` for the category `Python Books`.
+Мы снова использовали HTML тег `<ul>` для определения неупорядоченного списка. Внутри списка мы создаем ряд элементов списка (`<li>`), каждый из которых, в свою очередь, содержит HTML гиперссылку (`<a>`). Гиперссылка имеет атрибут `href`, который мы используем, чтобы указать требуемый URL, определяемый как `/rango/category/{{ category.slug }}`, который, например, превратится в `/rango/category/python-books/` для категории `Python Books`.
 
 ### Пример работы
-Let's try everything out now by visiting the Rango homepage. You should see up to five categories on the index page. The categories should now be links. Clicking on `Django` should then take you to the `Django` category page, as shown in the [figure below](#fig-ch6-rango-links). If you see a list of links like `Official Django Tutorial`, then you've successfully set up the new page. 
+Давайте посмотрим, что у нас получилось, посетив домашнюю страницу Rango. Вы должны увидеть пять категорий на главной странице. Категории теперь должны быть ссылками. Нажав на `Django`, Вы попадете на страницу категории `Django`, как показано на [рисунке ниже](#fig-ch6-rango-links). Если вы видите список ссылок, таких как `Официальное руководство по Django`, то Вы успешно создали новую страницу.
 
-What happens when you visit a category that does not exist? Try navigating a category which doesn't exist, like `/rango/category/computers/`. Do this by typing the address manually into your browser's address bar. You should see a message telling you that the specified category does not exist.
+Что происходит, когда Вы посещаете несуществующую категорию? Попытайтесь перейти в катагорию, которой не существует, например, `/rango/category/computers/`. Сделайте это, введя адрес вручную в адресную строку браузера. Вы должны увидеть сообщение о том, что указанной категории не существует.
 
 {id="fig-ch6-rango-links"}
-![The links to Django pages. Note the mouse is hovering over the first link -- you can see the corresponding URL for that link at the bottom left of the Google Chrome window.](images/ch6-rango-links.png)
+![Ссылки на страницы Django. Обратите внимание, что мышь находится над первой ссылкой -- вы можете увидеть соответствующий URL для этой ссылки в левом нижнем углу окна Google Chrome.](images/ch6-rango-links.png)
 
 X> ## Упражнения
 X> Закрепите то, чему Вы научились в этой главе, пытаясь выполнить следующие упражнения.
 X> 
-X> * Update the population script to add some value to the `views` count for each page.
-X> * Modify the index page to also include the top 5 most viewed pages.
-X> * Include a heading for the "Most Liked Categories" and "Most Viewed Pages".
-X> * Include a link back to the index page from the category page.
-X> * Undertake [part three of official Django tutorial](https://docs.djangoproject.com/en/2.0/intro/tutorial03/) if you have not done so already to reinforce what you've learnt here.
+X> * Обновите скрипт для заполнения базы данных, добавив значения к количеству просмотров `views` для каждой страницы.
+X> * Измените главную страницу, чтобы она также включала пять самых популярных страниц.
+X> * Добавьте заголовки для «Самых популярных категорий» и «Самых просматриваемых страниц».
+X> * Добавьте ссылку на главную страницу со страницы категории.
+X> * Пройдите [третью часть официального руководства по Django](https://docs.djangoproject.com/en/2.0/intro/tutorial03/), если Вы этого еще не сделали, чтобы закрепить то, что Вы узнали здесь.
 
 {id="fig-ch6-exercises"}
-![The index page after you complete the exercises, showing the most liked categories and most viewed pages.](images/ch6-exercises.png)
+![Главная страница после выполнения упражнений, показывающая наиболее понравившиеся категории и наиболее просматриваемые страницы.](images/ch6-exercises.png)
 
 T> ### Подсказки к упражнениям
-T> * When updating the population script, you'll essentially follow the same process as you went through in the [previous chapter's](#chapter-models-databases) exercises. You will need to update the data structures for each page, and also update the code that makes use of them.
-T>      * Update the three data structures containing pages for each category -- `python_pages`, `django_pages` and `other_pages`. Each page has a `title` and `url` -- they all now need a count of how many `views` they see, too.
-T>      * Look at how the `add_page()` function is defined in your population script. Does it allow for you to pass in a `views` count? Do you need to change anything in this function?
-T>      * Finally, update the line where the `add_page()` function is *called*. If you called the views count in the data structures `views`, and the dictionary that represents a page is called `p` in the context of where `add_page()` is called, how can you pass the views count into the function?
-T> * Remember to re-run the population script so that the views are updated.
-T>      * You will need to edit both the `index` view and the `index.html` template to put the most viewed (i.e. popular pages) on the index page.
-T>      * Instead of accessing the `Category` model, you will have to ask the `Page` model for the most viewed pages.
-T>      * Remember to pass the list of pages through to the context.
-T>      * If you are not sure about the HTML template code to use, you can draw inspiration from the `category.html` template code as the markup is essentially the same.
+T> * При обновлении скрипта для заполнения базы Вы по существу будете использовать ту же последовательность действий, что и в упражнениях из [предыдущей главы](#chapter-models-databases). Вам нужно будет обновить структуры данных для каждой страницы, а также код, который их использует.
+T> * Обновите три структуры данных, содержащие страницы для каждой категории -- `python_pages`, `django_pages` и `other_pages`. На каждой странице есть `title` и `url` -- теперь всем им нужно подсчитать также каличество просмотров `views`.
+T> * Посмотрите, как функция `add_page()` определена в вашем сценарии для заполнения. Позволяет ли она Вам передать количество просмотров `views`? Нужно ли Вам что-то изменить в єтой функции?
+T> * Наконец, обновите строку, в которой *вызывается* функция `add_page()`. Если Вы назвали количество просмотров в структурах данных `views`, а словарь, представляющий страницу, `p`, в контексте, где вызывается `add_page()`, как вы можете передать количество просмотров в функцию?
+T> * Не забудьте перезапустить скрипт для заполнения, чтобы обновилось количество просмотров.
+T> * Вам потребуется отредактировать как представление `index`? так и шаблон `index.html`, чтобы разместить наиболее просматриваемые (т.е. популярные страницы) на главной странице.
+T> * Вместо того, чтобы использовать модель `Category`, Вам нужно будет воспользоваться моделью `Page`, чтобы определить наиболее просматриваемые страницы.
+T> * Не забудьте передать список страниц в контекст.
+T> * Если вы не уверены в том, какой HTML код шаблона использовать, Вы можете воспользоваться кодом шаблона `category.html` в качестве примера, так как разметка практически не будет отличаться.
 
-T> ### Model Tips
-T> For more tips on working with models you can take a look through the following blog posts:
+T> ### Подсказки при работе с моделями
+T> Для получения дополнительных подсказок по работе с моделями Вы можете просмотреть следующие посты:
 T> 
-T> 1. [Best Practices when working with models](http://steelkiwi.com/blog/best-practices-working-django-models-python/) by Kostantin Moiseenko. In this post you will find a series of tips and tricks when working with models.
-T> 2. [How to make your Django Models DRYer](https://medium.com/@raiderrobert/make-your-django-models-dryer-4b8d0f3453dd#.ozrdt3rsm) by Robert Roskam. In this post you can see how you can use the `property` method of a class to reduce the amount of code needed when accessing related models.
+T> 1. [Лучшие практики при работе с моделями](http://steelkiwi.com/blog/best-practices-working-django-models-python/), автор Константин Моисеенко. В этом посте вы найдете ряд советов и подсказок при работе с моделями.
+T> 2. [Как уменьшить размер Ваших моделей в Django](https://medium.com/@raiderrobert/make-your-django-models-dryer-4b8d0f3453dd#.ozrdt3rsm), автор Роберт Роскам. В этом посте рассказывается как Вы можете использовать метод `property` класса, чтобы уменьшить объем кода, необходимый при доступе к связанным моделям.
