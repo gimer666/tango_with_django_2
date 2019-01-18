@@ -34,18 +34,8 @@
   <ul class="navbar-nav mr-auto">
     <li class="nav-item"><a class="nav-link" href="{% url 'rango:index' %}">Home</a></li>
     <li class="nav-item "><a class="nav-link" href="{% url 'rango:about' %}">About</a></li>
-
 	{% if user.is_authenticated %}
-    <!-->
     <li class="nav-item "><a class="nav-link" href="{% url 'rango:restricted' %}">Restricted</a></li>
-    -->
-    <li class="nav-item ">
-    <a class="nav-link" href="{% url 'rango:list_profiles' %}">List Profiles</a>
-    </li>
-
-<li class="nav-item ">
-<a class="nav-link" href="{% url 'rango:profile' user.username %}">Profile</a></li>
-
     <li class="nav-item"><a class="nav-link" href="{% url 'rango:add_category' %}">Add Category</a></li>
     <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/rango/">Logout</a></li>
 	{% else %}
@@ -63,15 +53,11 @@
     <div class="container-fluid">
       <div class="row">
 		  <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-		       <div  class="sidebar-sticky">
-                   
-                   <input type="search" class="form-control ds-input" id="suggestion" placeholder="Search..." >
-                   
-		<div id="cats">
+		       <div class="sidebar-sticky">
+		
 	        {% block sidebar_block %}
 	            {% get_category_list category %}
 	        {% endblock %}
-        </div>
 			
 		 </div>
 	 </nav>
@@ -80,25 +66,19 @@
 	 {% block body_block %}{% endblock %}
 	 
   <!-- FOOTER -->
-  <footer class="footer">
-<div class="container">
+  <footer>
     <p class="float-right"><a href="#">Back to top</a></p>
     <p>&copy; 2019 Tango With Django 2 &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-</div>
   </footer>
 </main>
 
 
     <!-- Bootstrap core JavaScript -->
     <!-- Placed at the end of the document so the pages load faster -->
- <script src="https://code.jquery.com/jquery-3.3.1.min.js"  crossorigin="anonymous"></script>
+ <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
        <script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.2/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
-       
          <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
         
          <script src="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.js"></script>
-         <script src="{% static "js/rango-jquery.js" %}"></script>
-         <script src="{% static "js/rango-ajax.js" %}"></script>
-         
 	</body>
 </html>
