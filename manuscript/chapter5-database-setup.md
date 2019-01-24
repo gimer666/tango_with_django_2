@@ -367,17 +367,17 @@ Django предоставляет три типа полей для опреде
 Цикл `for` в строках 51-54 отвечает за многократный вызов функций `add_cat()` и `add_page()`. Эти функции в свою очередь отвечают за создание новых категорий и страниц. `populate()` управляет созданием категорий. Например, ссылка на новую категорию хранится в локальной переменной `c` - смотри строку 52 выше. Она сохраняется поскольку для `Page` требуется ссылка на `Category`. После того как `add_cat()` и `add_page()` вызываются в `populate()`, функция завершается циклическим перебором всех новых объектов `Category` и связанных с ними `Page`, отображая их имена в терминале.
 
 > ### Создаём экземпляры моделей
-> Выше в скрипте для заполнения базы мы используем преимущество метода `get_or_create()` при создании моделей. Поскольку мы не хотим создавать дубликаты одной и той же записи, мы можем использовать `get_or_create()`, чтобы проверить существует ли запись в базе данных. Если не существует, метод создаст её. Если существует, то возвращается  If it does, then a reference to the specific model instance is returned.
+> Выше в скрипте для заполнения базы мы используем преимущество метода `get_or_create()` при создании моделей. Поскольку мы не хотим создавать дубликаты одной и той же записи, мы можем использовать `get_or_create()`, чтобы проверить существует ли запись в базе данных. Если не существует, метод создаст её. Если существует, то возвращается ссылка на конкретный экземпляр модели.
 > 
-> This helper method can remove a lot of repetitive code for us. Rather than doing this laborious check ourselves, we can make use of code that does exactly this for us.
+> Этот вспомогательный метод позволяет не вводить один и тот же код множество раз. Вместо того, чтобы осуществлять эту проверку самим, мы можем использовать код, который делает то же самое за нас.
 >
-> The `get_or_create()` method returns a tuple of `(object, created)`. The first element `object` is a reference to the model instance that the `get_or_create()` method creates if the database entry was not found. The entry is created using the parameters you pass to the method - just like `category`, `title`, `url` and `views` in the example above. If the entry already exists in the database, the method simply returns the model instance corresponding to the entry. `created` is a boolean value; `True` is returned if `get_or_create()` had to create a model instance.
+> Метод `get_or_create()` возвращает кортеж `(object, created)`. Первый элемент `object` - это ссылка на экземпляр модели, которая создаётся методом `get_or_create()`, если запись в базе данных не была найдена. Запись создается, используя параметры, которые Вы передаёте методу - точно так же, как `category`, `title`, `url` и `views` в примере выше. Если запись уже существует в базе данных, метод просто возвращает экземпляр модели, соответствующий этой записи. `created` - это логическое значение; True возвращается, если `get_or_create()` пришлось создать экземпляр модели.
 >
-> This explanation therefore means that the `[0]` at the end of our call to the `get_or_create()` returns the object reference only. Like most other programming language data structures, Python tuples use [zero-based numbering](http://en.wikipedia.org/wiki/Zero-based_numbering).
+> Из вышеприведенного объяснения следует, то `[0]` в конце нашего вызова `get_or_create()` возвращает ссылку на объект. Как и в большинстве других языков программирования для структур данных, кортежи Python используют [нумерацию, начинающуюся с нуля.](http://en.wikipedia.org/wiki/Zero-based_numbering).
 > 
-> You can check out the [official Django documentation](https://docs.djangoproject.com/en/2.0/ref/models/querysets/#get-or-create) for more information on the handy `get_or_create()` method.
+> Вы можете просмотреть [официальную Django документацию](https://docs.djangoproject.com/en/2.0/ref/models/querysets/#get-or-create), чтобы получить больше информации о вспомогательном методе `get_or_create()`.
 
-When saved, you can then run your new populations script by changing the present working directory in a terminal to the Django project's root. It's then a simple case of executing the command ``$ python populate_rango.py``. You should then see output similar to that shown below -- the order in which categories are added may vary depending upon how your computer is set up.
+После сохранения файла, Вы можете запустить скрипт, изменив текущий рабочий каталог в терминале на корневой каталог Django проекта. В этом случае достаточно выполнить команду ``$ python populate_rango.py``. Вы должны увидеть на экране текст, подобный тому, который показан ниже -- порядок добавления категорий может изменяться в зависимости от настроек вашего компьютера.
 
 {lang="text",linenos=off}
 
@@ -393,73 +393,72 @@ When saved, you can then run your new populations script by changing the present
 	- Other Frameworks - Bottle
 	- Other Frameworks - Flask
 
-Next, verify that the population script actually populated the database. Restart the Django development server, navigate to the admin interface (at `http://127.0.0.1:8000/admin/`) and check that you have some new categories and pages. Do you see all the pages if you click `Pages`, like in the figure shown below?
+Теперь давайте убедимся, что скрипт действительно заполнил базу данных. Перезапустите сервер для разработки Django, перейдите в интерфейс администратора (по адресу `http://127.0.0.1:8000/admin/`) и проверьте, что появились новые категории и страницы. Видите ли Вы все страницы, которые изображены на рисунке, если щелкните на `Pages`?
 
 {id="fig-admin-populated"}
-![The Django admin interface, showing the `Page` model populated with the new population script. Success!](images/ch5-admin-populated.png)
+![Интерфейс администратора Django, показывающий таблицу `Page`, заполненную новым скриптом. Заполнение прошло успешно!](images/ch5-admin-populated.png)
 
-While creating a population script may take time, you will save yourself time in the long run. When deploying your app elsewhere, running the population script after setting everything up means you can start demonstrating your app straight away. You'll also find it very handy when it comes to [unit testing your code](#chapter-testing).
+Хотя создание скрипта для заполнения базы данных может занять некоторое время, в конечном счёте вы сэкономите время. При развертывании приложения на другом компьютере запуск скрипта для заполнения после найстройки проекта позволит Вам сразу начать демонстрацию Вашего приложения. Также он пригодится при модульном [тестировании Вашего кода](#chapter-testing).
 
-## Workflow: Model Setup {#section-models-databases-workflow}
-Now that we've covered the core principles of dealing with Django's ORM, now is a good time to summarise the processes involved in setting everything up. We've split the core tasks into separate sections for you. Check this section out when you need to quickly refresh your mind of the different steps.
+## Основная последовательность действий: настройка модели {#section-models-databases-workflow}
+Теперь, когда мы рассмотрели основные принципы работы с Django ORM, пора подытожить процессы, необходимые для их настройки. Мы разобьем основные задачи на отдельные части. Возвращайтесь к этому разделу, когда Вам нужно будет освежить в памяти различные шаги в последовательности действий.
 
 ### Настраиваем Вашу базу данных
-With a new Django project, you should first [tell Django about the database you intend to use](##section-models-database-telling) (i.e. configure `DATABASES` in `settings.py`). You can also register any models in the `admin.py` module of your app to make them accessible via the admin interface.
+Для нового Django проекта, Вы должны сначала [сообщить Django о базе данных, которую Вы собираетесь использовать](##section-models-database-telling) (т. е., настроить `DATABASES` в `settings.py`). Вы можете также зарегистрировать любые модели в модуле `admin.py` Вашего приложения, чтобы они были доступны через интерфейс администратора. 
 
 ### Добавление модели
-The workflow for adding models can be broken down into five steps.
+Последовательность действий для добавления модели может быть разбита на пять этапов.
 
-1. First, create your new model(s) in your Django application's `models.py` file.
-2. Update `admin.py` to include and register your new model(s).
-3. Perform the migration `$ python manage.py makemigrations <app_name>`.
-4. Apply the changes `$ python manage.py migrate`. This will create the necessary infrastructure within the database for your new model(s).
-5. Create/edit your population script for your new model(s).
+1. Во-первых, создайте новую модель(и) в файле `models.py` Вашего Django приложения..
+2. Отредактируйте `admin.py`, чтобы добавить и зарегистрировать новую модель(и).
+3. Затем выполните миграцию `$ python manage.py makemigrations <app_name>`.
+4. Подтвердите изменения `$ python manage.py migrate`.Эта команда создаст необходимую инфраструктуру в базе данных для новой модели(ей).
+5. Создайте/отредактируйте скрипт для заполнения для новой модели(ей).
 
-There will be times when you will have to delete your database -- sometimes it's easier to just start afresh. When you want to do this, do the the following. Note that for this tutorial, you are using a SQLite database -- Django does support a [variety of other database engines](https://docs.djangoproject.com/en/2.0/ref/databases/).
+Неизбежно возникнут моменты, когда Вам придется удалить базу данных -- иногда проще начать с "чистого листа". В этом случае делайте это следующим образом. Обратите внимание, что в этом учебном пособии Вы используете базу данных SQLite -- но Django поддерживает [множество других движков баз данных](https://docs.djangoproject.com/en/2.0/ref/databases/).
 
-1. If you're running it, stop your Django development server.
-2. For an SQLite database, delete the `db.sqlite3` file in your Django project's directory. It'll be in the same directory as the `manage.py` file.
-3. If you have changed your app's models, you'll want to run the `$ python manage.py makemigrations <app_name>` command, replacing `<app_name>` with the name of your Django app (i.e. `rango`). Skip this if your models have not changed.
-4. Run the `$ python manage.py migrate` to create a new database file (if you are running SQLite), and migrate database tables to the database.
-5. Create a new admin account with the `$ python manage.py createsuperuser` command.
-6. Finally, run your population script again to insert credible test data into your new database.
+1. Если запущен сервер для разработки Django -- остановите его.
+2. Для базы данных SQLite, удалите файл `db.sqlite3` в каталоге Вашего Django проекта. Он будет в том же каталоге, что и файл `manage.py`.
+3. Если вы изменили модели своего приложения, вам нужно будет выполнить команду `$ python manage.py makemigrations <app_name>`, заменив `<app_name>` на имя вашего приложения Django (т. е. `rango`). Пропустите этот шаг, если Ваши модели не изменились.
+4. Запустите `$ python manage.py migrate`, чтобы создать новый файл базы данных (если вы используете SQLite), и перенесите таблицы в базу данных.
+5. Создайте новую учетную запись администратора с помощью команды `$ python manage.py createsuperuser`.
+6. Наконец, снова запустите скрипт для заполнения, чтобы вставить реалистичные тестовые данные в новую базу данных.
 
 X> ### Упражнения
-X> Now that you've completed this chapter, try out these exercises to reinforce and practice what you have learnt. **Once again, note that the following chapters will have expected you to have completed these exercises! If you're stuck, there are some hints to help you complete the exercises below.**
+X> Теперь, когда Вы прочитали главу, попытайтесь выполнить следующие упражнения, чтобы закрепить и применить на практике то, что вы узнали. ** Опять напоминаем, что в следующих главах подразумевается, что Вы выполнили эти упражнения! Если у Вас что-то не получается, воспользуйтесь подсказками, которые помогут Вам выполнить приведенные ниже упражнения.**
 X>
-X> * Update the `Category` model to include the additional attributes `views` and `likes` where the `default` values for each are both zero (`0`).
-X> * Make the migrations for your app, and then migrate your database to commit the changes.
-X> * Next update your population script so that the `Python` category has `128` views and `64` likes, the `Django` category has `64` views and `32` likes, and the `Other Frameworks` category has `32` views and `16` likes.
-X> * Delete and recreate your database, populating it with your updated population script.
-X> * Complete parts [two](https://docs.djangoproject.com/en/2.0/intro/tutorial02/) and [seven](https://docs.djangoproject.com/en/2.0/intro/tutorial07/) of the official Django tutorial. These sections will reinforce what you've learnt on handling databases in Django, and show you additional techniques to customising the Django admin interface.
-X> * Customise the admin interface. Change it in such a way so that when you view the `Page` model, the table displays the `category`, the `name` of the page and the `url` - just [like in the screenshot shown below](#fig-admin-completed). You will need to complete the previous exercises or at least go through the official Django Tutorial to complete this exercise.
-
+X> * Измените модель `Category` так, чтобы она включала дополнительные атрибуты: `views` и `likes`, у которых значение по умолчанию (`default`) равно нулю (`0`).
+X> * Осуществите миграции для Вашего приложения, затем выполните команду `migrate` для Вашей базы данных, чтобы зафиксировать изменения.
+X> * Затем отредактируйте скрипт для заполнения так, чтобы категория `Python` имела `128` просмотров и `64` лайка, категория `Django` -- `64` просмотра и `32` лайка и категория `Other Frameworks` -- `32` просмотра и `16` лайков.
+X> * Удалите и заново создайте Вашу базу данных, заполнив ее, с помощью обновленного скрипта для заполнения.
+X> * Прочтите [вторую](https://docs.djangoproject.com/en/2.0/intro/tutorial02/) и [седьмую](https://docs.djangoproject.com/en/2.0/intro/tutorial07/) части официального учебного пособия по Django. Эти разделы закрепят те знания, которым Вы научились при работе с базами данных в Django, и рассскажут Вам о дополнительных приёмах настройки интерфейса администратора Django.
+X> * Настройте интерфейс администратора. Измените его таким образом, чтобы при просмотре модели `Page`, в таблице отображалась категория (`category`), название страницы (`name`) и `url` - так же [как и на скриншоте ниже](#fig-admin-completed). Вам нужно будет выполнить предыдущие упражнения или хотя бы изучить официальное учебное пособие по Django, чтобы выполнить это упражнение.
 
 {id="fig-admin-completed"}
-![The updated admin interface `Page` view, complete with columns for category and URL.](images/ch5-admin-completed.png)
+![Обновленный вид страницы интерфейса администратора для модели `Page` с добавленными столбцами для категории и URL.](images/ch5-admin-completed.png)
 
 T> ### Подсказки к упражнениям
-T> If you require some help or inspiration to complete these exercises done, here are some hints.
+T> Если Вам необходима помощью или стимул для выполнения этих упражнений, то мы надеемся, что эти подсказки помогут Вам.
 T> 
-T> * Modify the `Category` model by adding two `IntegerField`s: `views` and `likes`.
-T> * In your population script, you can then modify the `add_cat()` function to take the values of the  `views` and `likes`.
-T>      * You'll need to add two parameters to the definition of `add_cat()` so that `views` and `likes` values can be passed to the function, as well as a `name` for the category.
-T>      * You can then use these parameters to set the `views` and `likes` fields within the new `Category` model instance you create within the `add_cat()` function. The model instance is assigned to variable `c` in the population script, as defined earlier in this chapter. As an example, you can access the `likes` field using the notation `c.likes`. Don't forget to `save()` the instance!
-T>      * You then need to update the `cats` dictionary in the `populate()` function of your population script. Look at the dictionary. Each [key/value pairing](https://www.tutorialspoint.com/python/python_dictionary.htm) represents the *name* of the category as the key, and an additional dictionary containing additional information relating to the category as the *value*. You'll want to modify this dictionary to include `views` and `likes` for each category.
-T>      * The final step involves you modifying how you call the `add_cat()` function. You now have three parameters to pass (`name`, `views` and `likes`); your code currently provides only the `name`. You need to add the additional two fields to the function call. If you aren't sure how the `for` loop works over dictionaries, check out [this online Python tutorial](https://www.tutorialspoint.com/python/python_dictionary.htm). From here, you can figure out how to access the `views` and `likes` values from your dictionary.
-T> * After your population script has been updated, you can move on to customising the admin interface. You will need to edit `rango/admin.py` and create a `PageAdmin` class that inherits from `admin.ModelAdmin`. 
-T>      * Within your new `PageAdmin` class, add `list_display = ('title', 'category', 'url')`.
-T>      * Finally, register the `PageAdmin` class with Django's admin interface. You should modify the line `admin.site.register(Page)`. Change it to `admin.site.register(Page, PageAdmin)` in Rango's `admin.py` file.
-T>		* If you get really stuck look at our [code on github](https://github.com/leifos/tango_with_django_2/)!
+T> * Измените модель `Category`, добавив два поля `IntegerField`: `views` и `likes`.
+T> * Затем в Вашем скрипте для заполнения измените функцию `add_cat()`, чтобы она принимала значения `views` и `likes`.
+T> * Вам будет нужно добавить два параметра в определение `add_cat()`, чтобы значения `views` и `likes` могли быть переданы в функцию, а также `name` для категории.
+T> * Затем Вы можете использовать эти параметры для изменения значений полей `views` и `likes` нового экземпляра модели `Category`, которую Вы создали в функции `add_cat()`. Экземпляр модели присваивается переменной `c` в скрипте для заполнения, как было определено ранее в этой главе. Например, Вы можете получить доступ к полю `likes`, обращаясь к `c.likes`. Не забудьте сохранить экземпляр!
+T> * Затем Вам нужно обновить словарь `cats` в функции `populate()` Вашего скрипта для заполнения. Посмотрите на словарь. Каждая [пара ключ/значение](https://www.tutorialspoint.com/python/python_dictionary.htm) представляет собой *название* категории в качестве ключа и дополнительный словарь, содержащий дополнительную информацию, относящуюся к категории в качестве *значения*. Вы захотите изменить этот словарь, добавив в него `views` и `likes` для каждой категории.
+T> * Последний шаг включает в себя изменение способа вызова функции `add_cat()`. Теперь Вам нужно передавать три параметра (`name`, `views` и `likes`); Ваш код в настоящее время предоставляет только `name`. Вам следует добавить два дополнительных аргумента при вызове функции. Если Вы не уверены как работает цикл `for` со словарями, просмотрите [это онлайн-руководство по Python](https://www.tutorialspoint.com/python/python_dictionary.htm). Из него Вы сможете узнать как получить доступ к значениям `views` и `likes` из Вашего словаря.
+T> * После того как Ваш скрипт для заполнения был обновлен, Вы можете перейти к изменению интерфейса администратора. Вам нужно отредактировать файл `rango/admin.py` и создать класс `PageAdmin`, который наследуется от `admin.ModelAdmin`.
+T> * В Ваш новый класс `PageAdmin`, добавьте `list_display = ('title', 'category', 'url')`.
+T> * Наконец, зарегистрируйте класс `PageAdmin` в интерфейсе администратора Django. Вы должны отредактировать строку `admin.site.register(Page)`. Измените её на `admin.site.register(Page, PageAdmin)` в файле `admin.py` Rango.
+T> * Если у Вас возникли трудности, просмотрите наш [код на github](https://github.com/leifos/tango_with_django_2/)!
 
 > ### Тесты
 >
-> Like in the last chapter we have written tests to check if you have completed the chapter and the exercises. To check your work so far, [download the `tests.py` script](https://github.com/leifos/tango_with_django_2/blob/master/code/tango_with_django_project/rango/tests.py) from our [GitHub repository](https://github.com/leifos/tango_with_django_2/), and save it within your `rango` app directory.
+> Как и в предыдущей главе мы написали тесты, чтобы проверить насколько хорошо Вы освоили материал из этой главы и выполнили упражнения. Для проверки своей работы на данный момент, [загрузите скрипт `tests.py`](https://github.com/leifos/tango_with_django_2/blob/master/code/tango_with_django_project/rango/tests.py) из нашего [GitHub репозитория](https://github.com/leifos/tango_with_django_2/) и сохраните его в каталоге приложения `rango`.
 >
-> Un-comment the Chapter 5 related tests.
-> To run the tests, issue the following command in the terminal or Command Prompt.
+> Раскомментируйте тесты, связанные с главой 5.
+> Для запуска тестов, введите следующую команду в терминале или командной строке.
 >
 > {lang="text",linenos=off}
 >     $ python manage.py test rango
 >
-> If you are interested in learning about automated testing, now is a good time to check out the [chapter on testing](#chapter-testing). The chapter runs through some of the basics on how you can write tests to automatically check the integrity of your code.
+> Если Вас заинтересовали возможности автоматизированного тестирования, сейчас самое время просмотреть [главу, посвященную тестированию](#chapter-testing). В этой главе рассматриваются некоторые основные принципы написания тестов для автоматической проверки целостности вашего кода.

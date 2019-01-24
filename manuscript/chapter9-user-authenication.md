@@ -1,18 +1,18 @@
-# User Authentication {#chapter-user}
-Most web applications ask users to sign up and register - so that they can manage their account and have access to special features. For Rango, we want to control what actions are available to different users. So the aim of this next part of the tutorial is to get you familiar with the user authentication mechanisms provided by Django. We'll be using the `auth` app provided as part of a standard Django installation, located in package `django.contrib.auth`. According to the [Django  documentation on authentication](https://docs.djangoproject.com/en/2.0/topics/auth/), the application provides the following concepts and functionality.
+# Аутентификация пользователя {#chapter-user}
+Большинство веб-приложений просят пользователей зарегистрироваться, чтобы они могли управлять своей учетной записью и иметь доступ к специальным функциям. Для Rango мы хотим контролировать, какие действия доступны для разных пользователей. Таким образом, цель этой следующей части учебного пособия - познакомить вас с механизмами аутентификации пользователей, предоставляемыми Django. Мы будем использовать приложение `auth`, предоставляемое как часть стандартной установки Django, расположенное в пакете `django.contrib.auth`. Согласно [документации Django по аутентификации](https://docs.djangoproject.com/en/2.0/topics/auth/), приложение предоставляет следующие функциональные возможности.
 
-- The concept of a *User* and the *User* Model.
-- *Permissions*, a series of binary flags (e.g. yes/no) that determine what a user may or may not do.
-- *Groups*, a method of applying permissions to more than one user.
-- A configurable *password hashing system*, a must for ensuring data security.
-- *Forms and view tools for logging in users*, or restricting content.
+- Понятие *Пользователь* (User) и модель *Пользователь* (User).
+- *Права доступа* (Permissions), ряд двоичных флагов (например, да/нет), которые определяют что пользователь делать, а что нет.
+- *Группы* (Groups), способ назначить права доступа сразу нескольким пользователям.
+- Настраиваемая *система хеширования паролей*, неотъемлемая часть системы для обеспечения безопасности данных.
+- *Формы и представления для входа пользователей в систему*, или ограничивающие доступ к содержимому сайта.
 
-There's lots that Django can do for you regarding user authentication. In this chapter, we'll be covering the basics to get you started. This will help you build your confidence with the available tools and their underlying concepts. Note that we'll be showing you how to set up the user authentication manually, from first principles using Django, but in a later chapter we will show you how we can use a pre-made application that handles the registeration process for us.
+Многое Django может сделать за Вас при аутентификации пользователя. В этой главе мы рассмотрим основы, чтобы Вам было с чего начать изучение. Это поможет Вам уверенно работать с доступными инструментами и лежащими в их основе понятиями. Обратите внимание, что мы покажем вам, как настроить аутентификацию пользователя вручную с чистого листа, используя Django, но в следующей главе мы будем использовать готовое приложение, которое будет осуществлять процесс регистрации за нас.
+ 
+## Настройка аутентификации
+Перед тем как начать работать с приложением аутентификации Django, необходимо проверить настройки в файле settings.py Вашего Rango проекта.
 
-## Setting up Authentication
-Before you can begin to play around with Django's authentication offering, you'll need to make sure that the relevant settings are present in your Rango project's `settings.py` file.
-
-Within the `settings.py` file find the `INSTALLED_APPS` list and check that `django.contrib.auth` and `django.contrib.contenttypes` are listed, so that it looks similar to the code below:
+В файле settings.py найдите кортеж INSTALLED_APPS и проверьте, что `django.contrib.auth` и `django.contrib.contenttypes` находятся внутри него, он должен выглядеть примерно, как показано ниже:
 
 {lang="python",linenos=off}
 	INSTALLED_APPS =[
@@ -25,9 +25,9 @@ Within the `settings.py` file find the `INSTALLED_APPS` list and check that `dja
 	    'rango',
 	]
 
-While `django.contrib.auth` provides Django with access to the provided authentication system, the package `django.contrib.contenttypes` is used by the authentication app to track models installed in your database.
+В то время как `django.contrib.auth` обеспечивает Django доступ к системе аутентификации, пакет `django.contrib.contenttypes` используется приложением аутентификации для отслеживания моделей, установленных в Вашей базе данных.
 
-I> ### Migrate, if necessary!
+I> ### Осуществите миграцию, если это необходимо!
 I> If you had to add `django.contrib.auth` and `django.contrib.contenttypes` applications to your `INSTALLED_APPS` tuple, you will need to update your database with the `$ python manage.py migrate` command. This will add the underlying tables to your database e.g. a table for the `User` model.
 I>
 I> It's generally good practice to run the `migrate` command whenever you add a new app to your Django project - the app could contain models that'll need to be synchronised to your underlying database.

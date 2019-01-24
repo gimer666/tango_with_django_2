@@ -1,39 +1,37 @@
-#Forms {#chapter-forms}
-As part of the Rango application, we will want to capture new categories and new pages from users. So
-in this chapter, we will run through how to capture data through web forms. Django comes with some neat form handling functionality, making it a pretty straightforward process to collect information from users and save it to the database via the models. According to [Django's documentation on forms](https://docs.djangoproject.com/en/2.0/topics/forms/), the form handling functionality allows you to:
+# Работа с формами {#chapter-forms}
+В приложении Rango мы хотим, чтобы у пользователей была возможность создавать новые категории и страницы. Поэтому в этой главе мы рассмотрим процесс сбора данных с помощью веб форм. В Django по умолчанию уже встроен некоторый удобный функционал для обработки форм, что упрощает процесс сбора информации от пользователей и сохранения её в базе данных с помощью моделей. В соответствии с [документацией Django по формам](https://docs.djangoproject.com/en/2.0/topics/forms/), функционал для работы с формами позволяет Вам:
 
-1.  display an HTML form with automatically generated *form widgets*
-    (like a text field or date picker);
-2.  check submitted data against a set of validation rules;
-3.  redisplay a form in case of validation errors; and
-4.  convert submitted form data to the relevant Python data types.
+1.  выводить HTML форму с автоматически генерируемыми *виджетами форм* (такими как текстовое поле или поле для выбора даты);
+2.  проверять посланные данные, используя набор правил для проверки;
+3.  повторно отображать форму в случае ошибок при проверке; а также
+4.  преобразовать отправленные данные формы в соответствующие типы данных языка Python.
 
-One of the major advantages of using Django's forms functionality is that it can save you a lot of time and hassle creating the HTML forms. 
+Одно из главных преимуществ использования Django функционала для работы с формами заключается в большой экономии времени и избавление от рутинной работы по созданию HTML форм. 
 
-## Basic Workflow
-The basic steps involved in creating a form and handling user input is as follows.
+## Основная последовательность действий
+Ниже приведены основные этапы, необходимые для создания формы и обработки данных, введенных пользователем.
 
-1. If you haven't already got one, create a `forms.py` file within your Django application's directory to store form-related classes.
-2. Create a `ModelForm` class for each model that you wish to represent as a form.
-3. Customise the forms as you desire.
-4. Create or update a view to handle the form 
-	 - including *displaying* the form, 
-	 - *saving* the form data, and 
-	 - *flagging up errors* which may occur when the user enters incorrect data (or no data at all) in the form.
-5. Create or update a template to display the form.
-6. Add a `urlpattern` to map to the new view (if you created a newone).
+1. Если Вы ещё этого не сделали этого, то создайте файл `forms.py` в каталоге Вашего приложения Django для хранения классов, связанных с формой.
+2. Создайте класс `ModelForm` для каждой модели, которая должна быть представлена в виде формы.
+3. Настройте форму по Вашему усмотрению.
+4. Создайте или измените представление, которое будет обрабатывать данные формы
+	 - включая *отображение* формы, 
+	 - *сохранение* данных формы, и 
+	 - *сигнализацию ошибок*, которые могут возникать, когда пользователь ввел неправильные данные (или вообще не ввел данные) в форму.
+5. Создайте или измените шаблон для отображения формы.
+6. Добавьте `URL шаблон` для сопоставления новому представлению (если Вы создали новое).
 
-This workflow is a bit more complicated than previous workflows, and the views that we have to construct have a lot more complexity as well. However, once you undertake the process a few times it will be pretty clear how everything pieces together.
+Эта последовательность действий немного сложнее, чем предыдущие, и представления, которые мы будем создавать также гораздо более сложные. Однако, как только Вы повторите процесс несколько раз, Вам станет понятно как всё работает.
 
-##Page and Category Forms
-Here, we will implement the necessary infrastructure that will allow users to add categories and pages to the database via forms.
+## Формы для страницы и категории
+Здесь мы реализуем необходимую инфраструктуру, которая позволит пользователям добавлять категории и страницы в базу данных с помощью форм.
 
-First, create a file called `forms.py` within the `rango` application directory. While this step is not absolutely necessary (you could put the forms in the `models.py`), this makes your codebase tidier and easier to work with.
+Сначала создадим файл под названием `forms.py` в каталоге приложения `rango`. Хотя этот шаг не является обязательным (Вы можете хранить формы в `models.py`), это деляет код чище и с ним проще работать.
 
-### Creating `ModelForm` Classes {#section-forms-pagecategory-modelform}
-Within Rango's `forms.py` module, we will be creating a number of classes that inherit from Django's `ModelForm`. In essence, [a `ModelForm`](https://docs.djangoproject.com/en/2.0/topics/forms/modelforms/#modelform) is a *helper class* that allows you to create a Django `Form` from a pre-existing model. As we've already got two models defined for Rango (`Category` and `Page`), we'll create `ModelForms` for both.
+### создание классов `ModelForm` {#section-forms-pagecategory-modelform}
+В модуле Rango `forms.py` мы создадим несколько классов, которые наследуются от класса Django `ModelForm`. По существу, [`ModelForm`](https://docs.djangoproject.com/en/2.0/topics/forms/modelforms/#modelform) - это *вспомогательный класс*, который позволяет Вам создавать Django `форму` из уже существующей модели. Поскольку у нас уже есть две модели, определенные для Rango (`Category` и `Page`), мы создадим `ModelForms` для обоих.
 
-In `rango/forms.py` add the following code.
+В `rango/forms.py` добавьте следующий код.
 
 {lang="python",linenos=on}
 	from django import forms
@@ -46,9 +44,9 @@ In `rango/forms.py` add the following code.
 	    likes = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
 	    slug = forms.CharField(widget=forms.HiddenInput(), required=False)
 	    
-	    # An inline class to provide additional information on the form.
+	    # Вложенный класс позволяющий задавать дополнительную информацию о форме.
 	    class Meta:
-	        # Provide an association between the ModelForm and a model
+	        # Создаем связь между ModelForm и моделью
 	        model = Category
 	        fields = ('name',)
 	
@@ -60,90 +58,90 @@ In `rango/forms.py` add the following code.
 	    views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
 	    
 	    class Meta:
-	        # Provide an association between the ModelForm and a model
+	        # Создаем связь между ModelForm и моделью
 	        model = Page
 	        
-	        # What fields do we want to include in our form?
-	        # This way we don't need every field in the model present.
-	        # Some fields may allow NULL values, so we may not want to include them.
-	        # Here, we are hiding the foreign key.
-	        # we can either exclude the category field from the form,
+	        # Какие поля мы хотим добавить в нашу форму?
+	        # Нам не обязательно добавлять каждое поле, существующее в модели.
+	        # Некоторые поля могут иметь значения NULL, поэтому мы не захотим добавлять их...
+	        # Здесь мы скрываем внешний ключ.
+	        # Мы можем либо исключить поле category из формы
 	        exclude = ('category',)
-	        # or specify the fields to include (i.e. not include the category field)
+	        # либо указать поля, которые надо в неё добавить (т. е., не добавлять поле category)
 	        #fields = ('title', 'url', 'views')
 
-We need to specify which fields are included on the form, via `fields`, or specify which fields are to be excluded, via `exclude`.
+Нам нужно указать какие поля должны быть добавлены в форму с помощью атрибута `fields` или указать какие поля следует исключить с помощью атрибута `exclude`.
 
-Django provides us with a number of ways to customise the forms that are created on our behalf. In the code sample above, we've specified the widgets that we wish to use for each field to be displayed. For example, in our `PageForm` class, we've defined `forms.CharField` for the `title` field, and `forms.URLField` for `url` field. Both fields provide text entry for users. Note the `max_length` parameters we supply to our fields - the lengths that we specify are identical to the maximum length of each field we specified in the underlying data models. Go back to the [chapter on models](#chapter-models-databases) to check for yourself, or have a look at Rango's `models.py` file.
+Django предоставляет нам несколько способов настройки созданных форм. В вышеприведенном примере кода, мы определили виджеты, которые мы хотим использовать для каждого отображаемого поля. Например, в нашем классе `PageForm` мы определили `forms.CharField` для поля `title` и `forms.URLField` для поля `url`. Оба поля позволяют вводить текстовые данные пользователям. Обратите внимание, что параметры `max_length` , передаваемые нашим полям совпадают с максимальной длиной каждого поля, которые мы определили в моделях данных, лежащих в их основе. Вернитесь к [главе, посвященной моделям](#chapter-models-databases), чтобы освежить информацию в памяти или просмотрите файл Rango `models.py`.
 
-You will also notice that we have included several `IntegerField` entries for the views and likes fields in each form. Note that we have set the widget to be hidden with the parameter setting `widget=forms.HiddenInput()`, and then set the value to zero with `initial=0`. This is one way to set the field to zero by default. And since the fields will be hidden the user won't be able to enter a value for these fields.
+Вы также заметите, что мы добавили несколько `IntegerField`, определяющих количество просмотров и лайков в каждой форме. Заметьте, что мы создали виджет скрытым с параметром `widget=forms.HiddenInput()` и затем установили значение равное нулю с помощью `initial=0`. Это один из способов установить поле равным нулю по умолчанию. И поскольку поля будут скрыты, пользователь не сможет ввести значение для этих полей.
 
-However, as you can see in the `PageForm`, despite the fact that we have a hidden field, we still need to include the field in the form. If in `fields` we excluded `views`, then the form would not contain that field (despite it being specified) and so the form would not return the value zero for that field. This may raise an error depending on how the model has been set up. If in the model we specified that the `default=0` for these fields then we can rely on the model to automatically populate field with the default value - and thus avoid a `not null` error. In this case, it would not be necessary to have these hidden fields. We have also included the field `slug` in the `CategoryForm`, and set it to use the `widget=forms.HiddenInput()`, but rather than specifying an initial or default value, we have said the field is not required by the form. This is because our model will be responsible on `save()` for populating this field. Essentially, you need to be careful when you define your models and forms to make sure that the form is going to contain and pass on all the data that is required to populate your model correctly.
+Тем не менее, как видно в `PageForm`, несмотря на то, что у нас есть скрытое поле, нам все равно необходимо добавить поле в форму. Если в `fields` мы исключили `views`, то форма не будет содержать поле (даже если мы его определили) и поэтому форма не будет возвращать нулевое значение для этого поля. Это может привести к ошибке в зависимости от того как была создана модель. Если в моделях мы указали, что `default=0` для этих полей, то мы можем рассчитывать на то, что модель автоматически заполнит поле значением по умолчанию - и таким образом удастся избежать ошибки `not null`. В этом случае, не обязательно задавать эти скрытые поля. Мы также добавили поле `slug` в `CategoryForm` и настроили её, чтобы она использовала `widget=forms.HiddenInput()`, но вместо того, чтобы указывать начальное значение или значение по умолчанию, мы прописали, что поле не требуется для формы. Это связано с тем, что при сохранении формы `save()` наша модель будет отвечать за заполнение этого поля. Это означает, что необходимо быть осторожным при определении Ваших моделей и форм, убеждаясь, что форма содержит и передаёт все данные, которые требуются для правильного заполнения Вашей модели.
 
-Besides the `CharField` and `IntegerField` widgets, many more are available for use. As an example, Django provides `EmailField` (for e-mail address entry), `ChoiceField` (for radio input buttons), and `DateField` (for date/time entry). There are many other field types you can use, which perform error checking for you (e.g. *is the value provided a valid integer?*). 
+Кроме виджетов `CharField` и `IntegerField` доступны и другие для использования. Например, в Django существует `EmailField` (для ввода адреса e-mail), `ChoiceField` (для радиокнопок) и `DateField` (для ввода даты/времени). Существует много других типов полей, которые Вы можете использовать, осуществляющие проверку на ошибки введенных данных за Вас (например, *действительно ли введенное значение является целым числом?*).
 
-Perhaps the most important aspect of a class inheriting from `ModelForm` is the need to define *which model we're wanting to provide a form for.* We take care of this through our nested `Meta` class. Set the `model` attribute of the nested `Meta` class to the model you wish to use. For example, our `CategoryForm` class has a reference to the `Category` model. This is a crucial step enabling Django to take care of creating a form in the image of the specified model. It will also help in handling flagging up any errors along with saving and displaying the data in the form.
+Возможно наиболее важной особенностью класса, наследуемого от `ModelForm`, является необходимость определять *для какой модели мы хотим создать форму*. Мы определяем это в нашем вложенном классе `Meta`. Присвойте атрибуту `model` вложенного класса `Meta` модель, которую Вы хотите использовать. Например, наш класс `CategoryForm` содержит ссылку на модель `Category`. Этот важный шаг позволяет Django создать форму на основе указанной модели. Это также поможет при сигнализации любых ошибок, сохранении и отображении данных в форме.
 
-We also use the `Meta` class to specify which fields that we wish to include in our form through the `fields` tuple. Use a tuple of field names to specify the fields you wish to include.
+Мы также использовали класс `Meta`? чтобы определить какие поля мы хотим включить в нашу форму с помощью кортежа `fields`. Используйте кортеж c названиями полей, чтобы указать поля, которые Вы хотите в форму.
 
-I> ###More about Forms
+I> ### Более подробная информация о формах
 I>
-I> Check out the [official Django documentation on forms](https://docs.djangoproject.com/en/2.0/ref/forms/) for further information about the different widgets and how to customise forms.
+I> Ознакомтесь с [официальной документацией Django о формах](https://docs.djangoproject.com/en/2.0/ref/forms/) для получения дополнительной информации о различных виджетах и о том, как настраивать формы.
 
-### Creating an *Add Category* View {#section-forms-addcategory}
+### Создание представления *Добавить категорию (Add Category)* {#section-forms-addcategory}
 
-With our `CategoryForm` class now defined, we're now ready to create a new view to display the form and handle the posting of form data. To do this, add the following code to `rango/views.py`.
+Теперь когда определен наш класс `CategoryForm`, мы готовы создать новое представление для отображения формы и обработки введенных в форму данных. Для этого добавьте следующий код в `rango/views.py`.
 
 {lang="python",linenos=off}
-	#Add this import at the top of the file
+	# Добавьте этот импорт в начало файла
 	from rango.forms import CategoryForm
 	...
 	def add_category(request):
 	    form = CategoryForm()
 	    
-	    # A HTTP POST?
+	    # HTTP POST?
 	    if request.method == 'POST':
 	        form = CategoryForm(request.POST)
 	        
-	        # Have we been provided with a valid form?
+	        # Все поля формы были заполнены правильно?
 	        if form.is_valid():
-	            # Save the new category to the database.
+	            # Сохранить новую категорию в базе данных.
 	            form.save(commit=True)
-	            # Now that the category is saved
-	            # We could give a confirmation message
-	            # But since the most recent category added is on the index page
-	            # Then we can direct the user back to the index page.
+	            # Теперь, когда категория сохранена
+	            # Мы могли бы выдать подтверждающее сообщение
+	            # Но поскольку последня добавленная категория находится на странице index,
+	            # то мы можем перенаправить пользователя обратно на страницу index.
 	            return index(request)
 	        else:
-	            # The supplied form contained errors -
-	            # just print them to the terminal.
+	            # Обрабатываемая форма содержит ошибки -
+	            # просто выводим их в терминал.
 	            print(form.errors)
 	    
-	    # Will handle the bad form, new form, or no form supplied cases.
-	    # Render the form with error messages (if any).
+	    # Обработка ситуаций, когда форма содержит неправильную информацию, когда нужно вывести новую форму или когда форма не была получена.
+	    # Вывести форму с сообщениями об ошибках (если они были).
 	    return render(request, 'rango/add_category.html', {'form': form})
 
-The new `add_category()` view adds several key pieces of functionality for handling forms. First, we create a CategoryForm(), then we check if the HTTP request was a `POST` i.e. if the user submitted data via the form.  We can then handle the `POST` request through the same URL. The `add_category()` view function can handle three different scenarios:
+Новое представление `add_category()` добавляет несколько ключевых элементов функциональности для обработки форм. Во-первых, мы создаём CategoryForm(), затем проверяем был ли HTTP метод запроса `POST`,т. е. отправлял ли пользователь данные через форму. Затем мы можем обработать `POST` запрос приходящий на тот же URL-адрес. Функция-представление `add_category()` может работать в трех различных режимах:
 
-- showing a new, blank form for adding a category;
-- saving form data provided by the user to the associated model, and rendering the Rango homepage; and
-- if there are errors, redisplay the form with error messages.
+- показывать новую, пустую форму для добавления категории;
+- сохранять данные формы, введенные пользователем в соответствующую модель, и выдавать главную страницу Rango; и
+- если возникли ошибки, повторно отображать форму с сообщениями об ошибках.
 
-I> ### `GET` and `POST`
+I> ### `GET` и `POST`
 I>
-I> What do we mean by `GET` and `POST`? They are two different types of *HTTP requests*.
+I> Что мы имеем в виду под  `GET` и `POST`? Существует два различных типа *HTTP запросов*.
 I>
-I> - A HTTP `GET` is used to *request a representation of the specified resource.* In other words, we use a HTTP `GET` to retrieve a particular resource, whether it is a webpage, image or other file.
-I> - In contrast, a HTTP `POST` *submits data from the client's web browser to be processed.* This type of request is used for example when submitting the contents of a HTML form.
-I> - Ultimately, a HTTP `POST` may end up being programmed to create a new resource (e.g. a new database entry) on the server. This can later be accessed through a HTTP `GET` request.
-I> - Check out the [w3schools page on `GET` vs. `POST`](http://www.w3schools.com/tags/ref_httpmethods.asp) for more details.
+I> - HTTP `GET` используется для *запроса содержимого указанного ресурса.* Другими словами, мы используем HTTP `GET` для получения конкретного ресурса, например, веб страницы, изображения или другого файла.
+I> - Напротив, HTTP `POST` *применяется для передачи данных веб браузера клиента.* Этот тип запроса используется, например, при отправке содержимого HTML формы.
+I> - Наконец, HTTP `POST` может использоваться для создания нового ресурса (например, новой записи в базе данных) на сервере. В дальнейшем к ней можно получить доступ через HTTP `GET` запрос.
+I> - Посетите [w3schools страницу `GET` vs. `POST`](http://www.w3schools.com/tags/ref_httpmethods.asp) для получения более подробной информации.
 
-Django's form handling machinery processes the data returned from a user's browser via a HTTP `POST` request. It not only handles the saving of form data into the chosen model, but will also automatically generate any error messages for each form field (if any are required). This means that Django will not store any submitted forms with missing information that could potentially cause problems for your database's [referential integrity](https://en.wikipedia.org/wiki/Referential_integrity). For example, supplying no value in the `category` name field will return an error, as the field cannot be blank.
+Механизм обработки форм Django обрабатывает данные, возвращаемые из браузера пользователя, через HTTP `POST` запрос. Он не только обрабатывает сохранение данных формы в выбранную модель, но также автоматически генерирует любые сообщения об ошибках для каждого поля формы (если они необходимы). Это означает, что Django не будет сохранять отправленные формы с отсутствующей информацией, что может потенциально привести к проблемам [ссылочной целостности](https://en.wikipedia.org/wiki/Referential_integrity) Вашей базы данных. Например, если не ввести значение в поле с названием категории, то это приведет к ошибке, так как поле не может быть пустым.
 
-You'll notice from the line in which we call `render()` that we refer to a new template called `add_category.html`. This will contain the relevant Django template code and HTML for the form and page.
+Обратите внимание, что в строке, где мы вызываем `render()`, мы ссылаемся на новый шаблон с именем `add_category.html`. Он будет содержать соответствующий код шаблона Django и HTML-код для формы и страницы.
 
-### Creating the *Add Category* Template
-Create the file `templates/rango/add_category.html`. Within the file, add the following HTML markup and Django template code.
+### Создание шаблона *Добавить категорию (Add Category)*
+Создайте файл `templates/rango/add_category.html`. В файл добавьте следующую HTML разметку и код шаблона Django.
 
 {lang="html",linenos=on}
 	<!DOCTYPE html>
@@ -171,21 +169,21 @@ Create the file `templates/rango/add_category.html`. Within the file, add the fo
 	    </body>
 	</html>
 
-You can see that within the `<body>` of the HTML page we placed a `<form>` element. Looking at the attributes for the `<form>` element, you can see that all data captured within this form is sent to the URL `/rango/add_category/` as a HTTP `POST` request (the `method` attribute is case insensitive, so you can do `POST` or `post` - both provide the same functionality). Within the form, we have two for loops:
+Как видно из кода, внутри тега `<body>` HTML страницы мы поместили элемент `<form>`. Посмотрев на атрибуты элемента `<form>` видно, что все данные, введенные в эту форму, будут отправляться на URL `/rango/add_category/` в виде HTTP POST запроса (атрибут `method` не чувствителен к регистру, поэтому Вы можете ввести `POST` или `post` - что приведет к одному и тому же результату). Внутри формы выполняются два цикла:
 
-- one controlling *hidden* form fields, and
-- the other *visible* form fields. 
+- один для *скрытых* полей формы, а
+- другой для *видимых* полей формы.
 
-The visible fields i.e. those that will be displayed to the user, are controlled by the `fields` attribute within your `ModelForm` `Meta` class.  These loops produce HTML markup for each form element. For visible form fields, we also add in any errors that may be present with a particular field and help text that can be used to explain to the user what he or she needs to enter.
+Видимые поля, то есть те, которые будут отображаться пользователю, задаются атрибутом `fields` вложенного класса `Meta` Вашего класса `ModelForm`. Эти циклы создают HTML разметку для каждого элемента формы. Для видимых полей формы мы также добавляем любые ошибки, которые могут возникать для конкретного поля и вспомогательный текст, который может использоваться, чтобы объяснить пользователю, что он или она должны ввести.
 
-I> ### Hidden Fields
-I> The need for hidden as well as visible form fields is necessitated by the fact that HTTP is a stateless protocol. You can't persist state between different HTTP requests that can make certain parts of web applications difficult to implement. To overcome this limitation, hidden HTML form fields were created which allow web applications to pass important information to a client (which cannot be seen on the rendered page) in a HTML form, only to be sent back to the originating server when the user submits the form.
+I> ### Скрытые поля
+I> Необходимость скрытых и видимых полей обусловлена тем, что HTTP - это протокол, не сохраняющий своего состояния. Вы не можете сохранять состояние между различными HTTP-запросами, что может усложнить реализацию определенных частей веб приложений. Для решения этой проблемы, создаются скрытые поля HTML формы, которые позволяют веб приложениям передавать важную информацию клиенту (не видимую на выдаваемой странице) в HTML форме, только чтобы послать её обратно серверу, когда пользователь отправит форму.
 
-I> ### Cross Site Request Forgery Tokens
-I> You should also take note of the code snippet `{% csrf_token %}`. This is a *Cross-Site Request Forgery (CSRF) token*, which helps to protect and secure the HTTP `POST` action that is initiated on the subsequent submission of a form. *The Django framework requires the CSRF token to be present. If you forget to include a CSRF token in your forms, a user may encounter errors when he or she submits the form.* Check out the [official Django documentation on CSRF tokens](https://docs.djangoproject.com/en/2.0/ref/csrf/) for more information about this.
+I> ### Токены защиты от межсайтовой подделки запроса
+I> Также обратите внимание на фрагмент кода `{% csrf_token %}`. Это *токен защиты от межсайтовой подделки запроса*, который используется для защиты и безопасного HTTP  `POST` запроса, который создается после отправки данных формы. *CSRF токен является обязательной составляющей форм для фреймворка Django. Если Вы забудете добавить CSRF токен в свои формы, у пользователя могут возникнуть ошибки при отправке формы*. Ознакомьтесь с [официальной документацией Django по CSRF токенам](https://docs.djangoproject.com/en/2.0/ref/csrf/) для получения дополнительной информации об этом.
 
-### Mapping the *Add Category* View
-Now we need to map the `add_category()` view to a URL. In the template we have used the URL `/rango/add_category/` in the form's action attribute. We now need to create a mapping from the URL to the View. In `rango/urls.py` modify the `urlpatterns` 
+### Сопоставление URLа представлению *Добавить категорию (Add Category)*
+Теперь необходимо сопоставить представлению `add_category()` URL. В шаблоне мы использовали URL `/rango/add_category/` в атрибуте `action` формы. Теперь нам нужно создать сопоставление для представления, используя этот URL. В `rango/urls.py` измените `urlpatterns` следующим образом:
 
 {lang="python",linenos=off}
 	urlpatterns = [
@@ -196,36 +194,36 @@ Now we need to map the `add_category()` view to a URL. In the template we have u
 	   
 	]
 
-Ordering doesn't necessarily matter in this instance. However, take a look at the [official Django documentation on how Django processes a request](https://docs.djangoproject.com/en/2.0/topics/http/urls/#how-django-processes-a-request) for more information. The URL for adding a category is `/rango/add_category/`.
+Порядок шаблонов не имеет значения в этом случае. Тем не менее, просмотрите официальную [Django документацию о том как Django обрабатывает запрос](https://docs.djangoproject.com/en/2.0/topics/http/urls/#how-django-processes-a-request) для получения дополнительной информации. URL для добавления категории - это `/rango/add_category/`.
 
 <!--BREAK-->
 
-### Modifying the Index Page View
-As a final step let's put a link on the index page so that we can easily add categories. Edit the template `rango/index.html` and add the following HTML hyperlink in the `<div>` element with the about link.
+### Изменение внешнего вида главной страницы
+Наконец, давайте поместим ссылку на главной странице, чтобы мы могли легко добавлять категории. Отредактируйте шаблон 
+`rango/index.html` и добавьте следующую HTML гиперссылку в `<div>` элемент с ссылкой на страницу `about`.
 
 {lang="html",linenos=off}
 	<a href="/rango/add_category/">Add a New Category</a><br />
 	
-	
-	
-### Demo
-Now let's try it out! Start or restart your Django development server, and then point your web browser to Rango at `http://127.0.0.1:8000/rango/`. Use your new link to jump to the Add Category page, and try adding a category. The [figure below](#fig-ch7-add-cat) shows screenshots of the Add Category and Index Pages.
+### Пример работы
+Теперь давайте проверим работоспособность написанного кода! Запустите или перезапустите сервер для разработки Django, и перейдите по адресу `http://127.0.0.1:8000/rango/`. Используйте Вашу новую ссылку, чтобы перейти на страницу добавления категории и попытайтесь добавить категорию. На [рисунке ниже](#fig-ch7-add-cat) скриншоты страниц "Добавить категорию" и "Главной страницы".
 
 {id="fig-ch7-add-cat"}
->![Adding a new category to Rango with our new form.](images/ch7-add-cat.png)
+>![Добавляем новую категорию в Rango с помощью нашей новой формы.](images/ch7-add-cat.png)
 
-I> ### Missing Categories
-I> If you add a number of categories, they will not always appear on the index page. This is because we are only showing the top five categories on the index page. If you log into the Admin interface, you should be able to view all the categories that you have entered. 
+I> ### Отсутствующие категории
+I> Если Вы добавите несколько категорий, они не всегда будут отображаться на главной странице. Это связано с тем, что показываем только пять первых категорий на главной странице. Если Вы войдёте в интерфейс администратора, то сможете просмотреть все категории, которые Вы ввели.
 I> 
-I> Another way to get some confirmation that the category is being added is to update the `add_category()` method in `rango/views.py` and change the line  `form.save(commit=True)` to be `cat = form.save(commit=True)`. This will give you a reference to an instance of the category object created by the form. You can then print the category to console (e.g. `print(cat, cat.slug)` ).
+I> Другой способ проверить, что категория была добавлена - обновить метод `add_category()` в `rango/views.py` и 
+изменить строку `form.save(commit=True)` на `cat = form.save(commit=True)`. В переменной `cat` будет храниться ссылка на экземпляр объекта категории, созданной формой. После этого Вы можете вывести категорию в консоль (например, `print(cat, cat.slug)`).
 
-### Cleaner Forms
-Recall that our `Page` model has a `url` attribute set to an instance of the `URLField` type. In a corresponding HTML form, Django would reasonably expect any text entered into a `url` field to be a correctly formatted, complete URL. However, users can find entering something like `http://www.url.com` to be cumbersome - indeed, users [may not even know what forms a correct URL](https://support.google.com/webmasters/answer/76329?hl=en)!
+### Проверяем данные формы
+Вспомним, что наша модель `Page` имеет атрибут `url`, который является экземпляром типа `URLField`. В соответствующей HTML форме, Django будет ожидать, что текст введенный в поле `url` будет правильно отформатированным, полным URL. Однако пользователи могут полениться вводить что-то на подобии `http://www.url.com` - на самом деле пользователи [могут даже не знать, что должен включать в себя правильный URL](https://support.google.com/webmasters/answer/76329?hl=en)!
 
-I> ### URL Checking
-I> Most modern browsers will now check to make sure that the URL is well-formed for you, so this example will only work on older browsers. However, it does show you how to clean the data before you try to save it to the database. If you don't have an old browser to try this example (in case you don't believe it), try changing the `URLField` to a `CharField`. The rendered HTML will then not instruct the browser to perform the checks on your behalf, and the code you implemented will be executed.
+I> ### Проверка URL
+I> Большинство современных браузеров теперь проверяют правильность URL-адреса, поэтому этот пример будет работать только в старых браузерах. Тем не менее, он показывает, как отфильтровать данные прежде чем пытаться сохранить их в базе данных. Если у вас нет старого браузера, чтобы проверить работу этого примера (если Вы не верите нам), попробуйте изменить `URLField` на `CharField`. Генерируемый HTML-код теперь не будет указывать браузеру осуществлять проверку и выполнится код, который Вы реализовали.
 
-In scenarios where user input may not be entirely correct, we can *override* the `clean()` method implemented in `ModelForm`. This method is called upon before saving form data to a new model instance, and thus provides us with a logical place to insert code which can verify - and even fix - any form data the user inputs. We can check if the value of `url` field entered by the user starts with `http://` - and if it doesn't, we can prepend `http://` to the user's input.
+В случае, когда ввод от пользователя может быть не правильным, мы можем *переопределить* метод `clean()` в `ModelForm`. Этот метод вызывается перед сохранением данных формы в новый экземпляр модели и таким образом является логическим местом для вставки кода, который может проверить - и даже исправить - любые данные, которые пользователь ввел в форму. Мы можем проверить начинается ли значение, введенное пользователем в поле `url` с `http://` - и если нет - вставить `http://` перед значением введенным пользователем.
 
 {lang="python",linenos=off}
 	class PageForm(forms.ModelForm):
@@ -234,45 +232,45 @@ In scenarios where user input may not be entirely correct, we can *override* the
 	        cleaned_data = self.cleaned_data
 	        url = cleaned_data.get('url')
 	        
-	        # If url is not empty and doesn't start with 'http://', 
-	        # then prepend 'http://'.
+	        # Если url не пустое и не начинается с 'http://', 
+	        # вставить перед ним 'http://'.
 	        if url and not url.startswith('http://'):
 	            url = 'http://' + url
 	            cleaned_data['url'] = url
 	            
 	            return cleaned_data
 
-Within the `clean()` method, a simple pattern is observed which you can replicate in your own Django form handling code.
+Простую последовательность действий внутри метода `clean()` Вы можете повторить в своей собственной реализации кода обработки Django форм.
 
-1.  Form data is obtained from the `ModelForm` dictionary attribute `cleaned_data`.
-2.  Form fields that you wish to check can then be taken from the `cleaned_data` dictionary. Use the `.get()` method provided by the dictionary object to obtain the form's values. If a user does not enter a value into a form field, its entry will not exist in the `cleaned_data` dictionary. In this instance, `.get()` would return `None` rather than raise a `KeyError` exception. This helps your code look that little bit cleaner!
-3.  For each form field that you wish to process, check that a value was retrieved. If something was entered, check what the value was. If it isn't what you expect, you can then add some logic to fix this issue before *reassigning* the value in the `cleaned_data` dictionary.
-4.  You *must* always end the `clean()` method by returning the reference to the `cleaned_data` dictionary. Otherwise the changes won't be applied.
+1. Данные формы берутся из атрибута-словаря `cleaned_data` класса `ModelForm` dictionary attribute `cleaned_data`.
+2. После этого поля формы, которые Вы хотите проверить на правильность ввода, могут быть извлечены из словаря `cleaned_data`. Используйте `.get()` метод объекта словаря, чтобы получить значения формы. Если пользователь не ввел значение в поле формы, его не будет существовать в словаре `cleaned_data`. В этом случае метод `.get()` вернет `None`, а не вызовет исключение `KeyError`. Это упростит Ваш код!
+3. Проверьте, что для каждого поля формы, которое Вы хотите обработать, было получено значение. Если что-то было введено, проверьте что именно. Если это не то, что Вы ожидаете, добавьте логику для исправления этой ошибки, прежде чем переопределить значение в словаре `cleaned_data` для данного поля.
+4. Вы *всегда должны* заканчивать метод `clean()`, возвращая ссылку на словарь `cleaned_data`. в противном случае, внесенные изменения не сохранятся.
 
-This trivial example shows how we can clean the data being passed through the form before being stored. This is pretty handy, especially when particular fields need to have default values - or data within the form is missing, and we need to handle such data entry problems.
+Этот простой пример показывает, как мы можем проверить данные, передаваемые с помощью формы, перед тем как сохранить их. Это очень удобно, особенно, когда определенные поля должны иметь значения по умолчанию - или в форме отсутствуют данные и поэтому нам необходимо решать такие проблемы с введенными данными.
 
-I> ### Clean Overrides
-I> Overriding methods implemented as part of the Django framework can provide you with an elegant way to add that extra bit of functionality for your application. There are many methods which you can safely override for your benefit, just like the `clean()` method in `ModelForm` as shown above. Check out [the Official Django Documentation on Models](https://docs.djangoproject.com/en/2.0/topics/db/models/#overriding-predefined-model-methods) for more examples on how you can override default functionality to slot your own in.
+I> ### Переопределение метода Clean
+I> Переопределение методов, реализуемое в рамках фреймворка Django является элегантным способом придать Вашему приложению дополнительные функциональные возможности. Существует множество методов, которые Вы можете безопасно и с выгодой переопределить, например, метод `clean()` в классе `ModelForm`, как показано выше. Просмотрите [официальную Django документацию по моделям](https://docs.djangoproject.com/en/2.0/topics/db/models/#overriding-predefined-model-methods) где приведено больше примеров о том, как Вы можете переопределить функционал, реализуемый по умолчанию, своим собственным.
 
-X> ###Exercises
-X> Now that you've worked through the chapter, consider the following questions, and how you could solve them.
+X> ### Упражнения
+X> Теперь, когда Вы ознакомились с материалом этой главы, прочитайте следующие вопросы и подумайте как бы Вы ответили на них.
 X> 
-X> - What would happen if you don't enter in a category name on the add category form?
-X> - What happens when you try to add a category that already exists?
-X> - What happens when you visit a category that does not exist? A hint for a potential solution to solving this problem can be found below.
-X> - In the [section above where we implemented our `ModelForm` classes](#section-forms-pagecategory-modelform), we repeated the `max_length` values for fields that we had previously defined in [the models chapter](#chapter-models-databases). This is bad practice as we are *repeating ourselves!* How can you refactor your code so that you are *not* repeating the `max_length` values?
-X> - If you have not done so already undertake [part four of the official Django Tutorial](https://docs.djangoproject.com/en/2.0/intro/tutorial04/) to reinforce what you have learnt here.
-X> - Now let users add pages to each category, see below for some example code and hints.
+X> - Что произойдет, если Вы не введете название категории в форму для добавления категории?
+X> - Что произойдет, если Вы попытаетесь добавить категорию. которая уже существует?
+X> - Что произойдет, если Вы перейдете по адресу категории, которой не существует? Подсказка для потенциального решения этой проблемы приведена ниже.
+X> - В [разделе, где мы реализовали наши классы `ModelForm`](#section-forms-pagecategory-modelform), мы повторно вводили значения `max_length` для полей, которые ранее определили в [главе, посвященной моделям](#chapter-models-databases). Это плохая практика, поскольку мы *дублируем код*! Как можно реорганизовать этот код, чтобы *не* повторять ввод значений `max_length`?
+X> - Если Вы этого еще не сделали, прочитайте четвертую часть [официального учебного пособия по Django](https://docs.djangoproject.com/en/2.0/intro/tutorial04/), чтобы закрепить то, чему Вы здесь научились.
+X> - Теперь реализуйте функционал, позволяющий пользователям добавять страницы в каждую категорию, смотри ниже примеры кода и подсказки к упражнениям.
 
-### Creating an *Add Pages* View, Template and URL Mapping {#section-forms-addpage}
-A next logical step would be to allow users to add pages to a given category. To do this, repeat the same workflow above but for adding pages.
+### Создание представления *Добавить стриницы* (Add Pages), шаблона и сопоставление URLа представлению {#section-forms-addpage}
+Следующий логический шаг - позволить пользователям добавлять страницы в заданную категорию. Для этого повторите вышеприведенную последовательность действий, но в этот раз для добавления страниц.
 
-- create a new view, `add_page()`, 
-- create a new template, `rango/add_page.html`, 
-- add a URL mapping, and
-- update the category page/view to provide a link from the category add page functionality.
+- создайте новое представление, `add_page()`, 
+- создайте новый шаблон, `rango/add_page.html`, 
+- добавьте URL сопоставление и
+- обновите страницу категории/представление, добавив ссылку на функционал для добавления страницы на страницу категории.
 
-To get you started, here is the code for the `add_page()` view function.
+Чтобы помочь Вам, ниже показан код фукнции-представления `add_page()`.
 
 {lang="python",linenos=off}
 	from rango.forms import PageForm
@@ -300,14 +298,14 @@ To get you started, here is the code for the `add_page()` view function.
 	    return render(request, 'rango/add_page.html', context_dict)
 
 
-T> ### Hints
-T> To help you with the exercises above, the following hints may be of some use to you.
+T> ### Подсказки к упражнениям
+T> Следующие подсказки могут помочь Вам при решении вышеприведенных упражнений.
 T>
-T> - In the `add_page.html` template you can access the slug with ``{{ category.slug }}`` because the view passes the `category` object through to the template via the context dictionary.
-T> - Ensure that the link only appears when *the requested category exists* - with or without pages. i.e. in the template check with `{% if cat %} .... {% else %} A category by this name does not exist {% endif %}`.
-T> - Update Rango's `category.html` template with a new hyperlink with a line break immediately following it: `<a href="/rango/category/{{category.slug}}/add_page/">Add Page</a> <br/>`
-T> - Make sure that in your `add_page.html` template that the form posts to `/rango/category/{{ category.slug }}/add_page/`.
-T> - Update `rango/urls.py` with a URL mapping (`/rango/category/<category_name_slug>/add_page/`) to handle the above link.
-T> - You can avoid the repetition of `max_length` parameters through the use of an additional attribute in your `Category` class. This attribute could be used to store the value for `max_length`, and then be referenced where required.
+T> - В шаблоне `add_page.html` Вы можете получить доступ к slug с помощью ``{{ category.slug }}``, поскольку представление передает объект `category` в шаблон через словарь контекста.
+T> - Убедитесь, что ссылка появляется только тогда, когда *запрошенная категория существует* - со страницами или без, т. е. в шаблоне проверяйте `{% if cat %} .... {% else %} Категории с таким именем не существует {% endif %}`.
+T> - Обновите шаблон Rango `category.html`, добавив новую гиперссылку с разрывом строки: `<a href="/rango/category/{{category.slug}}/add_page/">Add Page</a> <br/>`
+T> - Убедитесь, что в Вашем шаблоне `add_page.html` форма отправляет данные по адресу `/rango/category/{{ category.slug }}/add_page/`.
+T> - Обновите `rango/urls.py`, добавив URL сопоставление (`/rango/category/<category_name_slug>/add_page/`) для обработки вышеприведенной ссылки.
+T> - Вы можете избежать повторения параметров `max_length`, используя дополнительный атрибут в Вашем классе `Category`. В этом атрибуте можно хранить значение для `max_length`, а затем при необходимости на него ссылаться.
 T>
-T> If you get *really* stuck, you can always check out [our code on GitHub](https://github.com/leifos/tango_with_django_2).
+T> Если у Вас *действительно* возникли трудности при выполнении упражнений, Вы всегда можете просмотреть [наш код на GitHub](https://github.com/leifos/tango_with_django_2).
