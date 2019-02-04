@@ -28,12 +28,12 @@
 В то время как `django.contrib.auth` обеспечивает Django доступ к системе аутентификации, пакет `django.contrib.contenttypes` используется приложением аутентификации для отслеживания моделей, установленных в Вашей базе данных.
 
 I> ### Осуществите миграцию, если это необходимо!
-I> If you had to add `django.contrib.auth` and `django.contrib.contenttypes` applications to your `INSTALLED_APPS` tuple, you will need to update your database with the `$ python manage.py migrate` command. This will add the underlying tables to your database e.g. a table for the `User` model.
+I> Если Вам нужно добавить приложения `django.contrib.auth` и `django.contrib.contenttypes` в Ваш кортеж `INSTALLED_APPS`, обновите Вашу базу данных с помощью команды `$ python manage.py migrate`. Это добавит необходимые таблицы в Вашу базу данных, например, таблицу для модели `User`.
 I>
-I> It's generally good practice to run the `migrate` command whenever you add a new app to your Django project - the app could contain models that'll need to be synchronised to your underlying database.
+I> Обычно рекомендуется запускать команду `migrate` каждый раз, когда Вы добавляете новое приложение в проект Django - приложение может содержать модели, которые необходимо будет синхронизировать с Вашей базой данных.
 
-## Password Hashing
-[*Storing passwords as plaintext within a database is something that should never be done under any circumstances.*](http://stackoverflow.com/questions/1197417/why-are-plain-text-passwords-bad-and-how-do-i-convince-my-boss-that-his-treasur) If the wrong person acquired a database full of user accounts to your app, they could wreak havoc. Fortunately, Django's `auth` app by default stores a [hash of user passwords](https://en.wikipedia.org/wiki/Cryptographic_hash_function) using the [PBKDF2 algorithm](http://en.wikipedia.org/wiki/PBKDF2), providing a good level of security for your user's data.  However, if you want more control over how the passwords are hashed, you can change the approach used by Django in your project's `settings.py` module, by adding in a tuple to specify the `PASSWORD_HASHERS`. An example of this is shown below.
+## Хеширование пароля
+[*Хранение паролей в открытом виде в базе данных - это то, что не следует делать ни при каких обстоятельствах.*](http://stackoverflow.com/questions/1197417/why-are-plain-text-passwords-bad-and-how-do-i-convince-my-boss-that-his-treasur) Если посторонний человек получит доступ к базе данных Вашего приложения и таблице с учетными записями пользователей, то он сможет причинить вред. К счастью, приложение `auth` по умолчанию хранит [хеш паролей пользователей](https://en.wikipedia.org/wiki/Cryptographic_hash_function), используя [алгоритм PBKDF2](http://en.wikipedia.org/wiki/PBKDF2), обеспечивая хороший уровень безопасности данных вашего пользователя. Тем не менее, если Вы хотите ещё больше контролировать то как хешируются пароли, Вы можете изменить подход, используемый Django в модуле Вашего проекта `settings.py`, добавив в кортеж переменную `PASSWORD_HASHERS`. Пример как это сделать показан ниже.
 
 {lang="python",linenos=off}
 	PASSWORD_HASHERS = (
@@ -41,9 +41,9 @@ I> It's generally good practice to run the `migrate` command whenever you add a 
 	    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 	)
 
-Django considers the order of hashers specified as important, and will pick and use the first password hasher in `PASSWORD_HASHERS` (e.g. `settings.PASSWORD_HASHERS[0]`). If other password hashers are specified in the tuple, Django will also use these if the first hasher doesn't work.
+Для Django важен порядок указанных хэшей и он выберет и будет использовать первый алгоритм хеширования в `PASSWORD_HASHERS` (т. е., `settings.PASSWORD_HASHERS[0]`). Если в кортеже указаны другие алгоритм хеширования, то Django будет их использовать, если первый алгоритм не заработает.
 
-If you want to use a more secure hasher, you can install [Bcrypt](https://pypi.python.org/pypi/bcrypt/) using `pip install bcrypt`, and then set the `PASSWORD_HASHERS` to be:
+Если Вы хотите использовать более безопасный алгоритм хеширования, Вы можете установить [Bcrypt](https://pypi.python.org/pypi/bcrypt/) с помощью команды `pip install bcrypt`, а затем присвоить `PASSWORD_HASHERS` значение:
 
 {lang="python",linenos=off}
 	PASSWORD_HASHERS = [
@@ -53,11 +53,10 @@ If you want to use a more secure hasher, you can install [Bcrypt](https://pypi.p
 	    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 	]
 
-As previously mentioned, Django by default uses the PBKDF2 algorithm to hash passwords. If you do not specify a `PASSWORD_HASHERS` tuple in `settings.py`, Django will use the `PBKDF2PasswordHasher` password hasher, by default. You can read more about password hashing in the [Django documentation on how Django stores passwords](https://docs.djangoproject.com/en/2.0/topics/auth/passwords/#how-django-stores-passwords).
+Как было сказано ранее, Django по умолчанию использует алгоритм PBKDF2 для хешировани паролей. Если Вы не укажете кортеж `PASSWORD_HASHERS` в `settings.py`, то Django будет использовать алгоритм хеширования паролей `PBKDF2PasswordHasher` по умолчанию. Узнать больше о хешировании паролей можно в [Django документации, посвященной тому как Django хранит пароли](https://docs.djangoproject.com/en/2.0/topics/auth/passwords/#how-django-stores-passwords).
 
-
-## Password Validators
-As people may be tempted to enter a password that is comparatively easy to guess, Django provides a number of [password validation](https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators) methods. In your Django project's `settings.py` module, you will notice a list of nested dictionaries with the name `AUTH_PASSWORD_VALIDATORS`. From the nested dictionaries, you can clearly see that Django 1.9 comes with a number of pre-built password validators for common password checks, such as length. An `OPTIONS` dictionary can be specified for each validator, allowing for easy customisation. If, for example, you wanted to ensure accepted passwords are at least six characters long, you can set `min_length` of the `MinimumLengthValidator` password validator to `6`. This can be seen in the example shown below.
+## Валидаторы паролей
+Поскольку взломщики могут попытаться ввести пароль, который достаточно легко угадать, Django предоставляет ряд методов для [валидации пароля](https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators). В Вашем модуле `settings.py` Django проекта, Вы увидите список вложенных словарей с названием `AUTH_PASSWORD_VALIDATORS`. Из вложенных словарей видно, что в Django 1.9 по умолчанию входит несколько встроенных средств валидации паролей для обобщенных проверок паролей, таких как длина. Для каждого валидатора может быть указан словарь `OPTIONS`, что упрощает его настройку. Например, если Вы хотите чтобы пароли имели длину не менее шести символов, Вы можете установить для параметра min_length валидатора пароля MinimumLengthValidator значение `6`. Это видно из примера показанного ниже.
 
 {lang="python",linenos=off}
 	AUTH_PASSWORD_VALIDATORS = [
@@ -68,103 +67,104 @@ As people may be tempted to enter a password that is comparatively easy to guess
 	    },
 	    ...
 	]
-	
-It is also possible to create your own password validators. Although we don't cover the creation of custom password validators in this tutorial, refer to the [official Django documentation on password validators](https://docs.djangoproject.com/en/2.0/topics/auth/passwords/#password-validation) for more information.
 
-## The `User` Model
-The `User` object (located at `django.contrib.auth.models.User`) is considered to be the core of Django's authentication system. A `User` object represents each of the individuals interacting with a Django application. The [Django documentation on User objects](https://docs.djangoproject.com/en/2.0/topics/auth/default/#user-objects) states that they are used to allow aspects of the authentication system like access restriction, registration of new user profiles, and the association of creators with site content.
+Также можно создавать свои собственные валидаторы паролей. Хотя в этом учебном пособии мы не рассматриваем вопрос создания пользовательских валидаторов паролей, обратитесь к [официальной документации Django посвященной валидаторам паролей](https://docs.djangoproject.com/en/2.0/topics/auth/passwords/#password-validation) для получения дополнительной информации.
 
-The `User` model has five key attributes. They are:
+## Модель `User`
+Объект `User` (расположенный по адресу` django.contrib.auth.models.User`) считается ядром системы аутентификации Django. Объект `User` представляет каждого человека, взаимодействующего с приложением Django. В [Django документации по объектам User](https://docs.djangoproject.com/en/2.0/topics/auth/default/#user-objects) утверждается, что они используются, чтобы реализовать такие функции системы аутентификации как ограничение прав доступа, регистрация новых пользователей и связь содержимого сайта с его автором.
 
--   the *username* for the user account;
--   the account's *password*;
--   the user's *email address*;
--   the user's *first name*; and
--   the user's *surname*.
+Модель `User` содержит пять основных атрибутов. Это:
 
-The `User` model also comes with other attributes such as `is_active`, `is_staff` and `is_superuser`. These are boolean fields used to denote whether the account is active, owned by a staff member, or has superuser privileges respectively.  Check out the [Django documentation on the user model](https://docs.djangoproject.com/en/2.0/ref/contrib/auth/#django.contrib.auth.models.User) for a full list of attributes provided by the base `User` model.
+-   *имя пользователя* для учетной записи пользователя;
+-   *пароль* учетной записи;
+-   *адрес электронной почты* пользователяthe user's *email address*;
+-   *имя* пользователя; и
+-   *фамилия* пользователя.
 
-##Additional `User` Attributes
-If you would like to include other user related attributes than what is provided by the `User` model, you will needed to create a model that is *associated* with the `User` model. For our Rango app, we want to include two more additional attributes for each user account. Specifically, we wish to include:
+Модель `User` также имеет другие атрибуты, такие как `is_active`, `is_staff` и `is_superuser`. Эти логические поля, используются чтобы определить является ли учетная запись автивной, принадлежит ли она сотруднику или имеет привилегии суперпользователя соответственно. Прочитайте [официальную Django документацию по модели пользователя](https://docs.djangoproject.com/en/2.0/ref/contrib/auth/#django.contrib.auth.models.User), чтобы узнать полный список атрибутов, предоставляемый базовой моделью `User`.
 
-- a `URLField`, allowing a user of Rango to specify their own website; and
-- a `ImageField`, which allows users to specify a picture for their user profile.
+## Дополнительные атрибуты пользователя
+Если Вы хотите добавить другие атрибуты, отличающиеся от тех, которые уже предусмотрены в модели `User`, то Вы должны создать модель, которая *связана* с моделью `User`. Для нашего приложения Rango, мы хотим добавить два дополнительных атрибута для каждой учетной записи пользователя. В частности, мы хотим добавить:
 
-This can be achieved by creating an additional model in Rango's `models.py` file. Let's add a new model called `UserProfile`:
+- `URLField`, позволяет пользователю Rango указать свой собственный веб сайт; и
+- `ImageField`, , позволяет пользователям задать изображения для своего профиля пользователя.
+
+Для этого создадим дополнительную модель в файле `models.py` Rango. Давайте добавим новую модель под названием `UserProfile`:
 
 {lang="python",linenos=off}
 	class UserProfile(models.Model):
-	    # This line is required. Links UserProfile to a User model instance.
+	    # Эта строка обязательна. Она связывает UserProfile с экземпляром модели User.
 	    user = models.OneToOneField(User, on_delete=models.CASCADE)
 	    
-	    # The additional attributes we wish to include.
+	    # Дополнительные атрибуты, которые мы хотим добавить.
 	    website = models.URLField(blank=True)
 	    picture = models.ImageField(upload_to='profile_images', blank=True)
 	    
 	    def __str__(self):
 	        return self.user.username
 
-Note that we reference the `User` model using a one-to-one relationship. Since we reference the default `User` model, we need to import it within the `models.py` file:
+Обратите внимание, что мы ссылаемся на модель `User`, используя связь один-к-одному. Поскольку мы ссылаемся на модель по умолчанию `User`, нам необходимо импортировать её в файл `models.py`:
 
 {lang="python",linenos=off}
 	from django.contrib.auth.models import User
 
-For Rango, we've added two fields to complete our user profile, and provided a `__str__()` method to return a meaningful value when a unicode representation of a `UserProfile` model instance is requested. 
+Для Rango мы добавили два поля, необходимые для заполнения нашего профиля пользователя и прописали метод `__str__()`, возвращающий понятное человеку значение, когда запрашивается юникод представление экземпляра модели `UserProfile`.
 
-For the two fields `website` and `picture`, we have set `blank=True` for both. This allows each of the fields to be blank if necessary, meaning that users do not have to supply values for the attributes.
+Для полей `website` и `picture` мы установили значение `blank=True`. Это значит, что каждое из этих полей может быть пустым, если необходимо, т. е., пользователи могут не ввести значения для атрибутов, если не захотят.
 
-Furthermore, it should be noted that the `ImageField` field has an `upload_to` attribute. The value of this attribute is conjoined with the project's `MEDIA_ROOT` setting to provide a path with which uploaded profile images will be stored. For example, a `MEDIA_ROOT` of `<workspace>/tango_with_django_project/media/` and `upload_to` attribute of `profile_images` will result in all profile images being stored in the directory `<workspace>/tango_with_django_project/media/profile_images/`. Recall that in the [chapter on templates and media files](#chapter-templates-static) we set up the media root there. 
+Обратите внимание, что поле `ImageField` имеет атрибут `upload_to`. значение этого атрибута связано с переменной проекта `MEDIA_ROOT` и определяет путь, где будут храниться загруженные изображения для профиля. Например, если `MEDIA_ROOT` равен `<workspace>/tango_with_django_project/media/`, а атрибут `upload_to` - `profile_images`, то все изображения профилей будут храниться в каталоге `<workspace>/tango_with_django_project/media/profile_images/`.
 
-I> ### What about Inheriting to Extend?
-I> It may have been tempting to add the additional fields defined above by inheriting from the `User` model directly. However, because other applications may also want access to the `User` model, it not recommended to use inheritance, but to instead use a one-to-one relationship within your database.
+Furthermore, it should be noted that the `ImageField` field has an `upload_to` attribute. The value of this attribute is conjoined with the project's `MEDIA_ROOT` setting to provide a path with which uploaded profile images will be stored. For example, a `MEDIA_ROOT` of `<workspace>/tango_with_django_project/media/` and `upload_to` attribute of `profile_images` will result in all profile images being stored in the directory `<workspace>/tango_with_django_project/media/profile_images/`. Вспомните, что в [главе о шаблонах и медиа-файлах](#chapter-templates-static) мы настраивали корневой каталог для медиа файлов.
 
-I> ### Take the PIL
-I> The Django `ImageField` field makes use of the *Python Imaging Library (PIL)*. If you have not done so already, install PIL via Pip with the command `pip install pillow`. If you don't have `jpeg` support enabled, you can also install PIL with the command `pip install pillow --global-option="build_ext" --global-option="--disable-jpeg"`.
+I> ### Почему не используется наследование?
+I> Кажется заманчивым добавить эти дополнительные поля путем непосредственного наследования от модели `User`. Однако, поскольку другим приложениям может также понадобиться доступ к модели, не рекомендуется использовать наследование, а вместо него применять связь один-к-одному в базе данных.
+
+I> ### Установите PIL
+I> Django поле `ImageField` использует *Python Imaging Library (PIL)*. Если Вы ещё не установили её, сделайте это с помощью команды `pip install pillow`. Если у Вас не включена поддержка `jpeg`, Вы также можете установить PIL с помощью команды `pip install pillow --global-option="build_ext" --global-option="--disable-jpeg"`.
 I>
-I> You can check what packages are installed in your (virtual) environment by issuing the command `pip list`.
+I> Вы можете узнать какие пакеты установлены в Вашем (виртуальном) окружении, введя команду `pip list`.
 
-To make the `UserProfile` model data accessible via the Django admin Web interface, import the new `UserProfile` model into Rango's `admin.py` module.
+Чтобы сделать данные модели `UserProfile` доступными через веб-интерфейс администратора Django, импортируйте новую модель `UserProfile` в модуль Rango `admin.py`.
 
 {lang="python",linenos=off}
 	from rango.models import UserProfile
 
-Now you can register the new model with the admin interface, with the following line.
+Теперь Вы можете зарегистрировать новую модель через интерфейс администратора, используя следующую строку.
 
 {lang="python",linenos=off}
 	admin.site.register(UserProfile)
 
-I> ### Once again, Migrate!
-I> Remember that your database must be updated with the creation of a new model. Run:
+I> ### Помните о миграциях!
+I> Помните, что Вашу базу данных необходимо обновить при создании новой модели. Запустите:
 I> `$ python manage.py makemigrations rango` 
-I> from your terminal or Command Prompt to create the migration scripts for the new `UserProfile` model. Then run:
+I> из Вашего терминала или командной строки, чтобы создать скрипты для миграции новой модели `UserProfile`. Затем введите:
 I> `$ python manage.py migrate` 
-I> to execute the migration which creates the associated tables within the underlying database.
+I> чтобы выполнить миграцию, которая создаст соответствующие таблицы в базе данных.
 
-##Creating a *User Registration* View and Template
-With our authentication infrastructure laid out, we can now begin to build on it by providing users of our application with the opportunity to create user accounts. We can achieve this by creating a new view, template and URL mapping to handle user registrations.
+## Создание представления и шаблона *User Registration*
+После того как спроектирована инфраструктура аутентификации, можно начать генерировать её, предоставляя пользователям нашего приложения возможность создавать новые пользовательские учетные записи. Мы добьемся этого, создав новое представление, шаблон и URL сопоставление для регистрации пользователей.
 
-
-I> ### Django User Registration Applications
+I> ### Приложение Django для регистрации пользователей
 I>
-I> It is important to note that there are several off the shelf user registration applications available which reduce a lot of the hassle of building your own registration and login forms. 
+I> Важно отметить, что доступно несколько стандартных пакетов для регистрации пользователей, которые упрощают множество задач, связанных с созданием своих собственных форм для регистрации и входа.
 I> 
-I> However, it's a good idea to get a feeling for the underlying mechanics before using such applications. This will ensure that you have some sense of what is going on under the hood. *No pain, no gain.* It will also reinforce your understanding of working with forms, how to extend upon the `User` model, and how to upload media files.
+I> Тем не менее, хорошо получить некоторое представление о механике таких приложений, предже чем их использовать. Это гарантирует, что у Вас будет представление о том, что происходит внутри этих приложений. *Не попробуешь - не узнаешь*. Также это закрепит Ваши знания по работе с формами, позволит понять как расширить модель `User` и загружать медиа-файлы.
 
-To provide user registration functionality, we will now work through the following steps:
+Чтобы реализовать функцию регистрации пользователя, необходимо выполнить следующие шаги:
 
-- create a `UserForm` and `UserProfileForm`;
-- add a view to handle the creation of a new user;
-- create a template that displays the `UserForm` and `UserProfileForm`; and
-- map a URL to the view created.
+- создать `UserForm` и `UserProfileForm`;
+- добавить представление для обработки данных при создании нового пользователя;
+- создать шаблон, который отображает `UserForm` и `UserProfileForm`; и
+- сопоставить URL созданному представлению.
 
-As a final step to integrate our new registration functionality, we will also:
+В качестве последнего шага для интеграции нашей новой функции регистрации, мы также:
 
-- link the index page to the register page.
+- создадим ссылку на страницу регистрации на главной странице.
 
-### Creating the `UserForm` and `UserProfileForm`
-In `rango/forms.py`, we now need to create two classes inheriting from `forms.ModelForm`. We'll be creating one for the base `User` class, as well as one for the new `UserProfile` model that we just created. The two `ModelForm`-inheriting classes allow us to display a HTML form displaying the necessary form fields for a particular model, taking away a significant amount of work for us.
+### Создание `UserForm` и `UserProfileForm`
+Теперь в `rango/forms.py` нам нужно создать два класса, которые наследуются от `forms.ModelForm`. Мы создадим один для базового класса `User` и второй для новой только что созданной модели `UserProfile`. Два класса, наследующихся от `ModelForm`, позволят отображать HTML форму с необходимыми полями для конкретной модели, выполняя значительную часть работы за нас.
 
-In `rango/forms.py`, let's first create our two classes which inherit from `forms.ModelForm`. Add the following code to the module.
+Давайте создадим наши два класса в `rango/forms.py`, которые наследуются от `forms.ModelForm`. Добавьте следующий код в модуль.
 
 {lang="python",linenos=off}
 	class UserForm(forms.ModelForm):
@@ -179,94 +179,94 @@ In `rango/forms.py`, let's first create our two classes which inherit from `form
 	        model = UserProfile
 	        fields = ('website', 'picture')
 
-You'll notice that within both classes, we added a [nested](http://www.brpreiss.com/books/opus7/html/page598.html) `Meta` class. As [the name of the nested class suggests](http://www.webopedia.com/TERM/M/meta.html), anything within a nested `Meta` class describes additional properties about the particular class to which it belongs. Each `Meta` class must supply a `model` field. In the case of the `UserForm` class the associated model is the `User` model. You also need to specify the `fields` or the fields to `exclude`, to indicate which fields associated with the model should be present (or not) on the rendered form.
+Заметьте, что в оба класса мы добавили [вложенный](http://www.brpreiss.com/books/opus7/html/page598.html) класс `Meta`. Как [предполагает название вложенного класса](http://www.webopedia.com/TERM/M/meta.html), все что находится внутри вложенного класса `Meta` описывает дополнительные свойства, касающиеся конкретного класса, которому он принадлежит. Каждый класс `Meta` должен иметь поле `model`. В случае класса `UserForm`, связанной с ней моделью является модель `User`. Вам также нужно указать `fields` или поля для `exclude`, чтобы определить какие поля, связанные с моделью, должны присутствовать (или нет) в отображаемой форме.
 
-Here, we only want to show the fields `username`, `email` and `password` associated with the `User` model, and the `website` and `picture` fields associated with the `UserProfile` model. For the `user` field within `UserProfile` model, we will need to make this association when we register the user. This is because when we create a `UserProfile` instance, we won't yet have the `User` instance to refer to.
+Здесь мы хотим отображать только поля `username`, `email` и `password`, связанные с моделью `User` и поля `website` и `picture`, связанные с моделью `UserProfile`. Для поля `user` в `UserProfile` необходимо создать связь с моделью `User` при регистрации пользователя. Это связано с тем, что когда мы создаём экземпляр `UserProfile`, у нас нет ещё экземпляра `User`, на который можно сослаться.
 
-You'll also notice that `UserForm` includes a definition of the `password` attribute. While a `User` model instance contains a `password` attribute by default, the rendered HTML form element will not hide the password. If a user types a password, the password will be visible. By updating the `password` attribute, we can specify that the `CharField` instance should hide a user's input from prying eyes through use of the `PasswordInput()` widget.
+Заметьте также, что `UserForm` содержит определение атрибута `password`. Хотя экземпляр модели `User` содержит атрибут `password` по умолчанию, выводимое поле HTML формы не будет скрывать пароль. Когда пользователь будет вводить пароль, его будет видно. Обновляя атрибут мы можем указать, что экземпляр `CharField` должен скрывать введенные пользователем символы, используя виджет `PasswordInput()`.
 
-Finally, remember to include the required classes at the top of the `forms.py` module! We've listed them below for your convenience.
+Наконец, не забудем добавить требуемые классы в начале модуля `forms.py`! Для удобства мы привели их ниже.
 
 {lang="python",linenos=off}
 	from django import forms
 	from django.contrib.auth.models import User
 	from rango.models import Category, Page, UserProfile
 
-### Creating the `register()` View
-Next, we need to handle both the rendering of the form and the processing of form input data. Within Rango's `views.py`, add `import` statements for the new `UserForm` and `UserProfileForm` classes.
+### Создание представления `register()`
+Затем необходимо вывести форму и обработать данные, введенные в неё. В файле `views.py` Rango добавьте команды импорта `import` для новых классов `UserForm` и `UserProfileForm`.
 
 {lang="python",linenos=off}
 	from rango.forms import UserForm, UserProfileForm
 
-Once you've done that, add the following new view, `register()`.
+После этого добавьте следующее новое представление, `register()`.
 
 {lang="python",linenos=off}
 	def register(request):
-	    # A boolean value for telling the template 
-	    # whether the registration was successful.
-	    # Set to False initially. Code changes value to 
-	    # True when registration succeeds.
+	    # Логическое значение указывающее шаблону
+	    # прошла ли регистрация успешно.
+	    # В начале ему присвоено значение False. Код изменяет значение на
+	    # True, если регистрация прошла успешно.
 	    registered = False
 	    
-	    # If it's a HTTP POST, we're interested in processing form data.
+	    # Если это HTTP POST, мы заинтересованы в обработке данных формы.
 	    if request.method == 'POST':
-	        # Attempt to grab information from the raw form information.	
-	        # Note that we make use of both UserForm and UserProfileForm.
+	        # Попытка извлечь необработанную информацию из формы.	
+	        # Заметьте, что мы используем UserForm и UserProfileForm.
 	        user_form = UserForm(data=request.POST)
 	        profile_form = UserProfileForm(data=request.POST)
 	        
-	        # If the two forms are valid...
+	        # Если в две формы введены правильные данные...
 	        if user_form.is_valid() and profile_form.is_valid():
-	            # Save the user's form data to the database.
+	            # Сохраняем данные формы с информацией о пользователе в базу данных.
 	            user = user_form.save()
 	            
-	            # Now we hash the password with the set_password method.
-	            # Once hashed, we can update the user object.
+	            # Теперь мы хэшируем пароль с помощью метода set_password.
+	            # После хэширования мы можем обновить объект "пользователь".
 	            user.set_password(user.password)
 	            user.save()
 	            
-	            # Now sort out the UserProfile instance.
-	            # Since we need to set the user attribute ourselves, 
-	            # we set commit=False. This delays saving the model 
-	            # until we're ready to avoid integrity problems.
+	            # Теперь разберемся с экземпляром UserProfile.
+	            # Поскольку мы должны сами назначить атрибут пользователя,
+	            # необходимо приравнять commit=False. Это отложит сохранение модели,                 
+	            # до тех пор пока мы не получим все необходимые данные, чтобы избежать проблем с целостностью базы данных.
 	            profile = profile_form.save(commit=False)
 	            profile.user = user
 	            
-	            # Did the user provide a profile picture?
-	            # If so, we need to get it from the input form and 
-	            #put it in the UserProfile model.
+	            # Предоставил ли пользователь изображение для профиля?
+	            # Если да, необходимо извлечь его из формы и 
+	            # поместить в модель UserProfile.
 	            if 'picture' in request.FILES:
 	                profile.picture = request.FILES['picture']
 	            
-	            # Now we save the UserProfile model instance.
+	            # Теперь мы сохраним экземпляр модели UserProfile.
 	            profile.save()
 	            
-	            # Update our variable to indicate that the template
-                # registration was successful.
+	            # Обновляем нашу переменную, чтобы указать, 
+                # что регистрация прошла успешно.
 	            registered = True
 	        else:
-	            # Invalid form or forms - mistakes or something else?
-	            # Print problems to the terminal.
+	            # Неправильная формы или формы - ошибки или ещё какая-нибудь проблема?
+	            # Вывести проблемы в терминал.
 	            print(user_form.errors, profile_form.errors)
 	    else:
-	        # Not a HTTP POST, so we render our form using two ModelForm instances.
-	        # These forms will be blank, ready for user input.
+	        # Не HTTP POST запрос, следовательно, мы выводим нашу форму, используя два экземпляра ModelForm.
+	        # Эти формы будут не заполненными и готовы к вводу данных от пользователя.
 	        user_form = UserForm()
 	        profile_form = UserProfileForm()
 	    
-	    # Render the template depending on the context.
+	    # Выводим шаблон в зависимости от контекста.
 	    return render(request,
 	                  'rango/register.html',
 	                  {'user_form': user_form,
                        'profile_form': profile_form, 
 	                   'registered': registered})
 
-While the view looks pretty complicated, it's actually very similar to how we implemented the [add category](#section-forms-addcategory) and [add page](#section-forms-addpage) views. However, here we have to also handle two distinct `ModelForm` instances - one for the `User` model, and one for the `UserProfile` model. We also need to handle a user's profile image, if he or she chooses to upload one.
+Хотя представление кажется очень сложным, на самом деле оно очень похоже на реализацию представлений [добавить категорию](#section-forms-addcategory) и [добавить страницу](#section-forms-addpage). Тем не менее здесь нам нужно было обрабатывать два различных экземпляра `ModelForm` - один для модели `User` и второй для модели `UserProfile`. Нам также необходимо обработать изображение для профиля пользователя, если он или она захочет его загрузить.
 
-Furthermore, we need to establish a link between the two model instances that we have created. After creating a new `User` model instance, we reference it in the `UserProfile` instance with the line `profile.user = user`. This is where we populate the `user` attribute of the `UserProfileForm` form, which we hid from users.
+Более того нам нужно установить связь между двумя созданными экземплярами модели. После создания нового экземпляра модели `User` мы сослались на него в экземпляре `UserProfile` в строке `profile.user = user`. В этом месте заполняем атрибут `user` формы `UserProfileForm`, который мы скрыли от пользователей.
 
-### Creating the *Registration* Template
-Now we need to make the template that will be used by the new `register()` view. Create a new template file, `rango/register.html`, and add the following code.
+### Создание шаблона *Регистрация* (Registration)
+Теперь нам нужно создать шаблон, который будет использоваться нашим новым представлением `register()`. Создайте новый файл шаблона, `rango/register.html`, и добавьте следующий код.
 
 {lang="html",linenos=on}
 	{% extends 'rango/base.html' %}
@@ -288,33 +288,33 @@ Now we need to make the template that will be used by the new `register()` view.
 	        
 	        {% csrf_token %}
 	        
-	        <!-- Display each form  -->
+	        <!-- Выводим на экран каждую форму.  -->
 	        {{ user_form.as_p }}
 	        {{ profile_form.as_p }}
 	        
-	        <!-- Provide a button to click to submit the form. -->
+	        <!-- Создаем кнопку для отправки данных формы. -->
 	        <input type="submit" name="submit" value="Register" />
 	    </form>
 	    {% endif %}
 	{% endblock %}
 
-I> ### Using the `url` Template Tag
-I> Note that we are using the `url` template tag in the above template code e.g. `{% url 'register' %}`. 
-I> This means we will have to ensure that when we map the URL, we name it `register`.
+I> ### Использование тега шаблона `url`
+I> Обратите внимание, что мы используем тег шаблона `url` в приведенном выше коде шаблона, т. е., `{% url 'register' %}`.
+I> Это означает, что когда мы будем сопоставлять представлению URL, необходимо назвать его `register`.
 
-The first thing to note here is that this template makes use of the `registered` variable we used in our view indicating whether registration was successful or not. Note that `registered` must be `False` in order for the template to display the registration form - otherwise the success message is displayed.
+Первое на что нужно обратить внимание здесь - это то, что шаблон использует переменную `registered`, которая применялась в нашем представлении для обозначения того прошла ли регистрация успешно или нет. Учтите, что переменная `registered` должна быть равна `False`, чтобы шаблон вывел форму для регистрации - в противном случае выводится сообщение об успешной регистрации.
 
-Next, we have used the `as_p` template function on the `user_form` and `profile_form`. This wraps each element in the form in a paragraph (denoted by the `<p>` HTML tag). This ensures that each element appears on a new line.
+Затем мы использовали шаблонную функцию `as_p` в `user_form` и `profile_form`. Она оборачивает каждый элемент в форме в абзац (обозначаемый в HTML тегом `<p>`). Это гарантирует, что каждый элемент появится на новой строке.
 
-Finally, in the `<form>` element, we have included the attribute `enctype`. This is because if the user tries to upload a picture, the response from the form may contain binary data - and may be quite large. The response therefore will have to be broken into multiple parts to be transmitted back to the server. As such, we need to denote this with `enctype="multipart/form-data"`. This tells the HTTP client (the web browser) to package and send the data accordingly. Otherwise, the server won't receive all the data submitted by the user.
+Наконец в элемент `<form>` мы добавили атрибут `enctype`. Если пользователь пытается загрузить изображение, ответ от формы может содержать двоичные данные и может быть довольно большой. Поэтому ответ должен быть разбит на несколько частей при передаче обратно на сервер. Таким образом, это нужно обозначить с помощью `enctype="multipart/form-data"`. Это сообщает HTTP-клиенту (веб-браузеру) о необходимости упаковать и отправить данные. В противном случае сервер не получит все данные, отправленные пользователем.
 
-W> ### Multipart Messages and Binary Files
-W> You should be aware of the `enctype` attribute for the `<form>` element. When you want users to upload files from a form, it's an absolute *must* to set `enctype` to `multipart/form-data`. This attribute and value combination instructs your browser to send form data in a special way back to the server. Essentially, the data representing your file is split into a series of chunks and sent. For more information, check out [this great Stack Overflow answer](http://stackoverflow.com/a/4526286).
+W> ### Составные сообщения и бинарные файлы
+W> Вы должны быть знакомы с атрибутом `enctype` элемента `<form>`. Если Вы хотите позволить пользователям загружать файлы из формы, *обязательным* условием является присвоение `enctype` значения `multipart/form-data`. Эта комбинация атрибут и значения указывают Вашему браузеру посылать данные формы особым образом обратно на сервер. В частности, данные, представляющие Ваш файл деляется на части и отправляются. Дополнительную информацию можно узнать в [этом замечательном ответе на Stack Overflow](http://stackoverflow.com/a/4526286).
 
-Furthermore, remember to include the CSRF token, i.e. `{% csrf_token %}` within your `<form>` element! If you don't do this, Django's [cross-site forgery](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection middleware layer will refuse to accept the form's contents, returning an error.
+Кроме того не забудьте добавить CSRF токен, т. е. `{% csrf_token %}` в Ваш элемент `<form>`! Если Вы не сделаете этого, слой промежуточного программного обеспечения Django для защиты от [межсайтовой подделки запроса](https://en.wikipedia.org/wiki/Cross-site_request_forgery) откажется принимать содержимое формы, возвращая ошибку. 
 
-### The `register()` URL Mapping
-With our new view and associated template created, we can now add in the URL mapping. In Rango's URLs module `rango/urls.py`, modify the `urlpatterns` tuple as shown below.
+### Сопоставление URL представлению `register()`
+После того как наше новое представление и связанный с ним шаблон созданы, мы можем добавить для него URL сопоставление. В URL модуле Rango `rango/urls.py` измените кортеж `urlpatterns` как показано ниже.
  
 {lang="python",linenos=off}
 	urlpatterns = [
@@ -323,14 +323,14 @@ With our new view and associated template created, we can now add in the URL map
 	    path('category/<slug:category_name_slug>/add_page/', views.add_page, name='add_page'),
 	    path('category/<slug:category_name_slug>/', views.show_category, name='show_category'),
 	    path('add_category/', views.add_category, name='add_category'),
-		path('register/', views.register, name='register'), # New pattern!
+		path('register/', views.register, name='register'), # Добавляем новый шаблон!
 
 	]
 
-The newly added pattern (at the bottom of the list) points the URL `/rango/register/` to the `register()` view. Also note the inclusion of a `name` for our new URL, `register`, which we used in the template when we used the `url` template tag, e.g. `{% url 'register' %}`.
+Только что добавленный шаблон (самый последний в списке) связывает URL `/rango/register/` с представлением `register()`. Также обратите внимание на добавление `name` для нашего нового URL, `register`, которое мы использовали в шаблоне, когда записывали тег шаблона `url`, т. е., `{% url 'register' %}`.
 
-### Linking Everything Together
-Finally, we can add a link pointing to our new registration URL by modifying the `base.html` template. Update `base.html` so that the unordered list of links that will appear on each page contains a link allowing users to register for Rango.
+### Добавляем ссылку
+Наконец, добавим ссылку, указывающую на наш новый URL для регистрации модифицируя шаблон `base.html`. Обновите `base.html` так, чтобы неупорядоченный список ссылок, который отображается на каждой странице содержал ссылку, позволяющую пользователям зарегистрироваться.
 
 {lang="html",linenos=off}
 	<ul>
@@ -340,94 +340,91 @@ Finally, we can add a link pointing to our new registration URL by modifying the
 		<li><a href="{% url 'rango:register' %}">Sign Up</a></li>
 	</ul>
 
-### Demo
-Now everything is plugged together, try it out. Start your Django development server and try to register as a new user. Upload a profile image if you wish. Your registration form should look like the one illustrated in the [figure below](#fig-rango-register-form).
+### Пример работы
+Теперь когда всё сделано, попробуйте протестировать работу. Запустите свой сервер для разработки Django и попытайтесь зарегистрироваться как новый пользователь. зарузите изображение для профиля если хотите. Ваша форма для регистрации должна выглядеть так, как показано на [рисунке ниже](#fig-rango-register-form).
 
 {id="fig-ch9-user-register"}
-![A screenshot illustrating the basic registration form you create as
-part of this tutorial.](images/ch9-rango-register-form.png)
+![Снимок экрана с базовой формой для регистрации, которую Вы создадите при изучении этого учебного пособия.](images/ch9-rango-register-form.png)
 
-Upon seeing the message indicating your details were successfully registered, the database should have a new entry in the `User` and `UserProfile` models. Check that this is the case by going into the Django Admin interface.
+После появления сообщения о том, что Вы были успешно зарегистрированы, в базе данных должна появиться новая запись в моделях `User` и `UserProfile`. Убедитесь, что это так, зайдя в интерфейс администратора Django.
 
+## Добавление функции входа в систему
+После того как реализована возможность регистрации, теперь нам необходимо добавить для пользователей Rango функцию входа в систему. Для этого нужно выполнить следующую последовательность действий:
 
-## Implementing Login Functionality
-With the ability to register accounts completed, we now need to provide users of Rango with the ability to login. To achieve this, we'll need to undertake the workflow below:
+-	Создать представление login для обработки учетных данных пользователей 
+-	Создать шаблон login для отображения формы входа в систему
+-	Сопоставить представлению login URL
+-	Создать ссылку на форму входа в систему с главной страницы
 
--   Create a login in view to handle the processing of user credentials
--   Create a login template to display the login form
--   Map the login view to a URL
--   Provide a link to login from the index page
-
-### Creating the `login()` View
-First, open up Rango's views module at `rango/views.py` and create a new view called `user_login()`. This view will handle the processing of data from our subsequent login form, and attempt to log a user in with the given details.
+### Создание представления login()
+Сначала откройте модуль с представлениями Rango `rango/views.py` и создайте новое представление с названием `user_login()`. Это представление осуществляет обработку данных из нашей формы для входа и пытается залогинить пользователя с указанными данными.
 
 {lang="python",linenos=off}
 	def user_login(request):
-	    # If the request is a HTTP POST, try to pull out the relevant information.
+	    # Если запрос HTTP POST, пытаемся извлечь нужную информацию.
 	    if request.method == 'POST':
-	        # Gather the username and password provided by the user.
-	        # This information is obtained from the login form.
-	        # We use request.POST.get('<variable>') as opposed
-	        # to request.POST['<variable>'], because the
-	        # request.POST.get('<variable>') returns None if the
-	        # value does not exist, while request.POST['<variable>']
-	        # will raise a KeyError exception.
+	        # Получаем имя пользователя и пароль, вводимые пользователем.
+	        # та информация извлекается из формы входа в систему.
+	        # Мы используем request.POST.get('<имя переменной>') 
+	        # вместо request.POST['<имя переменной>'], потому что
+	        # request.POST.get('<variable>') вернет None, если 
+	        # значения не существует, тогда как request.POST['<variable>']
+	        # создаст исключение KeyError.
 	        username = request.POST.get('username')
 	        password = request.POST.get('password')
 	        
-	        # Use Django's machinery to attempt to see if the username/password
-	        # combination is valid - a User object is returned if it is.
+	        # Используйте Django, чтобы проверить является ли правильным
+	        # сочетание имя пользователя/пароль - если да, то возвращается объект User.
 	        user = authenticate(username=username, password=password)
 	        
-	        # If we have a User object, the details are correct.
-	        # If None (Python's way of representing the absence of a value), no user
-	        # with matching credentials was found.
+	        # Если мы получили объект User, то данные верны.
+	        # Если получено None (так Python представляет отсутствие значения), то пользователь
+	        # с такими учетными данными не был найден.
 	        if user:
-	            # Is the account active? It could have been disabled.
+	            # Аккаунт активен? Он может быть отключен.
 	            if user.is_active:
-	                # If the account is valid and active, we can log the user in.
-	                # We'll send the user back to the homepage.
+	                # Если учетные данные верны и аккаунт активен, мы можем позволить пользователю войти в систему.
+	                # Мы возвращаем его обратно на главную страницу.
 	                login(request, user)
 	                return HttpResponseRedirect(reverse('index'))
 	            else:
-	                # An inactive account was used - no logging in!
+	                # Использовался не активный аккуант - запретить вход!
 	                return HttpResponse("Your Rango account is disabled.")
 	        else:
-	            # Bad login details were provided. So we can't log the user in.
+	            # Были введены неверные данные для входа. Из-за этого вход в систему не возможен.
 	            print("Invalid login details: {0}, {1}".format(username, password))
 	            return HttpResponse("Invalid login details supplied.")
 	        
-	    # The request is not a HTTP POST, so display the login form.
-	    # This scenario would most likely be a HTTP GET.
+	    # Запрос не HTTP POST, поэтому выводим форму для входа в систему.
+	    # В этом случае скорее всего использовался HTTP GET запрос.
 	    else:
-	        # No context variables to pass to the template system, hence the
-	        # blank dictionary object...
+	        # Ни одна переменная контекста не передается в систему шаблонов, следовательно, используется
+	        # объект пустого словаря...
 	        return render(request, 'rango/login.html', {})
 
-As before, this view may seem rather complex as it has to handle a variety of scenarios. As shown in previous examples, the `user_login()` view handles form rendering and processing - where the form this time contains `username` and `password` fields.
+Это представление может показаться сложным, так как оно должно учитывать различные ситуации. Как и в предыдущих примерах, представление `user_login()` осуществляет отображение формы и её обработку - где форма в этот раз содержит поля `username` и `password`.
 
-First, if the view is accessed via the HTTP `GET` method, then the login form is displayed. However, if the form has been posted via the HTTP `POST` method, then we can handle processing the form.
+Во-первых, если обращение к представлению осуществлялось через HTTP GET метод, то отображается форма входа в систему. Однако, если форма была передана через HTTP POST метод, то мы должны обработать форму.
 
-If a valid form is sent via a `POST` request, the username and password are extracted from the form. These details are then used to attempt to authenticate the user. The Django function `authenticate()` checks whether the username and password provided actually match to a valid user account. If a valid user exists with the specified password, then a `User` object is returned, otherwise `None` is returned.
+Если через POST запрос передана форма без ошибок, то из формы извлекаются имя пользователя и пароль. Эти данные затем используются, чтобы попытаться аутентифицировать пользователя. Django функция `authenticate()` проверяет соответствует ли введенная комбинация имя пользователя/пароль учетной записи. Если существует пользователь с указанный паролем, то возвращается объект `User` и `None` - в противном случае.
 
-If we retrieve a `User` object, we can then check if the account is active or inactive - if active, then we can issue the Django function  `login()`, which officially signifies to Django that the user is to be logged in.
+Если мы получили объект `User`, то можем проверить, является ли учетная запись активной или нет - если активна, то мы можем вызвать Django функцию `login()`, которая указывает Django, что пользователь вошел в систему.
 
-However, if an invalid form is sent - due to the fact that the user did not add both a username and password - the login form is presented back to the user with error messages (i.e. an invalid username/password combination was provided).
+Однако если передана форма с ошибкой - например, пользователь не ввел имя или пароль - то опять выводится форма входу в систему с сообщениями об ошибках (например, было введена неверная комбинация имя пользователя/пароль).
 
+Также обратите внимание, что мы использовали новый класс `HttpResponseRedirect`. Как видно из названия, ответ, генерируемый экземпляром класса `HttpResponseRedirect` указывает веб-браузеру клиента перейти по URL-адресу, указанному в качестве аргумента. Обратите внимание, что при этом вернется HTTP код состояния `302`, который обозначает редирект вместо кода состояния `200` (OK). Смотри [документацию Django по редиректам](https://docs.djangoproject.com/en/2.0/ref/request-response/#django.http.HttpResponseRedirect) для получения дополнительной информации.
 
-You'll also notice that we make use of a new class, `HttpResponseRedirect`. As the name may suggest to you, the response generated by an instance of the `HttpResponseRedirect` class tells the client's Web browser to redirect to the URL you provide as the argument. Note that this will return a HTTP status code of `302`, which denotes a redirect, as opposed to an status code of `200` (success). See the [Django documentation on redirection](https://docs.djangoproject.com/en/2.0/ref/request-response/#django.http.HttpResponseRedirect) to learn more.
+Наконец, мы используем другой метод Django `reverse` для получения URL-адреса приложения Rango. Он выполняет поиск URL шаблонов в модуле `urls.py` Rango с названием `'index'` и подставляет соответствующий шаблон. Таким образом, если мы в дальнейшем изменим URL сопоставление, это не приведет к нарушению работы нашего нового представления.
 
-Finally, we use another Django method called `reverse` to obtain the URL of the Rango application. This looks up the URL patterns in Rango's `urls.py` module to find a URL called `'index'`, and substitutes in the corresponding pattern. This means that if we subsequently change the URL mapping, our new view won't break.
-
-Django provides all of these functions and classes. As such, you'll need to import them. The following `import` statements must now be added to the top of `rango/views.py`.
+Все эти функции и классы предоставляются Django. Таким образом, Вам нужно импортировать их. Добавьте следующие команды `import` в начале `rango/views.py`.
 
 {lang="python",linenos=off}
 	from django.contrib.auth import authenticate, login
 	from django.http import HttpResponseRedirect, HttpResponse
 	from django.urls import reverse
 
-### Creating a *Login* Template
-With our new view created, we'll need to create a new template, `login.html` allowing users to enter their credentials. While we know that the template will live in the `templates/rango/` directory, we'll leave you to figure out the name of the file. Look at the code example above to work out the name based upon the code for the new `user_login()` view. In your new template file, add the following code.
+### Создание шаблона *Login*
+После создания нашего нового представления, нам надо создать новый шаблон, `login.html`, который позволит пользователям ввести их учетные данные. Хотя мы знаем, что шаблон будет находиться в каталоге `templates/rango/`, задачу как правильно назвать файл Вы должны решить сами. Просмотрите на вышеприведенный пример кода, чтобы найти название в коде нового представления `user_login()`. В Ваш новый файл шаблона, добавьте следующий код:
 
 {lang="html",linenos=off}
 	{% extends 'rango/base.html' %}
@@ -449,16 +446,16 @@ With our new view created, we'll need to create a new template, `login.html` all
 	</form>
 	{% endblock %}
 
-Ensure that you match up the input `name` attributes to those that you specified in the `user_login()` view. For example, `username` matches to the username, and `password` matches to the user's password. Don't forget the `{% csrf_token %}`, either!
+Убедитесь, что атрибуты `name` тегов *input* совпадают с названиями переменных, которые Вы определили в представлении `user_login()`. Например, `username` для имени пользователя и `password` для пароля. Не забудьте также о `{% csrf_token %}`!
 
-### Mapping the Login View to a URL
-With your login template created, we can now match up the `user_login()` view to a URL. Modify Rango's `urls.py` module so that the `urlpatterns` list contains the following mapping.
+### Сопоставление URL представлению Login
+Создав Ваш шаблон *Login*, теперь мы можем сопоставить URL представлению `user_login()`. Измените модуль Rango `urls.py` так, чтобы его список `urlpatterns` содержал следующее сопоставление.
 
 {lang="python",linenos=off}
 	path('login/', views.user_login, name='login'),
 
-### Linking Together
-Our final step is to provide users of Rango with a handy link to access the login page. To do this, we'll edit the `base.html` template inside of the `templates/rango/` directory. Add the following link to your list.
+### Создание ссылки
+Наконец, для удобства пользователей Rango мы создадим ссылку для перехода на страницу входа в систему. Для этого мы отредактируем шаблон `base.html` внутри каталога `templates/rango/`. Добавьте следующую ссылку в Ваш список.
 
 {lang="html",linenos=off}
 	<ul>
@@ -466,12 +463,12 @@ Our final step is to provide users of Rango with a handy link to access the logi
 	    <li><a href="{% url 'rango:login' %}">Login</a></li>
 	</ul>
 
-If you like, you can also modify the header of the index page to provide a personalised message if a user is logged in, and a more generic message if the user isn't. Within the `index.html` template, find the message, as shown in the code snippet below.
+Также вы можете изменить заголовок главной страницы, в котором будете выдавать сообщение, обращенное к пользователю, если он вошел в систему и стандартное сообщение, которое видно всем, если нет. В шаблоне `index.html` найдите сообщение, которое показано в приведенном ниже фрагменте кода.
 
 {lang="html",linenos=off}
 	hey there partner!
 
-This line can then be replaced with the following code.
+Замените эту строку следующим кодом.
 
 {lang="html",linenos=off}
 	{% if user.is_authenticated %}
@@ -480,24 +477,24 @@ This line can then be replaced with the following code.
 	    hey there partner!
 	{% endif %}
 
-As you can see, we have used Django's template language to check if the user is authenticated with `{% if user.is_authenticated %}`. If a user is logged in, then Django gives us access to the `user` object. We can tell from this object if the user is logged in (authenticated). If he or she is logged in, we can also obtain details about him or her. In the example about, the user's username will be presented to them if logged in - otherwise the generic `hey there partner!` message will be shown.
+Как видно из кода, мы использовали язык шаблонов Django для проверки аутентифицирован ли пользователь с помощью тега `{% if user.is_authenticated %}`. Если пользователь вошел в систему, то Django предоставляет нам доступ к объекту `user`. Мы можем узнать с помощью этого объекта: вошел ли пользователь в систему (аутентифицирован ли он). Если да, мы можем также получить информацию о нем или ней. В вышеприведенном примере, если пользователь вошел в систему, то отображается его имя, а в противном случае отображается стандартное сообщение `hey there partner!`.
 
-### Demo
-Start the Django development server and attempt to login to the application. The [figure below](#fig-ch9-user-login) shows the screenshots of the login and index page.
+### Пример работы
+Запустите сервер для разработки Django и попытайтесь войти в приложение. На [рисунке ниже](#fig-ch9-user-login) показаны снимки экрана для страницы входа в систему и главной страницы.
 
 {id="fig-ch9-user-login"}
-![Screenshots illustrating the header users receive when not logged in, and logged in with username `somebody`.](images/ch9-rango-login-message.png)
+![Снимки экрана, показывающие заголовок, который пользователи видят, когда вход в систему не осуществлен и когда вход осуществлен с именем пользователя `somebody`.](images/ch9-rango-login-message.png)
 
-With this completed, user logins should now be working. To test everything out, try starting Django's development server and attempt to register a new account. After successful registration, you should then be able to login with the details you just provided.
+После выполнения вышеперечисленных действий, вход в систему пользователей теперь должен работать. Чтобы всё проверить, запустите сервер для разработки Django и попытайтесь зарегистрировать новую учетную запись. После успешной регистрации, у Вас должно получиться войти в систему, используя данные, которые Вы только что предоставили.
 
-## Restricting Access
-Now that users can login to Rango, we can now go about restricting access to particular parts of the application as per the specification, i.e. that only registered users can add categories and pages. With Django, there are several ways in which we can achieve this goal.
+## Ограничение доступа
+Теперь, когда пользователи могут входить в приложение Rango мы можем ограничить доступ к определенным частям приложения в соответствии с ТЗ, т. е., чтобы только зарегистрированные пользователи могли добавлять категории и страницы. Используя Django этого можно добиться несколькими способами:
 
-- In the template, we could use the `{% if user.authenticated %}` template tag to modify how the page is rendered (shown already).
-- In the View, we could directly examine the `request` object and check if the user is authenticated.
-- Or, we could use a *decorator* function `@login_required` provided by Django that checks if the user is authenticated.
+- В шаблоне, мы можем использовать тег шаблона `{% if user.authenticated %}`, чтобы изменить внешний вид страницы (было показано выше).
+- В представлении, путем непосредственной обработки объекта `request`  и проверки аутентифицирован ли пользователь.
+- Или, используя функцию *декоратор* `@login_required`, предоставляемый Django, которая проверяет аутентифицирован ли пользователь.
 
-The direct approach checks to see whether a user is logged in, via the `user.is_authenticated()` method. The `user` object is available via the `request` object passed into a view. The following example demonstrates this approach.
+Второй способ проверяет вошел ли пользователь в систему, используя метод `user.is_authenticated()`. Объект `user` доступен через объект `request`, который передается представлению. Следующий пример демонстрирует этот способ.
 
 {lang="python",linenos=off}
 	def some_view(request):
@@ -506,74 +503,71 @@ The direct approach checks to see whether a user is logged in, via the `user.is_
 	    else:
 	        return HttpResponse("You are not logged in.")
 
-The third approach uses [Python decorators](http://wiki.python.org/moin/PythonDecorators). Decorators
-are named after a [software design pattern by the same name](http://en.wikipedia.org/wiki/Decorator_pattern). They can dynamically alter the functionality of a function, method or class without having to directly edit the source code of the given function, method or class.
+Третий способ использует [Python декораторы](http://wiki.python.org/moin/PythonDecorators). Декораторы получили такое название благодаря [шаблону проектирования программного обеспечения с таким же названием](http://en.wikipedia.org/wiki/Decorator_pattern). Они могут динамически изменять функциональное назначение функции, метода или класса без необходимости непосредственного редактирования этой функции, метода или класса.
 
-Django provides a decorator called `login_required()`, which we can attach to any view where we require the user to be logged in. If a user is not logged in and attempts to access a view decorated with `login_required()`, they are then redirected to another page ([that you can set](https://docs.djangoproject.com/en/2.0/ref/settings/#login-url)) - typically the login page.
+В Django существует декоратор `login_required()`, который мы можем присоединить к любому представлению, для работы которого нужно чтобы пользователь вошел в систему. Если пользователь не вошел в систему и попытается получить доступ к представлению с декоратором `login_required()`, то он будет переадресован на другую страницу [по Вашему выбору](https://docs.djangoproject.com/en/2.0/ref/settings/#login-url)) - как правило, на страницу входа в систему.
 
-### Restricting Access with a Decorator
+### Ограничение доступа с помощью декоратора
 
-To try this out, create a view in Rango's `views.py` module called `restricted()`, and add the following code
+Применим только что полученные значения на практике, создав представление в модуле Rango `views.py` с названием `restricted()` и добавив следующий код
 
 {lang="python",linenos=off}
 	@login_required
 	def restricted(request):
 	    return HttpResponse("Since you're logged in, you can see this text!")
 
-Note that to use a decorator, you place it *directly above* the function signature, and put a `@` before naming the decorator. Python will execute the decorator before executing the code of your function/method. As a decorator is still a function, you'll still have to import it if it resides within an external module. As `login_required()` exists elsewhere, the following `import` statement is required at the top of `views.py`.
+Обратите внимание, чтобы использовать декоратор, его надо поместить *непосредственно над* названием функции и поставить `@` перед названием декоратора. Python выполнит декоратор до кода Вашей функции/метода. Поскольку декоторов - это просто функция, Вы всё равно должны импортировать её, если она нахожится во внешнем модуле. Так как `login_required()` находится в другом файле, следующая команда импорта необходима в начале `views.py`.
 
 {lang="python",linenos=off}
 	from django.contrib.auth.decorators import login_required
 
-We'll also need to add in another pattern to Rango's `urlpatterns` list in the `urls.py` file. Add the following line of code.
+Мы также добавим ещё один шаблон в список `urlpatterns` Rango в файле `urls.py`. Добавьте следующую строку кода.
 
 {lang="python",linenos=off}
 	path('restricted/', views.restricted, name='restricted'),
 	
+И затем добавьте в `base.html` ссылку на страницу с ограниченным доступом.
 
-And then in `base.html` add in the reference to the restricted page.
 {lang="html",linenos=off}
 	<ul>
 	    ...
 		<li><a href="{% url 'rango:restricted' %}">Restricted</a></li>	
 	</ul>
 
-
-We'll also need to handle the scenario where a user attempts to access the `restricted()` view, but is not logged in. What do we do with the user? The simplest approach is to redirect them to a page they can access, e.g. the registration page. Django allows us to specify this in our project's `settings.py` module, located in the project configuration directory. In `settings.py`, define the variable `LOGIN_URL` with the URL you'd like to redirect users to that aren't logged in, i.e. the login page located at `/rango/login/`:
+Также необходимо учесть случай, когда пользователь пытается получить доступ к представлению `restricted()`, но не вошел в систему. Что нужно делать в этом случае? Самый простой вариант - переадресовать его или её на страницу доступную всем пользователям, например, страницу регистрации. Django позволяет указать страницу для переадресации в файле `settings.py`, расположенном в каталоге конфигурации проекта. В `settings.py` определите переменную `LOGIN_URL` с URL, на который нужно перенаправить пользователей, не вошедших в систему, т. е., на страницу входа в систему, расположенную по адресу `/rango/login/`:
 
 {lang="python",linenos=off}
 	LOGIN_URL = '/rango/login/'
 
-This ensures that the `login_required()` decorator will redirect any user not logged in to the URL `/rango/login/`.
+Это гарантирует, что декоратор `login_required()` переадресует любого пользователя, который не вошел в систему, на URL `/rango/login/`.
 
-##Logging Out
-To enable users to log out gracefully, it would be nice to provide a logout option to users. Django comes with a handy `logout()` function that takes care of ensuring that the users can properly and securely log out. The `logout()` function will ensure that their session is ended, and that if they subsequently try to access a view that requires authentication then they will not be able to access it, unless they log back in.
-
-To provide logout functionality in `rango/views.py`, add the view called `user_logout()` with the following code.
+## Выход из системы
+Чтобы пользователи могли корректно выйти из системы, хорошо было бы предоставить им возможность выхода из системы. В Django существует удобная функция `logout()`, которая гарантирует правильный и безопасный выход пользовательтелей из системы. Функция `logout()` гарантирует завершение сессии. После этого последующие попытки доступа к представлению, которое требует аутентификации, приведут к отказу в доступе, пока они снова не войдут в систему.
+Для реализации функции выхода из системы в `rango/views.py` добавьте представление `user_logout()` со следующим кодом.
 
 {lang="python",linenos=off}
-	# Use the login_required() decorator to ensure only those logged in can
-	# access the view.
+	# Используйте декоратор login_required(), чтобы гарантировать, что только авторизированные пользователи
+	# смогут получить доступ к представлению.
 	@login_required
 	def user_logout(request):
-	    # Since we know the user is logged in, we can now just log them out.
+	    # Поскольку мы знаем, что только вошедшие в систему пользователи имеют доступ к этому представлению, можно осуществить выход из системы
 	    logout(request)
-	    # Take the user back to the homepage.
+	    # Перенаправляем пользователя обратно на главную страницу.
 	    return HttpResponseRedirect(reverse('index'))
 
-You'll also need to import the `logout` function at the top of `views.py`.
+Вам также нужно импортировать функцию `logout` в начале `views.py`.
 
 {lang="python",linenos=off}
 	from django.contrib.auth import logout
 
-With the view created, map the URL `/rango/logout/` to the `user_logout()` view by modifying the `urlpatterns` list in Rango's `urls.py`.
+После создания представления, сопоставьте URL `/rango/logout/` представлению `user_logout()`, изменив список `urlpatterns` в `urls.py` Rango.
 
 {lang="python",linenos=off}
 	path('logout/', views.user_logout, name='logout'),
 
-Now that all the machinery for logging a user out has been completed, we can add some finishing touches. It'd be handy to provide a link from the homepage to allow users to simply click a link to logout. However, let's be smart about this: is there any point providing the logout link to a user who isn't logged in? Perhaps not - it may be more beneficial for a user who isn't logged in to be given the chance to register, for example.
+Теперь после реализации функции выхода пользователя из системы, осталось добавить несколько последних штрихов. Было бы удобно, если бы существовала ссылка на главной странице, позволяющая пользователям простым нажатием на неё выйти из системы. Однако подумайте: необходимо ли выдавать такую ссылку пользователю, который не вошел в систему? Скорее всего нет - такому пользователю, например, можно выдать, например, ссылку на страницу регистрации.
 
-Like in the previous section, we'll be modifying Rango's `base.html` template and making use of the `user` object in the template's context to determine what links we want to show. Find your growing list of links at the bottom of the page, and replace it with the following code. Note we also add a link to our restricted page at `/rango/restricted/`.
+Как в предыдущем разделе, изменим шаблон Rango `base.html` и используем объект `user` из контекта шаблона, чтобы определить какую ссылку показывать. Найдите список со ссылками внизу страницы и замените его следующим кодом. Учтите, что мы также добавили ссылку на нашу страницу с ограниченным доступом `/rango/restricted/`.
 
 {lang="html",linenos=off}
 	<ul>
@@ -589,16 +583,16 @@ Like in the previous section, we'll be modifying Rango's `base.html` template an
 	    <li><a href="{% url 'rango:index' %}">Index</a></li>
 	</ul>
 
-This code states that when a user is authenticated and logged in, he or she can see the `Restricted Page` and `Logout` links. If he or she isn't logged in, `Register Here` and `Login` are presented. As `About` and `Add a New Category` are not within the template conditional blocks, these links are available to both anonymous and logged in users.
+Из этого фрагмента кода видно, что когда пользователь прошел аутентификацию и вошел в систему, он или она видит ссылки `Restricted Page` и `Logout`. Если он или она не вошел в систему, отображаются ссылки `Register Here` и `Login`. Ссылки `About` и `Add a New Category` находятся за условными блоками, поэтому доступны как анонимным, так и авторизированным пользователям.
 
-## Taking it Further
-In this chapter, we've covered several important aspects of managing user authentication within Django. We've covered the basics of installing Django's `django.contrib.auth` application into our project. Additionally, we have also shown how to implement a user profile model that can provide additional fields to the base `django.contrib.auth.models.User` model. We have also detailed how to setup the functionality to allow user registrations, login, logout, and to control access. For more information about user authentication and registration consult the [Django documentation on authentication](https://docs.djangoproject.com/en/2.0/topics/auth/).
+## Допонительные возможности
+В этой главе мы рассмотрели несколько важных принципов работы с системой аутентификации пользователей в Django. Мы показали основы установки приложения Django `django.contrib.auth` в наш проект. Кроме того, мы также показали как реализовать модель профиля пользователя, которая позволяет добавить дополнительные поля к базовой модели `django.contrib.auth.models.User`. Мы также подробно описали, как настроить приложение, чтобы позволить пользователям регистрироваться, входить в систему, выходить из системы и контролировать доступ. Для получения дополнительной информации об аутентификации и регистрации пользователей обратитесь к [документации Django по аутентификации](https://docs.djangoproject.com/en/2.0/topics/auth/).
 
-Many Web applications however take the concepts of user authentication further. For example, you may require different levels of security when registering users, by ensuring a valid e-mail address is supplied. While we could implement this functionality, why reinvent the wheel when such functionality already exists? The `django-registration-redux` app has been developed to greatly simplify the process of adding extra functionality related to user authentication. We cover how you can use this package in a [following chapter](#chapter-redux).
+Однако во многих веб-приложениях концепция аутентификации пользователей расширяется. Например, Вы можете захотеть регистрировать только пользователей, указавших реально существующий адрес электронной почты. Хотя мы могли бы реализовать эту функцию, зачём изобретать велосипед, если она уже реализована? Приложение `django-registration-redux` было разработано, чтобы значительно упростить процесс добавления дополнительных функций, связанных с аутентификацией пользователей. Мы рассмотрим как можно использовать этот пакет в [следующей главе](#chapter-redux).
 
-X> ### Exercises
-X> For now, work on the following two exercises to reinforce what you've learnt in this chapter.
+X> ### Упражнения
+X> Пока что выполните следующие два упражнения, чтобы закрепить то, чему Вы научились в этой главе.
 X>
-X> - Customise the application so that only registered users can add categories and pages, while unregistered can only view or use the categories and pages. You'll also have to ensure that the link to add pages appears only if the user browsing the website is logged in.
-X> - Provide informative error messages when users incorrectly enter their username or password.
-X> - Keep your templating know-how up to date by converting the restricted page view to use a template. Call the template `restricted.html`, and ensure that it too extends from Rango's `base.html` template.
+X> - Настройте приложение так, чтобы только зарегистрированные пользователи могли добавлять категории и страницы, а не зарегистрированные могли только просматривать или использовать категории и страницы. Также убедитесь, что ссылка, позволяющая добавлять страницы появляется только если пользователь, просматривает веб сайт, войдя в систему.
+X> - Выдавайте информативные сообщения об ошибках, когда пользователи неправильно вводят свои имена или пароли.
+X> - Применяя свои знания о шаблонах, преобразуйте представление с ограниченным доступом так, чтобы оно использовало шаблон. Назовите шаблон `restricted.html` и убедитесь, что он тоже наследуется от шаблона Rango `base.html`.
