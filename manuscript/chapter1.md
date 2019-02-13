@@ -34,16 +34,8 @@ In this book, we will be taking an exampled-based approach to web application de
 * How to **apply CSS** to give your application a professional look and feel.
 * How to work with **cookies and sessions** with Django.
 * How to include more advanced functionality like *AJAX* into your application.
-* How to **Deploy your application** to a web server using *PythonAnywhere.*
-
-And, new to **How To Tango with Django 2.0**:
-
-* How to **include logging with a web application**
 * How to **write class based views** 
-* How to **use an external database** 
-
-
-
+* How to **Deploy your application** to a web server using *PythonAnywhere.*
 
 
 At the end of each chapter, we have also included a number of exercises designed to push you to apply what you have learnt during the chapter. Then to push you harder, we've included a number of open development challenges, which require you to use many of the lessons from the previous chapters - but don't worry we've also included solutions and explanations too!
@@ -71,7 +63,7 @@ Through the course of this book, we will used various technologies and external 
 * the [JavaScript](https://www.javascript.com/) programming language;
 * the [JQuery](http://jquery.com) library;
 * the [Twitter Bootstrap](http://getbootstrap.com/) framework;
-* the [Webhose API](https://webhose.io/) (referred to as the *search API*); and
+* the [Bing Search API](https://docs.microsoft.com/en-gb/rest/api/cognitiveservices/bing-web-api-v7-reference); and
 * the [PythonAnywhere](https://www.pythonanywhere.com) hosting service;
 
 We've selected these technologies and services as they are either fundamental to web development, and/or enable us to provide examples on how to integrate your web application with CSS toolkits like *Twitter Bootstrap*, external services like those provided by the *Webhose API* and deploy your application quickly and easily with *PythonAnywhere*. Ok, let's get started!
@@ -136,7 +128,7 @@ Wireframes are great way to provide clients with some idea of what the applicati
 ![The index page with a categories search bar on the left, also showing the top five pages and top five categories.](images/ch1-rango-index.png)
 
 {id="fig-cat-page"}
-![The category page showing the pages in the category (along with the number of views). Below, a search for *Python* has been conducted, with the results shown underneath.](images/ch1-rango-cat-page.png)
+![The category page showing the pages in the category (along with the number of views for the category and each page).](images/ch1-rango-cat-page.png)
 
 ### Pages and URL Mappings
 From the specification, we have already identified two pages that our application will present to the user at different points in time. To access each page we will need to describe URL mappings. Think of a URL mapping as the text a user would have to enter into a browser's address bar to reach the given page. The basic URL mappings for Rango are shown below.
@@ -196,5 +188,14 @@ T> **However, it is better to type in the code.** We know that this is a hassle,
 T>
 T> Furthermore, cutting and pasting Python code is asking for trouble. Whitespace can end up being interpreted as spaces, tabs or a mixture of spaces and tabs. This will lead to all sorts of weird errors, and not necessarily indent errors. If you do cut and paste code be wary of this. Pay particular attention to this if you're using Python 3 - inconsistent use of tabs and spaces in your code's indentation will lead to a `TabError`.
 T> 
-T> Most code editors will show the whitespace and whether it is tabs or spaces. If so, turn it on and save yourself a lot of confusion. 
+T> Most code editors will show the whitespace and whether it is tabs or spaces. If so, turn it on and save yourself a lot of confusion.
+
+T> ### Representing Commands
+T>
+T> As you work through this book, you'll encounter lots of text that will be entered into your computer's terminal or Command Prompt. Snippets starting with a dollar sign (`$`) denotes a command that must be entered -- the remainder of the line is the command. In a UNIX terminal, the dollar represents a separator between the *prompt* and the command that you enter.
+T>
+T> {lang="text",linenos=off}
+T> 	david@seram:~ $ exit
+T>
+T> In the example above, the prompt `david@seram:~` tells us our username (`david`), computer name (`seram`) and our current directory (`~`, or our home directory). After the `$`, we have entered the command `exit`, which, when executed, will close the terminal. Refer to the [UNIX chapter for more information.](#chapter-unix)
 
