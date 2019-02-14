@@ -1,121 +1,123 @@
-# Cookies and Sessions
-In this chapter, we will be touching on the basics of handling *sessions* and storing *cookies*. Both go hand in hand with each other, and provide the basis for persisting the current state of the application. In the previous chapter, the Django framework used sessions and cookies to handle the login and logout functionality. However, all this was done behind the scenes. Here we will explore exactly what is going on under the hood, and how we can use cookies ourselves for other purposes.
+# Cookies и сессии
+В этой главе мы коснемся основ работы с *сессиями* и хранения *cookies*. Оба понятия тесно связаны друг с другом и позволяют сохранять текущее состояние приложения. В предыдущей главе фреймворк Django использовал сессии и cookies для реализации функций входа и выхода в/из системы. Но это делалось без нашего явного указания использовать их. Здесь мы рассмотрим, что именно происходит изнутри, и как мы можем сами использовать cookies для других целей.
 
-## Cookies, Cookies Everywhere!
-Whenever a request to a website is made, the webserver returns the content of the requested page. In addition, one or more cookies may also be sent as part of the request. Consider a cookie as a small piece of information sent from the server to the client. When a request is about to be sent, the client checks to see if any cookies that match the address of server exist on the client. If so, they are included in the request. The server can then interpret the cookies as part of the request's context and generate a response to suit.
+## Cookies, Cookies используются везде!
+Всякий раз при создании запроса к сайту, вебсервер возвращает содержимое запрашиваемой страницы. Кроме него также может посылаться один или несколько cookies как часть запроса. Считайте, что cookie - это небольшой фрагмент информации, отправляемой с сервера клиенту. Перед отправкой запроса, клиент проверяет существуют ли у него cookies соответствующие адресу сервера. Если да, то они посылаются вместе с запросом. Затем сервер может обработать cookies как часть контекста запроса и сгенерировать подходящий ответ.
 
-As an example, you may login to a site with a particular username and password. When you have been authenticated, a cookie may be returned to your browser containing your username, indicating that you are now logged into the site. At every request, this information is passed back to the server where your login information is used to render the appropriate page - perhaps including your username in particular places on the page. Your session cannot last forever, however - cookies *have* to expire at some point in time - they cannot be of infinite length. A Web application containing sensitive information may expire after only a few minutes of inactivity. A different Web application with trivial information may expire half an hour after the last interaction - or even weeks into the future.
+Например, Вы можете войти на сайт с определенным именем пользователя и паролем. После аутентификации сервер может вернуть вашему браузеру cookie, который содержит Ваше имя пользователя, указывая на то, что Вы зашли на сайт. При каждом запросе эта информация посылается обратно на сервер, где она используется для выдачи соответствующей страницы - при этом в определенных местах страницы может быть вставлено Ваше имя пользователя. Ваш сеанс работы с браузером не может длиться вечно, поэтому cookies *истекут* через определенный промежуток времени - они не могут быть бесконечной длины. Для веб приложения содержащего содержащего конфиденциальную информацию cookies могут истечь через несколько минут при бездействии со стороны пользователя. Для других веб приложений с не такой важной информацией могут истечь через полчаса после последнего взаимодействия или даже через недели.
 
-I> ### Cookie Origins
-I> The term *cookie* wasn't actually derived from the food that you eat, but from the term *magic cookie*, a packet of data a program receives and sends again unchanged. In 1994, *MCI* sent a request to *Netscape Communications* to implement a way of implementing persistence across HTTP requests. This was in response to their need to reliably store the contents of a user's virtual shopping basket for an e-commerce solution they were developing. Netscape programmer Lou Montulli took the concept of a magic cookie and applied it to Web communications.
+I> ### История появления Cookie
+I> Термин *cookie* на самом деле возник не от слова печенье (так переводится cookie - *прим. переводчика*), а от термина *magic cookie*, пакета данных, которые программа получает и затем отправляет обратно неизменными. В 1994 году *MCI* попросило *Netscape Communications* реализовать способ с помощью которого можно было бы хранить информацию между HTTP запросами.  Это нужно было, чтобы надежно хранить содержимое виртуальной корзины покупок пользователя для приложения электронной коммерции, которое они разрабатывали. Программист Netscape Лу Монтулли (Lou Montulli) использовал понятие magic cookie и применил его для веб коммуникаций.
 I> 
-I> You can find out more about [cookies and their history on Wikipedia](http://en.wikipedia.org/wiki/HTTP_cookie#History). Of course, with such a great idea came a software patent - and you can read [US patent 5774670](http://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1=5774670.PN.&OS=PN/5774670&RS=PN/5774670) that was submitted by Montulli himself.
+I> Вы можете узнать больше о [cookies и их истории на Википедии](http://en.wikipedia.org/wiki/HTTP_cookie#History). Конечно после такой великолепной идеи, Монтулли подал заявку на патент, который можно прочитать [US патент 5774670](http://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1=5774670.PN.&OS=PN/5774670&RS=PN/5774670).
 
-The passing of information in the form of cookies can open up potential security holes in your Web application's design. This is why developers of Web applications need to be extremely careful when using cookies. When using cookies, a designer must always ask himself or herself: *does the information you want to store as a cookie **really** need to be sent and stored on a client's machine?* In many cases, there are more secure solutions to the problem. Passing a user's credit card number on an e-commerce site as a cookie for example would be highly insecure. What if the user's computer is compromised? A malicious program could take the cookie. From there, hackers would have his or her credit card number - all because your Web application's design is fundamentally flawed. This chapter examines the fundamental basics of client-side cookies - and server-side session storage for Web applications.
+Передача информации в виде cookies может привести к потенциальным проблемам безопасности при проектировании Вашего приложения. Из-за этого разработчики веб приложений должны быть очень осторожны при использовании cookies. Каждый раз при использовании cookies разработчик должен спрашивать себя: ***действительно** ли необходимо информацию, которую Вы хотите хранить в cookie, посылать и хранить на машине клиента?* Во многих случаях, существуют альтернативные и более безопасные решения проблемы. Например, не стоит передавать номер кредитной карточки пользователя сайту электронной коммерции в виде cookie. Что если компьютер пользователя взломают? Cookie может быть перехвачен вредноносной программой. После этого хакер сможет получить номер кредитной карточки пользователя - все из-за в корне ошибочного дизайна Вашего веб приложения. В этой главе рассматриваются фундаментальные основы cookie на стороне клиента и хранения сессий на стороне сервера для веб-приложений.
 
 {id="fig-ch10-bbcnews"}
-![A screenshot of the BBC News website (hosted in the United Kingdom) with the cookie warning message presented at the top of the page.](images/ch10-bbcnews.png)
+![Снимок экрана веб сайта BBC News (с хостингом в Великобритании) с предупреждающим сообщением об использовании cookie в верхней части страницы.](images/ch10-bbcnews.png)
 
-I> ### Cookies in the EU
-I> In 2011, the European Union (EU) introduced an EU-wide *'cookie law'*, where all hosted sites within the EU should present a cookie warning message when a user visits the site for the first time. The [figure above](#fig-ch10-bbcnews) demonstrates such a warning on the BBC News website. You can read about [the law here](https://ico.org.uk/for-organisations/guide-to-pecr/cookies-and-similar-technologies/).
+I> ### Об использовании Cookies в Европейском Союзе
+I> В 2011 году Европейский Союз (ЕС) ввел *"закон о cookie"* на всей территории ЕС, согласно которому все сайты с хостингом в ЕС должны выдавать предупреждающее сообщением об использовании cookie, когда пользователь посещает сайт первый раз. На [приведенном выше рисунке](#fig-ch10-bbcnews) показано такое предупреждающее сообщение для сайта BBC News. Прочитать о [законе можно здесь](https://ico.org.uk/for-organisations/guide-to-pecr/cookies-and-similar-technologies/).
 I>
-I> If you are developing a site, you'll need to be aware of this law, and other laws especially regarding accessibility and more recently explainability.
+I> Если вы разрабатываете сайт, вам нужно знать об этом законе и других законах, особенно касающихся доступности и объяснимости, ставшей актуальной в последнее время.
 
-## Sessions and the Stateless Protocol
-All correspondence between Web browsers (clients) and servers is achieved through the [HTTP protocol](http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol). As previously mentioned, HTTP is a [stateless protocol](http://en.wikipedia.org/wiki/Stateless_protocol). This means that a client computer running a Web browser must establish a new network connection (a [TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) connection) to the server each time a resource is requested (HTTP `GET`) or sent (HTTP `POST`) [^1].
+## Сессии и протокол без сохранения состояния
+Все взаимодействия между веб браузерами (клиентами) и серверами осуществляется с помощью [HTTP протокола](http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol). Как мы уже говорили ранее, HTTP - это [протокол без сохранения состояния](http://en.wikipedia.org/wiki/Stateless_protocol). Это означает, что компьютер клиента, на котором работает веб браузер должен установить новое сетевое соединение ([TCP соединение](https://en.wikipedia.org/wiki/Transmission_Control_Protocol)) с сервером каждый раз при запросе ресурса (HTTP `GET`) или отправке (HTTP `POST`) [^1].
 
-Without a persistent connection between the client and server, the software on both ends cannot simply rely on connections alone to *hold session state*. For example, the client would need to tell the server each time who is logged on to the Web application on a particular computer. This is known as a form of *dialogue* between the client and server, and is the basis of a *session* - a [semi-permanent exchange of information](http://en.wikipedia.org/wiki/Session_(computer_science)). Being a stateless protocol, HTTP makes holding session state pretty challenging, but there are luckily several techniques we can use to circumnavigate this problem.
+Без постоянной связи между клиентом и сервером программное обеспечение на обеих сторонах не может использовать саму связь для *хранения состояния сеанса*. Например, клиент должен передавать серверу каждый раз кто вошел в веб приложение на конкретном компьютере. Это так называемый диалог между клиентом и сервером и он является основой для *сессии* - [полупостоянного обмена информацией](http://en.wikipedia.org/wiki/Session_(computer_science)). Являясь протоколом без сохранения состояния, HTTP сильно усложняет хранение состояния сессии - но, к счастью, существует несколько методов, которые можно использовать для решения этой проблемы.
 
-The most commonly used way of holding state is through the use of a *session ID* stored as a cookie on a client's computer. A session ID can be considered as a token (a sequence of characters, or a *string*) to identify a unique session within a particular Web application. Instead of storing all kinds of information as cookies on the client (such as usernames, names, or passwords), only the session ID is stored, which can then be mapped to a data structure on the Web server. Within that data structure, you can store all of the information you require. This approach is a **much more secure** way to store information about users. This way, the information cannot be compromised by a insecure client or a connection which is being snooped.
+Чаще всего для хранения состояния используется *идентификатор сессии*, хранящийся в виде cookie на компьютере клиента. Идентификатор сессии можно считать токеном (последовательностью символов или *строкой*), который используется для определения отдельной сессии в рамках конкретного веб приложения. Вместо хранения различной информации в виде cookies на стороне клиента (например, имя пользователя, имена или пароли), хранится только идентификатор сессии, который затем сопоставляется структуре данных на веб сервере. В этой структуре данных, Вы можете хранить любую информацию, которая Вам требуется. Этот метод **гораздо более безопасный** способ хранения информации о пользователях. Таким образом, информацию нельзя получить, взломав незащищенный клиент или отслеживая линию связи.
 
-If you're using a modern browser that's properly configured, it'll support cookies. Pretty much every website that you visit will create a new *session* for you when you visit. You can see this for yourself now -- check out the [screenshot below](#fig-ch10-sessionid). For Google Chrome, you can view cookies for the currently open website by accessing Chrome's Developer Tools, by accessing *Chrome Settings > More Tools > Developer Tools*. When the Developer Tools pane opens, click the *Application* tab, and look for *Cookies* down the left hand side, within the *Storage* menu. If you're running this with a Rango page open, you should then hopefully see a cookie called `sessionid`. The `sessionid` cookie contains a series of letters and numbers that Django uses to uniquely identify your computer with a given session. With this session ID, all your session details can be accessed -- but they are only stored on the *server side*.
+
+Если вы используете современный правильной настроенный браузер, то он будет поддерживать cookies. Практически каждый веб-сайт, который Вы посещаете, будет создавать новую *сессию*. Вы можете убедиться в этом сами -- посмотрите на [снимок экрана, показанный ниже](#fig-ch10-sessionid). В Google Chrome вы можете просматривать файлы cookie для открытого в данный момент веб-сайта из Инструментов разработчика, выбрав *Настройки Chrome > Дополнительные инструменты > Инструменты разработчика*.  Когда откроется панель «Инструменты разработчика», перейдите на вкладку *Application* и найдите *Cookies* в левой части меню *Storage*. Если у Вас открыта страница Rango, то Вы должны увидеть cookie с именем `sessionid`. Cookie `sessionid` состоит из последовательности букв и цифр, которые Django использует для уникальной идентификации вашего компьютера с текущей сессией. С помощью этого идентификатора сессии можно получить доступ ко всей информации сессии, но она хранятся только на *серверной стороне*.
 
 {id="fig-ch10-sessionid"}
-![A screenshot of Google Chrome's Developer Tools with the `sessionid` cookie highlighted.](images/ch10-sessionid.png)
+![Снимок экрана Google Chrome с открытой панелью Инструментов разработчика и выделенным `sessionid` cookie.](images/ch10-sessionid.png)
 
-I> ### Without Cookies
-I> An alternative way of persisting state information *without cookies* is to encode the Session ID within the URL. For example, you may have seen PHP pages with URLs like this one: `http://www.site.com/index.php?sessid=someseeminglyrandomandlongstring1234`. This means you don't need to store cookies on the client machine, but the URLs become pretty ugly. These URLs go against the principles of Django, which is to provide clean, simple and human-friendly URLs.
+I> ### Если не использовать Cookies
+I> Альтернативный способ сохранения информации о состоянии *без cookies* заключается в кодировании идентификатора сессии в URL. Например, возможно Вы видели PHP страницы с URL-адресами вида: `http://www.site.com/index.php?sessid=someseeminglyrandomandlongstring1234`. При этом Вам не нужно хранить cookies на компьютере клиента, но URL-адреса становятся довольно уродливыми. Эти URL идут вразрез с принципами Django, который заключается в предоставлении простых и человекопонятных URL-адресов.
 
-## Setting up Sessions in Django
-Although this should already be setup and working correctly, it's nevertheless good practice to learn which Django modules provide which functionality. In the case of sessions, Django provides [middleware](https://docs.djangoproject.com/en/2.0/topics/http/middleware/) that implements session functionality.
+## Настройка сессий в Django
+Хотя все должно быть настроено и работать правильно, тем не менее полезно изучить такие функции выполняет каждый модуль Django. В случае сессий, Django предоставляет [ПО промежуточного уровня](https://docs.djangoproject.com/en/2.0/topics/http/middleware/), которое реализует функционал сессий.
 
-To check that everything is in order, open your Django project's `settings.py` file. Within the file, locate the `MIDDLEWARE` list. You should find within this list a module represented by the string `django.contrib.sessions.middleware.SessionMiddleware`. If you can't see it, add it to the list now. It is the `SessionMiddleware` middleware that enables the creation of unique `sessionid` cookies.
+Чтобы проверить, что все работает правильно, откройте файл `settings.py` проекта Django. В файле найдите список `MIDDLEWARE`. В нём должен находится модуль `django.contrib.sessions.middleware.SessionMiddleware`. Если его нет, то добавьте его в список. Именно `SessionMiddleware` позволяет создавать уникальные `sessionid` cookies.
 
-The `SessionMiddleware` is designed to work flexibly with different ways to store session information. There are many approaches that can be taken - you could store everything in a file, in a database, or even in a in-memory cache. The most straightforward approach is to use the `django.contrib.sessions` application to store session information in a Django model/database (specifically, the model `django.contrib.sessions.models.Session`). To use this approach, you'll also need to make sure that `django.contrib.sessions` is in the `INSTALLED_APPS` tuple of your Django project's `settings.py` file. Remember, if you add the application now, you'll need to update your database with the usual migration commands.
+`SessionMiddleware` создано таким образом, что позволяет хранить информацию о сессии различным образом. Существует множество методов, которые можно использовать - Вы можете хранить всё в файле, в базе данных или даже в кэше. Самый простой способ - это использовать приложение `django.contrib.sessions` для хранения информации о сессии в модели/базе данных Django
+The `SessionMiddleware` (а именно, модели `django.contrib.sessions.models.Session`). Для этого нужно добавить `django.contrib.sessions` в кортеж `INSTALLED_APPS` в файл `settings.py` Вашего Django проекта. Помните, что если Вы добавили его только что, необходимо обновить базу данных с помощью команд миграции.
 
-T> ### Caching Sessions
-T> If you want faster performance, you may want to consider a cached approach for storing session information. You can check out the [Django documentation for advice on cached sessions](https://docs.djangoproject.com/en/2.0/topics/http/sessions/#using-cached-sessions).
+T> ### Кеширование сессий
+T> Если Вы хотите ускорить работу приложения, можно попробовать использовать кэш для хранения информации о сессии. Прочитайте [официальную Django документацию, связанную с кэшированием сессий](https://docs.djangoproject.com/en/2.0/topics/http/sessions/#using-cached-sessions).
 
-## A Cookie Tasting Session
-While all modern Web browsers support cookies, certain cookies may get blocked depending on your browser's security level. Check that you've enabled support for cookies before continuing. It's likely however that everything is ready for you to proceed.
+## Использование сессий с cookie
+Хотя все современные браузеры поддерживают cookies, определенные cookies могут блокироваться в зависимости от настроек безопасности Вашего браузера. Прежде чем продолжить убедитесь, что у Вас включена поддержка cookies. Скорее всего всё уже и так готово к работе и Вы можете продолжать.
 
-### Testing Cookie Functionality
-To test out cookies, you can make use of some convenience methods provided by Django's `request` object. The three of particular interest to us are `set_test_cookie()`, `test_cookie_worked()` and `delete_test_cookie()`. In one view, you will need to set the test cookie. In another, you'll need to test that the cookie exists. Two different views are required for testing cookies because you need to wait to see if the client has accepted the cookie from the server.
+### Проверка функционала cookie
+Для проверки cookies, Вы можете использовать несколько удобных методов, предоставляемых объектом Django's `request`. Особый интерес для нас представляют три метода - `set_test_cookie()`, `test_cookie_worked()` и `delete_test_cookie()`. В одном предсатвлении Вам нужно будет установить тестовый cookie. В другом - проверить, что cookie существует. Для тестирования cookies нужно два разных представления, поскольку необходимо подождать пока клиент получит cookie от сервера.
 
-We'll use two pre-existing views for this simple exercise, `index()` and `about()`. Instead of displaying anything on the pages themselves, we'll be making use of the terminal output from the Django development server to verify whether cookies are working correctly.
+Для этого простой проверки мы будем использовать два ранее существующих представления: `index()` и `about()`. Вместо того, чтобы что-то отображать на самих страницах, мы будем использовать терминал, в котором запускается Django сервер для разработки, чтобы проверить правильно ли работают cookies.
 
-In Rango's `views.py` file, locate your `index()` view. Add the following line to the view. To ensure the line is executed, make sure you put it as the first line of the view.
+В файле `views.py` Rango найдите Ваше представление `index()`. Добавьте следующую строку в представление. Чтобы строка действительно выполнялась, убедитесь, что она находится в первой строке представления.
 
 {lang="python",linenos=off}
 	request.session.set_test_cookie()
 
-In the `about()` view, add the following three lines to the top of the function.
+В представление `about()`  добавьте следующие три строки в самом начале функции.
 
 {lang="python",linenos=off}
 	if request.session.test_cookie_worked():
 	    print("TEST COOKIE WORKED!")
 	    request.session.delete_test_cookie()
 
-With these small changes saved, run the Django development server and navigate to Rango's homepage, `http://127.0.0.1:8000/rango/`. Now navigate to the about page, you should see `TEST COOKIE WORKED!` appear in your Django development server's console, like in the [figure below](#fig-ch10-test-cookie).
+Сохранив эти изменения, запустите Django сервер для разработки и перейдите на главную страницу Rango `http://127.0.0.1:8000/rango/`. Теперь перейдите на страницу about и Вы должны увидеть сообщение `TEST COOKIE WORKED!` в консоли Django сервера для разработки, как показано на [рисунке ниже](#fig-ch10-test-cookie).
 
 {id="fig-ch10-test-cookie"}
-![A screenshot of the Django development server's console output with the `TEST COOKIE WORKED!` message.](images/ch10-test-cookie.png)
+![Снимок экрана консоли Django сервера для разработки с сообщением `TEST COOKIE WORKED!`.](images/ch10-test-cookie.png)
 
-If the message isn't displayed, you'll want to check your browser's security settings. The settings may be preventing the browser from accepting the cookie.
+Если сообщение не выводится, проверьте настройки безопасности Вашего браузера. Настройки могут запрещать браузеру принимать cookie.
 
-## Client Side Cookies: A Site Counter Example
-Now we know how cookies work, let's implement a very simple site visit counter. To achieve this, we're going to be creating two cookies: one to track the number of times the user has visited the Rango app, and the other to track the last time they accessed the site. Keeping track of the date and time of the last access will allow us to only increment the site counter once per day (for example) and thus avoid people spamming the site to increment the counter.
+## Пример использования cookies на стороне клиента: счетчик количества посещений сайта
+Убедившись, что cookies работают, давайте реализуем очень простой счетчик посещений сайта. Для этого мы создадим два cookies: один для подсчета количества посещений пользователем сайта Rango и второй для хранения времени последнего посещения сайта. Хранение даты и времени последнего посещения позволит нам увеличивать счетчик только раз в день (например) и таким образом избежать накрутки счетчика, если одни и те же люди будут заходить на сайт.
 
-The sensible place to assume where a user enters the Rango site is at the index page. Open Rango's `view.py` file. Let's first make a function -- given a handle to both the `request` and `response` objects -- to handle cookies (`visitor_cookie_handler()`). We can then make use of this function in Rango's `index()` view. In `views.py`, add in the following function. Note that it is not technically a view, because it does not return a `response` object -- it is just a [*helper function*](https://web.cs.wpi.edu/~cs1101/a05/Docs/creating-helpers.html).
+Будем считать, что пользователь посещает сайт Rango, когда заходит на главную страницу. Откройте файл `view.py`. давайте сначала создадим функцию -- которой передаются объекты `request` и `response` -- для обработки cookies (`visitor_cookie_handler()`). Затем мы можем использовать её в представлении `index()` Rango. В `views.py` добавьте следующую функцию. Обратите внимание, что на самом деле это не представление, поскольку оно не возвращает объект `response` - это просто [*вспомогательная функция*](https://web.cs.wpi.edu/~cs1101/a05/Docs/creating-helpers.html).
 
 {lang="python",linenos=off}
 	def visitor_cookie_handler(request, response):
-	    # Get the number of visits to the site.
-	    # We use the COOKIES.get() function to obtain the visits cookie.
-	    # If the cookie exists, the value returned is casted to an integer.
-	    # If the cookie doesn't exist, then the default value of 1 is used.
+	    # Получаем количество посещений сайта.
+	    # Мы используем функцию COOKIES.get(), чтобы получить cookie с количеством посещений.
+	    # Если cookie существует, то возвращаемое значение преобразуется в целое число.
+	    # Если cookie не существует, то используется значение по умолчанию 1.
 	    visits = int(request.COOKIES.get('visits', '1'))
 	
 	    last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
 	    last_visit_time = datetime.strptime(last_visit_cookie[:-7],
 	                                        '%Y-%m-%d %H:%M:%S')
 	
-	    # If it's been more than a day since the last visit...
+	    # Прошло больше суток с момента последнего посещения...
 	    if (datetime.now() - last_visit_time).days > 0:
 	        visits = visits + 1
-	        # Update the last visit cookie now that we have updated the count
+	        # Обновляем last_visit_cookie после того как мы обновили счетчик
 	        response.set_cookie('last_visit', str(datetime.now()))
 	    else:
-	        # Set the last visit cookie
+	        # Устанавливаем last_visit_cookie
 	        response.set_cookie('last_visit', last_visit_cookie)
 	    
-	    # Update/set the visits cookie
+	    # Обновляем/устанавливаем cookie посещений
 	    response.set_cookie('visits', visits)
 
-This helper function takes the `request` and `response` objects -- because we want to be able to access the incoming cookies from the `request`, and add or update cookies in the `response`. In the function, you can see that we call the `request.COOKIES.get()` function, which is a further helper function provided by Django. If the cookie exists, it returns the value. If it does not exist, we can provide a default value.  Once we have the values for each cookie, we can calculate whether a day (`.days`) has elapsed between the last visit.
+Эта вспомогательная функция принимает объекты `request` и `response` -- поскольку мы хотим получить доступ к передаваемым серверу cookies с помощью `request` и добавить или обновить cookies в `response`. В функции мы вызываем функцию `request.COOKIES.get()`, которая является дополнительной вспомогательной функцией, предоставляемой Django. Если cookie существует, она возвращает его значение. Если нет -- мы можем выдать значение по умолчанию. Получив значения для каждого cookie, мы можем определить прошел ли день (`.days`) между последним посещением.
 
-If you want to test this code out without having to wait a day, change `days` to `seconds`. That way the visit counter can be updated every second, as opposed to every day.
+Если Вы хотите протестировать этот код не ожидая целый день, измените `days` на `seconds`. Таким образом, счетчик посещений будет обновляться, если пользователь посещал сайт секундой ранее, а не днём.
 
-**Note that all cookie values are returned as strings**; *do not assume that a cookie storing whole numbers will return an integer.* You have to manually cast this to the correct type yourself because there's no place in which to store additional information within a cookie telling us of the value's type.
+**Обратите внимание, что все значения cookie возвращаются в виде строк**; *даже, если cookie содержит только цифры, вернется не число, а строка*. Вы должны вручную преобразовать результат в правильный тип, поскольку в cookie не сохраняется информация о типе значения.
 
-If a cookie does not exist, you can create a cookie with the `set_cookie()` method of the `response` object you create. The method takes in two values, the name of the cookie you wish to create (as a string), and the value of the cookie. In this case, it doesn't matter what type you pass as the value - it will be automatically cast to a string.
+Если cookie не существует, Вы можете создать его с помощью метода set_cookie() объекта `response`. Метод принимает два значения: название cookie, которое нужно создать (в виде строки) и значение cookie. В этом случае, не важно какой тип Вы передаёте для значения - он будет автоматически приведен к строке.
 
-Since we are using the `datetime` we need to `import` this into `views.py` at the top of the file.
+Поскольку мы используем `datetime` нам надо импортировать (`import`) его в `views.py` в начале файла.
 
 {lang="python",linenos=off}
 	from datetime import datetime
 
-Next, update the `index()` view to call the `cookie_handler_function()` helper function. To do this, we need to extract the `response` first.
+Затем обновите представление `index()`, чтобы вызвать вспомогательную функцию `cookie_handler_function()`. Для этого нам необходимо сначала получить `response`.
 
 {lang="python",linenos=off}
 	def index(request):
@@ -123,45 +125,45 @@ Next, update the `index()` view to call the `cookie_handler_function()` helper f
 	    page_list = Page.objects.order_by('-views')[:5]
 	    context_dict = {'categories': category_list, 'pages': page_list}
 	    
-	    # Obtain our Response object early so we can add cookie information.
+	    # Получаем наш объект Response заранее, чтобы мы могли добавить информацию о cookie.
 	    response = render(request, 'rango/index.html', context_dict)
 	
-	    # Call the helper function to handle the cookies
+	    # Вызываем вспомогательную функцию для обработки cookies
 	    visitor_cookie_handler(request, response)
 	
-	    # Return response back to the user, updating any cookies that need changed.
+	    # Возвращаем ответ обратно пользователю, обновляя при этом любые изменившиеся cookies.
 	    return response
 
 {id="fig-ch10-cookie-visits"}
-![A screenshot of Google Chrome with the Developer Tools open showing the cookies for Rango, using the Django development server at `127.0.0.1`. Note the `visits` cookie - the user has visited a total of three times, with each visit at least one day apart.](images/ch10-cookie-visits.png)
+![Снимок экрана Google Chrome с открытымы инструментами разработчика, где показаны cookies для Rango, используя сервер для разработок Django по адресу `127.0.0.1`. Обратите внимание на cookie `visits` - пользователь в общей сложности посетил сайт три раза, с интервалом по крайней мере в один день.](images/ch10-cookie-visits.png)
 
-Now if you visit the Rango homepage and open the cookie inspector provided by your browser (e.g. Google Chrome's Developer Tools), you should be able to see the cookies `visits` and `last_visit`. The [figure above](#fig-ch10-cookie-visits) demonstrates the cookies in action. Instead of using the developer tools, you could update the `index.html` and add `<p>visits: {{ visits }}</p>` to the template to show the number of visits, and updating the context dictionary to include the `visits` value (i.e. `'visits': int(request.COOKIES.get('visits', '1')),`).
+Теперь, если Вы посетите главную страницу Rango и откроете инструменты для просмотра cookie Вашего браузера (например, Инструменты разработчика Google Chrome), Вы должны увидеть cookies `visits` и `last_visit`. На [рисунке выше](#fig-ch10-cookie-visits) показаны эти cookies. Вместо использования инструментов разработчика Вы можете обновить `index.html` и добавить `<p>visits: {{ visits }}</p>` в шаблон, чтобы увидеть число посещений. Также Вам нужно будет обновить словарь контекта добавив в него значение `visits` (т. е., `'visits': int(request.COOKIES.get('visits', '1')),`).
 
+## Данные сессии
+В предыдущем примере показано как мы можем хранить и изменять cookies на стороне клиента - или данные, хранящиеся у клиента. Но безопаснее хранить информацию о сессии на стороне сервера. Тогда мы можем использовать cookie идентификатора сессии, который хранится на стороне клиента (но не предоставляет какой-либо информации), чтобы получить эти данные.
 
-## Session Data
-The previous example shows how we can store and manipulate client side cookies - or the data stored on the client. However, a more secure way to save session information is to store any such data on the server side. We can then use the session ID cookie that is stored on the client side (but is effectively anonymous) as the key to access the data.
+Чтобы использовать сессии, на основе cookies, необходимо осуществить следующие шаги.
 
-To use session-based cookies you need to perform the following steps.
+1.  Удостовериться, что список `MIDDLEWARE_CLASSES` в модуле `settings.py` содержит `django.contrib.sessions.middleware.SessionMiddleware`.
+2.  Настроить бекенд Вашей сесссии. Убедитесь, что `django.contrib.sessions` находится в `INSTALLED_APPS` файла `settings.py`. Если нет - добавить его и выполнить команду миграции базы данныых -  `python manage.py migrate`.
+3.  По умолчанию, бекендом является база данных, но Вы можете выбрать другой (например, кэш). Смотри [Django документацию по сесссиям для других конфигураций бекендов](https://docs.djangoproject.com/en/2.0/topics/http/sessions/).
 
-1.  Make sure that the `MIDDLEWARE_CLASSES` list found in the `settings.py` module contains `django.contrib.sessions.middleware.SessionMiddleware`.
-2.  Configure your session backend. Make sure that `django.contrib.sessions` is in your `INSTALLED_APPS` in `settings.py`. If not, add it, and run the database migration command, `python manage.py migrate`.
-3.  By default a database backend is assumed, but you might want to a different setup (i.e. a cache). See the [Django documentation on sessions for other backend configurations](https://docs.djangoproject.com/en/2.0/topics/http/sessions/).
+Теперь вместо хранения непосредственно cookies в запросе (и таким образом на машине клиента), Вы можете получить доступ к cookies на стороне сервера, используя метод `request.session.get()`, и хранить их в `request.session[]`. Обратите внимание, что cookie идентификатора сессии всё равно используется для идентификации машины клиента (поэтому технически cookie на стороне браузера существует). Но все данные пользователя/сессии хранятся на серверной стороне. 
+Instead of storing the cookies directly in the request (and thus on the client's machine), you can access server-side data via the method `request.session.get()` and store them with `request.session[]`. Note that a session ID cookie is still used to remember the client's machine (so technically a browser side cookie exists). However, all the user/session data is stored server side. ПО промежуточного уровня Django для работы с сессиями берет на себя задачи по работе с cookie на стороне клиента и хранению данных пользователя/сессии.
 
-Instead of storing the cookies directly in the request (and thus on the client's machine), you can access server-side data via the method `request.session.get()` and store them with `request.session[]`. Note that a session ID cookie is still used to remember the client's machine (so technically a browser side cookie exists). However, all the user/session data is stored server side. Django's session middleware handles the client side cookie and the storing of the user/session data. 
+Чтобы использовать данные на стороне сервера, нам необходимо провести рефакторинг кода, который мы уже написали. Во-первых, нам нужно обновить функцию visitor_cookie_handler (), чтобы она использовала cookies на стороне сервера. Для этого вызовите `request.session.get()` и сохраните их, поместив в словарь `request.session[]`. Чтобы упростить нам задачу мы создали вспомогательную функцию `get_server_side_cookie()`, которая запрашивает cookie у запроса. Если cookie находится в данных сессии, то возвращается его значение. В противном случае возвращается значение по умолчанию.
 
-To use the server side data, we need to refactor the code we have written so far. First, we need to update the `visitor_cookie_handler()` function so that it accesses the cookies on the server side. We can do this by calling `request.session.get()`, and store them by placing them in the dictionary `request.session[]`. To help us along, we have made a helper function called `get_server_side_cookie()` that asks the request for a cookie. If the cookie is in the session data, then its value is returned. Otherwise, the default value is returned.
-
-Since all the cookies are stored server side, we won't be changing the response directly. Because of this, we can remove `response` from the `visitor_cookie_handler()` function definition.
+Поскольку все cookies хранятся на стороне сервера, мы не будем непосредственно менять ответ сервера. Поэтому мы можем удалить `response` из аргументов функции `visitor_cookie_handler()`.
 
 {lang="python",linenos=off}
-	# A helper method
+	# Вспомогательный метод
 	def get_server_side_cookie(request, cookie, default_val=None):
 	    val = request.session.get(cookie)
 	    if not val:
 	        val = default_val
 	    return val
 	
-	# Updated the function definition
+	# Обновленное определение функции
 	def visitor_cookie_handler(request):
 	    visits = int(get_server_side_cookie(request, 'visits', '1'))
 	    last_visit_cookie = get_server_side_cookie(request,
@@ -170,24 +172,24 @@ Since all the cookies are stored server side, we won't be changing the response 
 	    last_visit_time = datetime.strptime(last_visit_cookie[:-7],
 	                                        '%Y-%m-%d %H:%M:%S')
 	
-	    # If it's been more than a day since the last visit...
+	    # Если прошло более одного дня с последнего посещения...
 	    if (datetime.now() - last_visit_time).days > 0:
 	        visits = visits + 1
-	        #update the last visit cookie now that we have updated the count
+	        # теперь обновляем cookie last visit, после того как обновили значение счётчика
 	        request.session['last_visit'] = str(datetime.now())
 	    else:
-	        # set the last visit cookie 
+	        # установить cookie last visit
 	        request.session['last_visit'] = last_visit_cookie
 	
-	    # Update/set the visits cookie
+	    # Обновить/установить cookie visits
 	    request.session['visits'] = visits
 
-Now that we have updated the handler function, we can now update the `index()` view. First change `visitor_cookie_handler(request, response)` to `visitor_cookie_handler(request)`. Then add in the following line to pass the number of visits to the context dictionary.
+Теперь когда мы обновили функцию-обработчик, можно обновить представление `index()`. Сначала измените `visitor_cookie_handler(request, response)` на `visitor_cookie_handler(request)`. Затем добавьте следующую строку, чтобы передать количество посещений в словарь контекста.
 
 {lang="python",linenos=off}
 	context_dict['visits'] = request.session['visits']
 
-Make sure that these lines are executed before `render()` is called, or your changes won't be executed. The `index()` view should look like the code below. Notice that the order in which the methods are called is different because we no longer need manipulate the cookies in the response.
+Убедитесь, что эти строки выполняются до вызова метода `render()` или Ваши изменения не применятся. Представление `index()` должно выглядеть так, как показано ниже. Обратите внимание, что порядок вызова методов отличается, потому что нам больше не нужно изменять cookies в ответе от сервера.
 
 {lang="python",linenos=off}
 	def index(request):
@@ -202,54 +204,54 @@ Make sure that these lines are executed before `render()` is called, or your cha
 	    response = render(request, 'rango/index.html', context=context_dict)
 	    return response
 
-Before you restart the Django development server, delete the existing client side cookies to start afresh. See the warning below for more information.
+Прежде чем перезапустить сервер разработки Django, удалите существующие cookies на стороне клиента. Смотри предупреждение, приведенное ниже, для получения дополнительной информации.
 
-W> ### Avoiding Cookie Confusion
-W> It's highly recommended that you delete any client-side cookies for Rango *before* you start using session-based data. You can do this in your browser's cookie inspector by deleting each cookie individually, or simply clear your browser's cache entirely -- ensuring that cookies are deleted in the process.
+W> ### Избегаем конфликтов c Cookie
+W> Настоятельно рекомендуется удалять любые cookies на стороне клиента для Rango *перед* тем как использовать данные, на основе сессий. Это можно сделать через инструменты разработчика Вашего браузера, удалив каждый cookie по отдельности или просто очистить вешь кэш Вашего браузера и убедиться, что все cookies были удалены.
 
-I> ### Data Types and Cookies
-I> An added advantage of storing session data server-side is its ability to cast data from strings to the desired type. This only works however for [built-in types](http://docs.python.org/3/library/stdtypes.html), such as `int`, `float`, `long`, `complex` and `boolean`. If you wish to store a dictionary or other complex type, don't expect this to work. In this scenario, you might want to consider [pickling your objects](https://wiki.python.org/moin/UsingPickle).
+I> ### Типы данных и Cookies
+I> Дополнительным преимуществом хранения данных сессии на стороне сервера является возможность приводить данные из строк в требуемый тип. Но эта возможность работает только для [встроенных типов](http://docs.python.org/3/library/stdtypes.html), таких как `int`, `float`, `long`, `complex` и `boolean`. Если вы хотите сохранить словарь или другой сложный тип, то этот способ не сработает. В этом случае можно [сохранять/загружать объекты с помощью модуля Pickle](https://wiki.python.org/moin/UsingPickle).
 
-## Browser-Length and Persistent Sessions
-When using cookies you can use Django's session framework to set cookies as either *browser-length sessions* or *persistent sessions*. As the names of the two types suggest:
+## Браузерные и постоянные сессии
+Используя фреймворк для работы с сессиями Django можно настроить cookies для работы с *браузерными сессиями* или *постоянными сессиями*. Как следует из названий этих двух типов:
 
--   browser-length sessions expire when the user closes his or her browser; and
--   persistent sessions can last over several browser instances - expiring at a time of your choice. This could be half an hour, or even as far as a month in the future.
+-   браузерные сессии заканчиваются, когда пользователь закрывает свой браузер; а
+-   постоянные сессии могут длиться на протяжении нескольких сеансов работы с браузером - истекая в момента времени, выбранный Вами. Этот момент может настать через полчаса или даже через месяц.
 
-By default, browser-length sessions are disabled. You can enable them by modifying your Django project's `settings.py` module. Add the variable `SESSION_EXPIRE_AT_BROWSER_CLOSE`, setting it to `True`.
+По умолчанию, браузерные сессии отключены. Вы можете включить их, изменив модуль `settings.py` Вашего Django проекта. Добавьте переменную `SESSION_EXPIRE_AT_BROWSER_CLOSE` и присвойте ей значение `True`.
 
-Alternatively, persistent sessions are enabled by default, with `SESSION_EXPIRE_AT_BROWSER_CLOSE` either set to `False`, or not being present in your project's `settings.py` file. Persistent sessions have an additional setting, `SESSION_COOKIE_AGE`, which allows you to specify how long the cookie can live for. This value should be an integer, representing the number of seconds the cookie can live for. For example, specifying a value of `1209600` will mean your website's cookies expire after a two week (14 day) period.
+Постоянные сессии наоборот по умолчанию включены - если `SESSION_EXPIRE_AT_BROWSER_CLOSE` присвоено значение `False` или оно вообще не определено в файле `settings.py` Вашего проекта. Постоянные сессии имеют дополнительную настройку `SESSION_COOKIE_AGE`, которая позволяет определить срок существования cookie. Значение должно быть целым числом, представляющим число секунд существования cookie. Например, если указать в качестве значения `1209600`, то это будет означать, что cookies для Вашего веб сайта истечет через две недели (или 14 дней).
 
-Check out the available settings you can use on the [official Django documentation on cookies](https://docs.djangoproject.com/en/2.0/ref/settings/#session-cookie-age) for more details. You can also check out [Eli Bendersky's blog](http://eli.thegreenplace.net/2011/06/24/django-sessions-part-i-cookies/) for an excellent tutorial on cookies and Django.
+Чтобы узнать больше о доступных параметрах для настройки, которые Вы можете использовать, обратитесь к [официальной Django документации по cookies](https://docs.djangoproject.com/en/2.0/ref/settings/#session-cookie-age). Также можете просмотреть [блог Eli Bendersky](http://eli.thegreenplace.net/2011/06/24/django-sessions-part-i-cookies/), который является прекрасным учебным пособием по cookies и Django.
 
-## Clearing the Sessions Database
-Sessions accumulate easily, and the data store that contains session information does too. If you are using the database backend for Django sessions, you will have to periodically clear the database that stores the cookies. This can be done using `$ python manage.py clearsessions`. The [Django documentation](https://docs.djangoproject.com/en/2.0/topics/http/sessions/#clearing-the-session-store) suggests running this daily as a [Cron job](https://en.wikipedia.org/wiki/Cron). If you don't, you could find your app's performance begin to degrade when it begins to experience more and more users.
+## Очищаем базу данных сессий
+Cookies сессий имеют свойство быстро накапливаться вместе с хранилищем данных, содержащим информацию о сессии. Если Вы используете в качестве бекэнда для Django сессий базу данных, необходимо периодически очищщать её. Это можно сделать с помощью команды `$ python manage.py clearsessions`. В [Django документации](https://docs.djangoproject.com/en/2.0/topics/http/sessions/#clearing-the-session-store) предлагается запускать её ежедневно по расписанию в виде [Cron задачи](https://en.wikipedia.org/wiki/Cron). Если не сделать этого, то производительность Вашего приложения будет уменьшаться по мере роста количества пользователей.
 
-## Basic Considerations and Workflow
-When using cookies within your Django application, there are a few things you should consider.
+## Выводы и основная последовательность действий
+При использовании cookies в Вашем Django приложении, необходимо учитывать, что:
 
-- First, consider what type of cookies your Web application requires. Does the information you wish to store need to persist over a series of user browser sessions, or can it be safely disregarded upon the end of one session?
-- Think carefully about the information you wish to store using cookies. Remember, storing information in cookies by their definition means that the information will be stored on client's computers, too. This is a potentially huge security risk: you simply don't know how compromised a user's computer will be. Consider server-side alternatives if potentially sensitive information is involved.
-- As a follow-up to the previous bullet point, remember that users may set their browser's security settings to a high level that could potentially block your cookies. As your cookies could be blocked, your site may function incorrectly. You *must* cater for this scenario - *you have no control over the client browser's setup*.
+- Во-первых, какой тип cookies необходим для Вашего веб приложения. Должна ли информация храниться на протяжении нескольких сеансов работы пользователя с браузером или её можно спокойно удалить после завершения одного сеанса?
+- Тщательно продумайте какую информацию Вы хотите хранить, используя cookies. Помните, что, сохраняя информацию в cookies из их определения следует, что Вы храните её на компьютерах клиентов. Это потенциально огромный риск в плане безопасности: нельзя гарантировать, что компьютер пользователя не взломан. Рассмотрите альтернативы с хранением информации на стороне сервера, если нужно хранить конфиденциальную информацию.
+- С учетом предыдущего замечания, помните, что пользователи могут выставить высокий уровень безопасности в своих браузерах, что потенциально может заблокировать Ваши cookies. Из-за этого Ваш сайт может работать не корректно. Вы *должны* предусмотреть этот вариант, поскольку *не можете изменить настройки браузера клиента*.
 
-If client-side cookies are the right approach for you, then work through the following steps.
+Если можно использовать cookies на стороне клиента, то осуществите следующие шаги:
 
-1. You must first perform a check to see if the cookie you want exists. Checking the `request` parameter parameter will allow you to do this. The `request.COOKIES.has_key('<cookie_name>')` function returns a boolean value indicating whether a cookie `<cookie_name>` exists on the client's computer or not.
-2. If the cookie exists, you can then retrieve its value - again via the `request` parameter - with `request.COOKIES[]`. The `COOKIES` attribute is exposed as a dictionary, so pass the name of the cookie you wish to retrieve as a string between the square brackets. Remember, cookies are all returned as strings, regardless of what they contain. You must therefore be prepared to cast to the correct type (with `int()` or `float()`, for example).
-3. If the cookie doesn't exist, or you wish to update the cookie, pass the value you wish to save to the response you generate. `response.set_cookie('<cookie_name>', value)` is the function you call, where two parameters are supplied: the name of the cookie, and the `value` you wish to set it to.
+1. Проверьте существует ли cookie, который Вам нужен. Для этого проверьте параметр `request`. Функция `request.COOKIES.has_key('<название_cookie>')` возвращает логическое значение, указывающее существует ли cookie с именем `<название_cookie>` на компьютере клиента или нет.
+2. Если cookie существует, то Вы можете получить его значение опять с помощью параметра `request` - `request.COOKIES[]`. Атрибут `COOKIES`  является словарем, поэтому внутри квадратных скобок нужно ввести название cookie, который Вы хотите получить в виде строки. Помните, что cookies всегда возвращаются в виде строк, не зависимо от того, что они содержат. Таким образом, возможно Вам нужно будет осуществить приведение к правильному типу (например, с помощью `int()` или `float()`).
+3. Если cookie не существует или Вы хотите обновить cookie, передайте значение, которое нужно сохранить объекту `response`. Необходимо вызвать функцию `response.set_cookie('<название_cookie>', value)`, передав два параметра: название cookie и `значение`, которое Вы хотите хранить в нём.
 
-If you need more secure cookies, then use session based cookies.
+Для повышения безопасности, используйте сессии, основанные на cookies:
 
-1.  Firstly, ensure that the `MIDDLEWARE_CLASSES` list in your Django project's `settings.py` module contains `django.contrib.sessions.middleware.SessionMiddleware`. If it doesn't, add it to the list.
-2.  Configure your session backend `SESSION_ENGINE`. See the [Django Documentation on Sessions](https://docs.djangoproject.com/en/2.0/topics/http/sessions/) for the various backend configurations.
-3.  Check to see if the cookie exists via `requests.sessions.get()`.
-4.  Update or set the cookie via the session dictionary, `requests.session['<cookie_name>']`.
+1.  Во-первых, убедитесь, что список `MIDDLEWARE_CLASSES` в модуле `settings.py` Вашего Django проекта module содержит `django.contrib.sessions.middleware.SessionMiddleware`. Если нет - добавьте его в список.
+2.  Настройте бекэнд для Ваших сессий - `SESSION_ENGINE`. О различных конфигурациях бекэнда можно прочитать в [официальной Django документации по сессиям](https://docs.djangoproject.com/en/2.0/topics/http/sessions/).
+3.  Проверьте существует ли cookie с помощью функции `requests.sessions.get()`.
+4.  Обновите или установите cookie с помощью словаря сессии, `requests.session['<название_cookie>']`.
 
-X> ### Exercises
+X> ### Упражнения
 X>
-X> Now you've read through this chapter and tried out the code, give these exercises a go.
+X> После того как Вы прочитали эту главу и поработали с кодом, выполните следующие упражнения.
 X> 
-X> - Check that your cookies are server side. Clear the browser's cache and cookies, then check to make sure you can't see the `last_visit` and `visits` variables in the browser. Note you will still see the `sessionid` cookie. Django uses this cookie to look up the session in the database where it stores all the server side cookies about that session.
-X> - Update the *About* page view and template telling the visitors how many times they have visited the site. Remember to call the `visitor_cookie_handler()` before you attempt to get the `visits` cookie from the `request.session` dictionary, otherwise if the cookie is not set it will raise an error. 
+X> - Проверьте, что Вы используете cookies на стороне сервера. Очистите кэш браузера и cookies, затем проверьте, что в браузере отсутствуют переменные `last_visit` и `visits`. Обратите внимание, что все равно будет существовать cookie `sessionid`. Django использует этот cookie для поиска сессии в базе данных, где хранятся все серверные cookies, связанные с этой сессией.
+X> - Обновите представление для страницы *About* и шаблон, сообщая пользователям, сколько раз они посетили сайт. Не забудьте вызвать `visitor_cookie_handler()` прежде чем попытаетесь получить cookie `visits` из словаря `request.session`, в противном случае, если cookie не установлен, сгенерируется ошибка. 
 
-[^1]: The latest version of the HTTP standard HTTP 1.1 actually supports the ability for multiple requests to be sent in one TCP network connection. This provides huge improvements in performance, especially over high-latency network connections (such as via a traditional dial-up modem and satellite). This is referred to as *HTTP pipelining*, and you can read more about this technique on [Wikipedia](http://en.wikipedia.org/wiki/HTTP_pipelining).
+[^1]: Последняя версия HTTP стандарта HTTP 1.1 на самом деле поддерживает возможность посылки множественных запросов через одно сетевое TCP соединение. Это приводит к значительным улучшениям в производительности, особенно для сетевых соединений с большой задержкой (например, с помощью обычных телефонных модемов и спутников). Это называется *HTTP pipelining* (конвейерная обработка HTTP), о которой можно узнать, прочитав [Википедию](http://en.wikipedia.org/wiki/HTTP_pipelining).
