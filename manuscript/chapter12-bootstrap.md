@@ -1,43 +1,41 @@
-# Bootstrapping Rango {#chapter-bootstrap}
-In this chapter, we will be styling Rango using the *Twitter Bootstrap 4* toolkit. Bootstrap is the most popular HTML, CSS, JS Framework, which we can use to style our application. The toolkit lets you design and style responsive web applications, and is pretty easy to use once you get familiar with it.
+# Использование Bootstrap в приложении Rango {#chapter-bootstrap}
+В этой главе мы стилизуем приложение Rango c помощью инструментария *Twitter Bootstrap 4*. Bootstrap - это самый популярный HTML, CSS, JS фреймворк, который мы можем использовать для стилизации нашего приложения. Инструментарий позволяет разрабатывать и стилизовать адаптивные веб-приложения и довольно прост в использовании, когда Вы с ним познакомитесь.
 
-I> ### Cascading Style Sheets
-I> If you are not familiar with CSS, have a look at the [CSS crash course](#chapter-css). We provide a quick guide on the basic of Cascading Style Sheets.
+I> ### Каскадные таблицы стилей
+I> Если Вы не знакомы с CSS, ознакомтесь с [кратким курсом по CSS](#chapter-css). Там представлено краткое руководство по основам работы с каскадными таблицами стилей.
 
-Now take a look at the [Bootstrap 4.0 website](http://getbootstrap.com/) - it provides you with sample code and examples of the different components and how to style them by added in the appropriate style tags, etc. On the Bootstrap website they provide a number of [example layouts](http://getbootstrap.com/examples/) which we can base our design on.
+Теперь перейдите на [сайт Bootstrap 4.0](http://getbootstrap.com/) - там приведен образец кода и примеры различных элементов, показано как стилизовать их, добавив соответствующие теги стилей и т. д. На сайте Bootstrap также приводится множество [образцовых макетов](http://getbootstrap.com/examples/), на основе которых мы можем спроектировать свой.
 
-To style Rango we have identified that the [dashboard style](http://getbootstrap.com/examples/dashboard/) more or less meets our needs in terms of the layout of Rango, i.e. it has a menu bar at the top, a side bar (which we will use to show categories) and a main content pane. 
+Мы считаем, что [стиль dashboard](http://getbootstrap.com/examples/dashboard/) лучше всего удовлетворяет нашим потребностям с учетом макета Rango, т. к. он содержит верхнее меню, боковую панель (которую мы будем использовать для отображения категорий) и панель для основного содержимого.
 
-Download and save the HTML source for the Dashboard layout to a file called, `bootstrap-base.html` and save it to your `templates/rango` directory.
+Загрузите и сохраните исходный код HTML шаблона Dashboard в файл с названием `bootstrap-base.html`, выбрав в качестве места для хранения Ваш каталог `templates/rango`.
 
-Before we can use the template, we need to modify the HTML so that we can use it in our application. The changes that we performed are listed below along with the updated HTML (so that you don't have to go to the trouble and a copy of the HTML is in our [github repository] 
-(https://raw.githubusercontent.com/leifos/tango_with_django_2/master/code/tango_with_django_project/templates/rango/bootstrap-base.html).
+Прежде чем мы сможем использовать шаблон, нам нужно изменить HTML так, чтобы мы могли использовать его в нашем приложении. Изменения, которые мы осуществили приведены ниже вместе с обновленным HTML кодом (чтобы облегчить Вам задачу, копия HTML кода находится в нашем [github репозитории](https://raw.githubusercontent.com/leifos/tango_with_django_2/master/code/tango_with_django_project/templates/rango/bootstrap-base.html)).
 
-- Replaced all references of `../../` to be `http://getbootstrap.com/docs/4.2/` as we are using version 4.2.
-- Replaced `dashboard.css` with the absolute reference:
+- Были заменены все ссылки вида `../../` на `http://getbootstrap.com/docs/4.2/`, поскольку мы используем версию 4.2.
+- Была заменена ссылка на `dashboard.css` с относительной на абсолютную:
 	- `http://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css`
-- Removed the search form from the top navigation bar.
-- Stripped out all the non-essential content from the HTML and replaced it with:
+- Удалена форма поиска из верхней навигационной панели.
+- Удалено всё несущественное содержимое из HTML и заменено на:
 	- `{% block body_block %}{% endblock %}`
-- Set the title element to be:
+- Элементу title присвоено:
 	- `<title>
            Rango - {% block title %}How to Tango with Django!{% endblock %}
        </title>`
-- Changed `project name` to be `Rango`.
-- Added the links to the index page, login, register, etc to the top nav bar.
-- Added in a side block, i.e., `{% block side_block %}{% endblock %}`
-- Added in `{% load staticfiles %}`  and `{% load rango_template_tags %}` after the `DOCTYPE` tag.
+- Изменено `project name` на `Rango`.
+- Добавлены ссылки на главную страницу, страницу входа в систему, регистрации и т. д. в верхнюю навигационную панель.
+- Добавлен боковой блок, т. е., `{% block side_block %}{% endblock %}`
+- Добавлен блок `{% load staticfiles %}`  и `{% load rango_template_tags %}` после тега `DOCTYPE`.
 
 
 
-## Template
+## Новый базовый шаблон
 
-W> ### Copying and Pasting
-W> In the introductory chapter, we said not the copy and paste - but this is an exception. 
-W> However, if you directly cut and paste you will end up bringing additional text you do not want. So go to our github page and get the [base template] 
-(https://raw.githubusercontent.com/leifos/tango_with_django_2/master/code/tango_with_django_project/templates/rango/bootstrap-base.html) shown below.
+W> ### Копирование и вставка кода
+W> В введении мы говорили, что копировать и вставлять код нельзя - но код приведенный здесь является исключением.
+W> Однако, если Вы будете напрямую вырезать и вставлять код, то в итоге добавите дополнительный текст, который Вам не нужен. Поэтому перейдите на нашу страницу GitHub и возьмите [базовый шаблон](https://raw.githubusercontent.com/leifos/tango_with_django_2/master/code/tango_with_django_project/templates/rango/bootstrap-base.html) показанный ниже оттуда.
 W> 
-W> Also, If you don't understand what the specific Bootstrap classes do, then you can check out the [ Bootstrap Documentation](http://getbootstrap.com/css/).
+W> Кроме того, если Вы не понимаете, что делают конкретные классы Bootstrap, обратитесь к [Bootstrap документации](http://getbootstrap.com/css/).
 
 
 {lang="html",linenos=off}
@@ -126,30 +124,25 @@ W> Also, If you don't understand what the specific Bootstrap classes do, then yo
 		</body>
 	</html>
 
+Как только Вы настроите шаблон, можете загрузить [Rango Favicon](https://raw.githubusercontent.com/leifos/tango_with_django_2/master/code/tango_with_django_project/static/images/favicon.ico) и сохранить её в `static/images/`.
+
+Если Вы внимательно посмотрите на измененный HTML код макета Dashboard, то заметите, что большая часть структуры создается тегами `<div>`. По сути страница разбита на две части - верхнюю навигационную панель, которая находится внутри тегов `<header>` и основную панель с содержимым, которая обозначена тегом `<main ... >`. Внутри основной панели с содержимым есть `<div>`, в котором находятся два других divа для `sidebar_block` и `body block`.
 	
-	
+При создании вышеприведенного кода шаблона предполагалось, что Вы прочитали главу Аутентификация пользователя и использовали пакет Django Regisration Redux. Если нет, то Вам нужно будет обновить шаблон и удалить/изменить ссылки для регистрации, входа в систему и т.д. в панели навигации в хедере.
 
-Once you have the new template setup, you can download the [Rango Favicon](https://raw.githubusercontent.com/leifos/tango_with_django_2/master/code/tango_with_django_project/static/images/favicon.ico) and save it to `static/images/`.
+Также обратите внимание, что шаблон HTML содержит ссылки на внешние сайты для получения необходимых файлов `css` и `js`. Поэтому Вам нужно быть подключенным к Интернету для загрузки стилей при запуске приложения.
 
-If you take a close look at the modified Dashboard HTML source, you'll notice it has a lot of structure in it created by a series of `<div>` tags. Essentially the page is broken into two parts - the top navigation bar which is contained by `<header>` tags, and the main content pane denoted by the `<main ... >` tag. Within the main content pane, there is a `<div>` which houses two other divs for the `sidebar_block` and the `body block`.
-	
-	
-The code above assumes that you have completed the chapters on User Authentication and used the Django Regisration Redux Package. If not you will need to update the template and remove/modify the references to those links in the navigation bar in the header. 
-	
-Also of note is that the HTML template makes references to external websites to request the required `css` and `js` files. So you will need to be connected to the internet for the style to be loaded when you run the application.
+I> ### Работаете Оффлайн?
+I> Вместо того, чтобы добавлять внешние ссылки на файлы `css` и `js`, Вы можете загрузить все необходимые файлы и сохранить их в своём каталоге для статических файлов. Если Вы сделаете это, то просто обновите базовый шаблон добавив ссылки на статические файлы, хранящиеся локально.
 
-I> ###Working Offline?
-I> Rather than including external references to the `css` and `js` files, you could download all the associated files and store them in your static directory. If you do this, simply update the base template to reference the static files stored locally. 
+## Быстрое изменение стиля
+Чтобы придать приложению Rango нужный нам внешний вид, мы можем заменить содержимое существующего файла `base.html` на HTML код из шаблона `base_bootstrap.html`. Возможно Вы захотите сначала скопировать в другой файл ранее введенный код из `base.html`, а затем вставить в него код из `base_bootstrap.html`.
 
-	
-## Quick Style Change
-To give Rango a much needed facelift, we can replace the content of the existing `base.html` with the HTML template code in `base_bootstrap.html`. You might want to first copy out the existing code in `base.html` and then copy in the `base_bootstrap.html` code.
+Теперь перезагрузите ваше приложение. Смотрится хорошо! Ну или лучше, чем было.
 
-Now reload your application. Pretty nice! Well, sort of.
+Вы должны заметить, что ваше приложение уже смотрится примерно в сто раз лучше. Ниже мы привели несколько снимков экрана страницы about до и после добавления стилей.
 
-You should notice that your application looks about a hundred times better already. Below we have some screen shots of the about page showing the before and after.
-
-Flip through the different pages. Since they all inherit from base, they will all be looking better, but not perfect! In the remainder of this chapter, we will go through a number of changes to the templates and use various Bootstrap classes to improve the look and feel of Rango.
+Посетите разные страницы. Поскольку все они наследуются от базового шаблона, они будут выглядеть намного лучше, но не идеально! В оставшейся части этой главы мы рассмотрим ряд изменений, сделанных в шаблонах, и будем использовать различные Bootstrap классы для улучшения внешнего вида приложения Rango.
 
 <!--
 ## Page Headers
@@ -170,7 +163,7 @@ Let's start by updating all our templates by adding in the class `page-header` t
 	{% block body_block %}
 		<div>
 		<h1 class="page-header">About Page</h1>			
-			This tutorial has been put together by: leifos and maxwelld90 
+			This tutorial has been put together by: leifos and maxwelld90
 		</div>	
 		<img src="{% static "images/rango.jpg" %}" alt="Picture of Rango" /> 
 	{% endblock %}
@@ -179,15 +172,13 @@ This doesn't visually appear to change the look and feel, but it informs the too
 
 -->
 
-![A screenshot of the About page without styling.](images/ch12-about-nostyling.png)
+![Снимок экрана страницы About до добавления нового стиля.](images/ch12-about-nostyling.png)
 
-![A screenshot of the About page with Bootstrap Styling applied.](images/ch12-about-bootstrap.png)
+![Снимок экрана страницы About после применения Bootstrap стилизации.](images/ch12-about-bootstrap.png)
 
 
-
-### Sidebar Categories
-For of all the sidebar categories are not displaying very nicely. If we take a look at the HTML source code for the [Dashboard page](https://getbootstrap.com/docs/4.2/examples/dashboard/), we can notice that a few classes have been added to the `<ul>` and `<li>` tags to denote that they are nav-items and nav-links respectively. So update the template as shown below.
-
+### Категории в боковой панели
+Категории в боковой панели пока никак не стилизованы. Если мы посмотрим на исходный HTML код для [страницы Dashboard](https://getbootstrap.com/docs/4.2/examples/dashboard/), то заметим, что несколько классов были добавлены к тегам `<ul>` and `<li>`, чтобы указать, что они являются nav-items и nav-links соответственно. Поэтому обновите шаблон, как показано ниже.
 
 {lang="html",linenos=off}
 	<ul class="nav flex-column">
@@ -211,14 +202,12 @@ For of all the sidebar categories are not displaying very nicely. If we take a l
 	{% endif %}
 	</ul>
 
+Кроме того вместо того, чтобы использовать `<strong>` для выбранной в настоящий момент категории, мы добавили класс `active` к активной категории. Мы также добавили `feather-icon`, используя тег `<span. ... >`. Здесь мы выбрали иконку `archive`, но Вы можете выбрать любую поправившуюся Вам на странице Feather Icons (https://feathericons.com/).
 
-Also, rather than using `<strong>` to show that the category page has been selected, we have added the `active` class to the active category. We can also add in a `feather-icon` using the `<span. ... >' tag. Here we chose the `archive` icon, but you can see that there are loads of icons to choose from at Feather Icons (https://feathericons.com/)
+### Главная страница
+Для главной страницы неплохо было бы показать самые популярные категорри и страницы в двух отдельных столбцах, а заголовок расположить вверху.
 
-
-### The Index Page
-For the index page it would be nice to show the top categories and top pages in two separate columns, while the title is at the top.
-
- Looking at the Bootstrap examples, we can see that in the [Jumbotron](https://getbootstrap.com/docs/4.2/examples/jumbotron/)  example, they have a neat header element (i.e. the jumbotron) which we can put our title message in. And so we can update the index.html as follows:
+Глядя на примеры с сайта Bootstrap, мы видим, что в примере [Jumbotron](https://getbootstrap.com/docs/4.2/examples/jumbotron/) есть четко выделенный элемент хедера (т. е., jumbotron), в который мы можем поместить наш заголовок. И поэтому мы можем обновить index.html следующим образом:
  
  {lang="html",linenos=off}
  	<div class="jumbotron p-4">
@@ -237,18 +226,15 @@ For the index page it would be nice to show the top categories and top pages in 
  	</div>
  	</div>
 	
-	
-You might notice that after the `jumbotron` we have put `p-4`. The `p-4` controls the [spacing](https://getbootstrap.com/docs/4.2/utilities/spacing/) around the jumbotron. Try changing the padding to be `p-6` or `p-1`. You can also control the space of the top, bottom, left and right by specifically setting `pt`, `pb`, `pr` and `pl`. 
+Возможно Вы заметили, что после `jumbotron` мы добавили `p-4`. Класс `p-4` определяет отступы (https://getbootstrap.com/docs/4.2/utilities/spacing/) вокруг `jumbotron`. Попробуйте изменить класс на  `p-6` или `p-1`. Вы также можете управлять отступами сверху, снизу, слева и справа с помощью классов `pt`, `pb`, `pr` и `pl`.
   
+X> ### Упражнение
+X> - Обновите все другие шаблоны шаблоны, чтобы заголовок страницы находился внутри `jumbotron`.
+X> Это сделает внешний вид приложения единообразным.
   
- X> ###Exercise 
- X> - Update all other templates so that the page heading is encapsulated within a jumbotron.
- X> This will make the whole application have a consistent look and feel.
-  
- 
- Then to create the two columns, we draw upon the [Album](https://getbootstrap.com/docs/4.2/examples/album/) example. While it has three columns, called cards, we only need two. Most, if not all, CSS frameworks use a [grid layout](https://getbootstrap.com/docs/4.2/layout/grid/)  consisteing of 12 blocks. If you inspect the HTML souce for the Album you will see that within a row there is a `<div>` which sets the size of the cards `<div class="col-md-4">` followed by `<div class="card mb-4 shadow-sm">`. This sets each card to be 4 units in length relative to the width (and 4 by 3 is 12). Since we want two cards (one for the most popular pages and most popular categories) then we can change the 4 to a 6 (i.e. 2 by 6 is 12). And so you can update the `index.html` with the following HTML.
- 
- {lang="html",linenos=off}
+Затем, чтобы создать две колонки, мы воспользуемся примером [Альбом](https://getbootstrap.com/docs/4.2/examples/album/). Хотя в нём три колонки, называемые карточками, нам нужно только две. Большинство, если не все CSS-фреймворки используют [сетку](https://getbootstrap.com/docs/4.2/layout/grid/), состоящую из 12 блоков. Если Вы просмотрите исходный HTML код для страницы Альбом, то увидите, что внутри строки расположен `<div>`, который определяет размер карточки `<div class="col-md-4">`, после которого следует `<div class="card mb-4 shadow-sm">`. Эти классы задают длину каждой карточки в 4 условные единицы относительно ширины экрана (а 4 на 3 равно 12). Поскольку нам нужны две карточки (одна для самых популярных страниц, а вторая - для самых популярных категорий), мы можем изменить 4 на 6 (т. к. 2 на 6 равно 12). Таким образом, обновите `index.html` добавив в него следующий HTML код.
+
+{lang="html",linenos=off}
 	 <div class="container">
 	 <div class="row">
 	 <div class="col-md-6">
@@ -294,14 +280,14 @@ You might notice that after the `jumbotron` we have put `p-4`. The `p-4` control
 	</div>
 	</div>
  
-Once you have updated the template, reload the page - it should look a lot better now, but the way the list items are presented is pretty horrible. 
+После того, как Вы обновили шаблон, перезагрузите страницу - теперь она должна выглядеть намного лучше, но то как отображаются элементы списка выглядит ужасно.
 
-Let's use the [list group styles provided by Bootstrap](https://getbootstrap.com/docs/4.2/components/list-group/) to improve how they look. We can do this quite easily by changing the `<ul>` elements to `<ul class="list-group">` and the `<li>` elements to `<li class="list-group-item">`. Reload the page, any better?
+Давайте используем [стили для списков, предоставляемые Bootstrap](https://getbootstrap.com/docs/4.2/components/list-group/), чтобы улучшить их внешний вид. Мы можем сделать это довольно легко, изменив элементы `<ul>` на `<ul class="list-group">` и `<li>` - на `<li class="list-group-item">`. Перезагрузите страницу, смотрится лучше, не правда ли?
 
-![A screenshot of the Index page with a Jumbotron and Columns.](images/ch12-styled-index.png)
+![Снимок экрана главной страницы с Jumbotron и колонками.](images/ch12-styled-index.png)
 
-###The Login Page
-Now let's turn our attention to the login page. On the Bootstrap website you can see they have already made a [nice login form](https://getbootstrap.com/docs/4.2/examples/signin/). If you take a look at the source, you'll notice that there are a number of classes that we need to include to stylise the basic login form. Update the `body_block` in the `login.html` template as follows:
+### Страница входа в систему
+Теперь давайте рассмотрим страницу входа в систему. На сайте Bootstrap видно, что они уже создали [хорошую форму для входа в систему](https://getbootstrap.com/docs/4.2/examples/signin/). Если просмотреть код страницы, то Вы заметите множество классов, которые нужно добавить для стилизации базовой формы для входа в систему. Обновите `body_block` в шаблоне `login.html` следующим образом:
 
 {lang="html",linenos=off}
 	{% block body_block %}
@@ -328,14 +314,14 @@ Now let's turn our attention to the login page. On the Bootstrap website you can
 	</div>
 	{% endblock %}
 
-Besides adding in a link to the bootstrap `signin.css`, and a series of changes to the classes associated with elements, we have removed the code that automatically generates the login form, i.e. `form.as_p`. Instead, we took the elements, and importantly the `id` of the elements generated and associated them with the elements in this bootstrapped form. To find out what these `id`s were, we ran Rango, navigated to the page, and then inspected the source to see what HTML was produced by the `form.as_p` template tag. 
+Кроме добавления ссылки на файл `signin.css` Bootstrap и ряда изменений в классах, связанных с элементами, мы удалили код, который автоматически генерирует форму для входа в систему, т. е. `form.as_p`. Вместо этого, мы использовали её элементы и что важно `id` создаваемых элементов и связали их с элементами, которые используются в Bootstrap форме. Чтобы узнать значения `id` мы запустили приложение Rango, перешли на страницу и затем открыли исходный код, чтобы увидеть, какой HTML-код был создан с помощью тега шаблона `form.as_p`.
 
-In the button, we have set the class to `btn` and `btn-primary`. If you check out the [Bootstrap section on buttons](https://getbootstrap.com/docs/4.2/components/buttons/) you can see there are lots of different colours, sizes and styles that can be assigned to buttons.
+Кнопке были присвоены классы `btn` и `btn-primary`. Если Вы обратитесь к [Bootstrap разделу по кнопкам](https://getbootstrap.com/docs/4.2/components/buttons/), то увидите, что существует множество различных цветов, размеров и стилей, которые могут быть назначены кнопкам, смотри 
 
-![A screenshot of the login page with customised Bootstrap Styling.](images/ch12-styled-login.png)
+![Снимок экрана страницы входа в систему с измененной нами Bootstrap стилизацией.](images/ch12-styled-login.png)
 
-### Other Form-based Templates
-You can apply similar changes to `add_cagegory.html` and `add_page.html` templates. For the `add_page.html` template, we can set it up as follows.
+### Другие шаблоны, использующие формы
+Вы можете проделать аналогичные изменения с шаблонами `add_cagegory.html` и `add_page.html`. Шаблон `add_page.html` мы можем модифицировать следующим образом:
 
 {lang="html",linenos=off}
 	{% extends "rango/base.html" %}
@@ -373,11 +359,11 @@ You can apply similar changes to `add_cagegory.html` and `add_page.html` templat
 		</div>
 	{% endblock %}
 
-X> ###Exercise 
-X> - Create a similar template for the Add Category page called `add_category.html`.
+X> ### Упражнение 
+X> - Создайте подобный шаблон для страницы Добавить категорию под названием `add_category.html`.
 
-###The Registration Template
-For the `registration_form.html`, we can update the form as follows:
+### Шаблон страницы для регистрации
+Для `registration_form.html`, мы можем изменить форму следующим образом:
 
 {lang="python",linenos=off}
     {% extends "rango/base.html" %}
@@ -434,17 +420,16 @@ For the `registration_form.html`, we can update the form as follows:
 	
     {% endblock %}
 
-Again we have manually transformed the form created by the `{{ form.as_p }}` template tag, and added the various bootstrap classes.
+Опять мы вручную преобразовали форму, созданную тегом шаблона `{{ form.as_p }}` и добавили различные Bootstrap классы.
 
-W> ###Bootstrap, HTML and Django Kludge
-W> This is not the best solution - we have kind of kludged it together. 
-W> It would be much nicer and cleaner if we could instruct Django when building the HTML for the form to insert the appropriate classes. But we will leave that to you to figure out :-)
+W> ### Bootstrap, HTML и Django  - решение на скорую руку
+W> Предложенный нами вариант - не лучшее решение проблемы - но достаточное для решения поставленной задачи.
+W> Код будет выглядеть намного лучше и понятнее, если мы сможем указать Django, что при создании HTML кода для формы нужно подставить соответствующие классы. Но как это сделать Вы должны выяснить сами :-)
 
+### Что дальше?
+В этой главе мы описали как быстро стилизовать Ваше приложение Django с помощью Bootstrap. Bootstrap обладает большими возможностями и позволяет относительно легко менять темы - перейдите на [сайт StartBootstrap](http://startbootstrap.com/), где приведен целый ряд бесплатных тем. В качестве альтернативы вы можете использовать другой CSS фреймворк, например: [Zurb](http://zurb.com), [Gridism](http://cobyism.com/gridism/), [Pure](https://purecss.io) или [GroundWorkd](https://groundworkcss.github.io/groundwork/). Теперь, когда у вас есть представление о том, как работать с шаблонами и настраивать их для работы с адаптивным CSS фреймворком, мы можем вернуться к работе над самим приложением и добавить в него дополнительные функциональные возможности, объединяющие приложение в единое целое.
 
-###Next Steps
-In this chapter we have described how to quickly style your Django application using the Bootstrap toolkit. Bootstrap is highly extensible and it is relatively easy to change themes - check out the [StartBootstrap Website](http://startbootstrap.com/) for a whole series of free themes. Alternatively, you might want to use a different CSS toolkit like: [Zurb](http://zurb.com), [Gridism](http://cobyism.com/gridism/), [Pure](https://purecss.io) or [GroundWorkd](https://groundworkcss.github.io/groundwork/). Now that you have an idea of how to hack the templates and set them up to use a responsive CSS toolkit, we can now go back and focus on finishing off the extra functionality that will really pull the application together.
+![Снимок экрана страницы регистрации с измененной нами Bootstrap стилизацией.](images/ch12-styled-register.png)
 
-![A screenshot of the Registration page with customised Bootstrap Styling.](images/ch12-styled-register.png)
-
-X> ### Another Style Exercise
-X> While this tutorial uses Bootstrap, an additional, and optional exercise, would be to style Rango using one of the other responsive CSS toolkits.  If you do create your own style, let us know and we can link to it to show others how you have improved Rango's styling!
+X> ### Упражнение, связанное с использованием другого фреймворка
+X> Хотя в этом учебном пособии используется Bootstrap, в качестве дополнительного, необязательного упражнения, Вы можете стилизовать приложение Rango, используя один из других адаптивных CSS фреймворков. Если Вы создадите свой собственный стиль для приложения, дайте нам знать, чтобы мы могли привести ссылку на него и показать другим как Вы улучшили внешний вид приложения Rango!

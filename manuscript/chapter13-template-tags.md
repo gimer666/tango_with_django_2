@@ -1,29 +1,17 @@
-#Template Tags
+# Теги шаблонов
 
+## Выдаем список категорий на каждой странице
 
-##Providing Categories on Every Page
+Хотелось бы иметь возможность показывать различные категории, которые пользователь может просматривать в боковой панели на каждой странице. С учетом того, что мы изучили, можно было бы поступить следующим образом:
 
-It would be nice to show the different categories that users can browse
-through in the sidebar on each page. Given what we have learnt so far we
-could do the following:
+-   В шаблоне `base.html` добавить код, отображающий список категорий, если он был передан ему.
+-   Затем в каждом представлении мы могли обращаться к объекту Category, получать все категории и передавать их в словарь контекста.
 
--   In the `base.html` template we could add some code to display an
-    item list of categories, if the category list has been passed
-    through.
--   Then in each view, we could access the Category object, get all the
-    categories, and return that in the context dictionary.
+Но это довольно примитивное решение. Оно требует большого числа операций вырезания и вставки кода. Кроме того, возникнет проблема с отображением категорий на страницах, обслуживаемых пакетом django-registration-redux. Из-за этого необходим другой подход, использующий `теги шаблонов`, которые добавляются в шаблон и запрашивают необходимые данные.
 
-However, this is a pretty nasty solution. It requires a lot of cutting
-and pasting of code. Also, we will run into problems, when we want to
-show the categories on pages serviced by the django-registration-redux
-package. So we need a different approach, by using `templatetags` that
-are included in the template that request the data required.
+### Использование тегов шаблонов
 
-###Using Template Tags
-
-Create a directory `rango/templatetags`, and create two files, one
-called `__init__.py`, which will be empty, and another called,
-`rango_extras.py`, where you can add the following code:
+Создайте каталог `rango/templatetags`, , а в нем два файла - один назовите `__init__.py`, и оставьте его пустым, а второй -- `rango_extras.py`, в который добавьте следующий код:
 
 {lang="python",linenos=off}
 	from django import template
@@ -35,10 +23,7 @@ called `__init__.py`, which will be empty, and another called,
 	def get_category_list():
     	return {'cats': Category.objects.all()}
 
-As you can see we have made a method called, `get_category_list()` which
-returns the list of categories, and that is assocaited with a template
-called `rango/cats.html`. Now create a template called
-''rango/cats.html`in the templates directory with the following code:  
+Как видите, мы создали метод под названием `get_category_list()`, который возвращает список категорий, и связали его с шаблоном `rango/cats.html`. Теперь создайте шаблон `rango/cats.html` в каталоге с шаблонами и вставьте в него следующий код:
 
 {lang="html",linenos=off}
 	<ul class="nav nav-sidebar">
@@ -51,10 +36,7 @@ called `rango/cats.html`. Now create a template called
 	{% endif %}  
 	</ul> 
 	
-Now in your`base.html`you can access the template tag by first loading it up with`{%
-load rango\_extras %}`and then slotting it into the page with`{%
-get\_category\_list
-%}`, i.e.:  
+Теперь в Вашем базовом шаблоне `base.html` Вы можете обратиться к созданному тегу шаблона, сначала загрузив его с помощью команды `{% load rango\_extras %}`, а затем разместив его на странице в виде `{% get\_category\_list %}`, т. е.:  
 
 {lang="html",linenos=off}      
 	<div class="col-sm-3 col-md-2 sidebar">          
@@ -64,11 +46,11 @@ get\_category\_list
 	</div>   
 	
 
-I> Restart Server to Register Tags
+I> Перезагрузите сервер, чтобы зарегистрировать новые теги
 I>
-I> You will need to restart your server every time you modify the template tags. Otherwise they will not be registered, and you will be really confused why your code is not working.
+I> Вам нужно будет перезапускать Ваш сервер каждый раз при модификации тегов шаблонов. В противном случае они не будут зарегистрированы в системе и Вы будете искать причину почему Ваш код не работает.
 
-###Parameterised Template Tags 
+### Теги шаблонов с параметрами
 
 Now lets extend this so that when we visit a category page, it highlights which category we are in. To do this we need to paramterise the templatetag. So update the method in `rango\_extras.py` to be: 
 
