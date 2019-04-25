@@ -52,14 +52,13 @@ I> Вам нужно будет перезапускать Ваш сервер �
 
 ### Теги шаблонов с параметрами
 
-Now lets extend this so that when we visit a category page, it highlights which category we are in. To do this we need to paramterise the templatetag. So update the method in `rango\_extras.py` to be: 
+Теперь давайте расширим функциональные возможности нашего тега так, чтобы при переходе на страницу с категорией, он подсвечивал категорию, в которой мы находимся в данный момент. Для этого необходимо передать аргументы в тег шаблона. Поэтому  отредактируйте метод в файле `rango\_extras.py` следующим образом:
 
 {lang="python",linenos=off}
        def get_category_list(cat=None):         
 	   return {'cats': Category.objects.all(), 'act_cat': cat}  
 
-
-This lets us pass through the category we are on. We can now update the `base.html` to pass through the category, if it exists.  
+Это позволит передать методу категорию, в которой мы находимся в данной момент. Теперь можно изменить шаблон `base.html`, передавая в тег категорию, если она существует. 
 
 {lang="html",linenos=off}
 
@@ -69,7 +68,7 @@ This lets us pass through the category we are on. We can now update the `base.ht
 	{% endblock %}      
 	</div>   
 	
-Now update the`cats.html` template:   
+Обновите шаблон `cats.html`:   
 
 {lang="html",linenos=off}
 	{% for c in cats %}
@@ -81,5 +80,4 @@ Now update the`cats.html` template:
 			<a href="{% url 'category'  c.slug %}">{{ c.name }}</a></li>
 	{% endfor %}
 
-
-Here we check to see if the category being displayed is the same as the category being passed through (i.e.`act\_cat`), if so, we assign the`active`class to it from Bootstrap (http://getbootstrap.com/components/#nav).   Restart the development web server, and now visit the pages. We have passed through the `category` variable. When you view a category page, the template has access to the `category` variable, and so provides a value to the template tag `get\_category\_list()`. This is then used in the `cats.html` template to select which category to highlight as active.
+В нём мы проверяем совпадает ли категория, выводимая на экран, с категорией (т. е. `act\_cat`), которая была передана методу; если да, то мы присваиваем ей Bootstrap класс `active` (http://getbootstrap.com/components/#nav). Перезапустите сервер для разработки и посетите различные страницы приложения. При каждом посещении страницы мы пытаемся получить доступ к переменной `category`. Когда Вы просматриваете страницу категории, шаблон имеет доступ к переменной `category`, значение которой передает тегу шаблона `get\_category\_list()`. Оно затем используется в шаблоне  `cats.html` для выделения активной категории.

@@ -1,56 +1,54 @@
-# Search {#chapter-bing}
-Now that our Rango application is looking good and most of the core functionality has been implemented, we can move onto some of the more advanced functionality. In this chapter, we will connect Rango up to a search API so that users can also search for pages, rather than just browse categories. The main point of this chapter is to show you how you can connect and use other web services - and how to integrate them within your own application. 
+# Добавляем функциональные возможности: поиск с помощью стороннего API {#chapter-bing}
+Теперь когда наше приложение Rango хорошо смотрится и большинство основных функциональных возможностей реализовано, мы можем реализовать некоторым более продвинутые функции. В этой главе мы подсоединим Rango к поисковому API, чтобы пользователи могли также искать страницы, а не только просматривать категории. Основная цель этой главы - показать вам, как Вы можете подключаться и использовать другие веб-сервисы - и как интегрировать их в свое собственное приложение.
 
-The search API that we will be using will be Microsoft's Bing Search API, but you could as easily  use the APIs provided by [Webhose](https://webhose.io/) or [Yandex](https://yandex.com/support/search/robots/search-api.html), instead. 
+Поисковое API, которое мы будем использовать - это API поисковой системы Microsoft Bing, но Вы можете также легко подключить API, предоставляемые [Webhose](https://webhose.io/) или [Yandex](https://yandex.com/support/search/robots/search-api.html) вместо него.
 
-To use the Bing Search API we will need to write a [wrapper](https://en.wikipedia.org/wiki/Adapter_pattern), which enables us to send a query and obtain the results from their API - and bring them back in a more convienent format. But, before we can do so, we first need to set up an Azure account to use Bing's Search API.
+Чтобы использовать API поисковой системы Bing нам нужно написать [обертку](https://en.wikipedia.org/wiki/Adapter_pattern), которая позволит нам посылать запросы и получать результаты из API - и возвращать их обратно в более удобном формате. Но прежде чем мы сможем это сделать, нам сначала нужно настроить учетную запись Azure для использования поискового API Bing.
 
-## The Bing Search API
-The [Bing Search API](https://docs.microsoft.com/en-gb/rest/api/cognitiveservices/bing-web-api-v7-reference) provides you with the ability to embed search results from the Bing search engine within your own applications. Through a straightforward interface, you can request results from Bing's servers to be returned in either XML or JSON. The data returned can then be interpreted by a XML or JSON parser, with the results then rendered as part of a template within your application.
+## API поисковой системы Bing
+[API поисковой системы Bing](https://docs.microsoft.com/en-gb/rest/api/cognitiveservices/bing-web-api-v7-reference) позволяет Вам встраивать результаты поиска поисковой системы Bing в Ваше собственное приложение. С помощью простого интерфейса Вы можете запросить результаты поиска от Bing серверов в XML или JSON форме. Возвращаемые данные могут быть обработаны XML или JSON анализатором, а результат затем выведен как часть шаблона Вашего приложения.
 
-Although the Bing API can handle requests for different kinds of content, we'll be focusing on web search only for this tutorial - as well as handling JSON responses. To use the Bing Search API, you will need to sign up for an *API key*. The key currently provides subscribers with access to 3000 queries per month, which should be more than enough for our purposes.
+Хотя Bing API может обрабатывать запросы различного вида, в этом учебном пособии мы сосредоточимся только на поиске, а также обработке JSON ответов. Для использования Bing Search API Вам надо зарегистрироваться, чтобы получить *API ключ*. В настоящее время ключ позволяет осуществлять подписчикам до 3000 запросов в месяц, что более чем достаточно для наших целей.
 
-I> ### Application Programming Interface (API)
-I> An [Application Programming Interface](http://en.wikipedia.org/wiki/Application_programming_interface) specifies how software components should interact with one another. In the context of web applications, an API is considered as a set of HTTP requests along with a definition of the structures of response messages that each request can return. Any meaningful service that can be offered over the Internet can have its own API - we aren't limited to web search. For more information on web APIs, [Luis Rei provides an excellent tutorial on APIs](http://blog.luisrei.com/articles/rest.html).
+I> ### Программный Интерфейс Приложения (API)
+I> [Программный Интерфейс Приложения](http://en.wikipedia.org/wiki/Application_programming_interface) определяет способ взаимодействия программных компонентов друг с другом. Для веб-приложений API является набор HTTP-запросов вместе с определением структур ответных сообщений от сервера, которые может возвращать каждый запрос. Любой более-менее полезный сервис, который может быть предложен через Интернет, может иметь свой собственный API - мы не ограничены только веб-поиском. Для получения дополнительной информации о веб API, [ознакомтесь с отличным руководством по API от Луиса Рея (Luis Rei)](http://blog.luisrei.com/articles/rest.html).
 
+### Регистрируемся для получения ключа Bing API
+Для получения Bing API ключа, Вы должны сначала зарегистрировать учетную запись Microsoft Azure. Учетная запись открывает доступ к широкому спектру услуг Microsoft. Если у Вас уже есть учетная запись Microsoft, Вам не нужно регистрироваться, а достаточно просто войти в неё. В противном случае, Вы можете войти в Интернет и создать бесплатную учетную запись Microsoft по адресу [`https://account.windowsazure.com`](https://account.windowsazure.com).
 
-### Registering for a Bing API Key
-To obtain a Bing API key, you must first register for a Microsoft Azure account. The account provides you with access to a wide range of Microsoft services. If you already have a Microsoft account, you dont need to register you can log in. Otherwise, you can go online and create a free account with Microsoft at [`https://account.windowsazure.com`](https://account.windowsazure.com).
+Когда ваша учетная запись будет создана, войдите в систему и перейдите на портал.
 
-When your account has been created, log in and go to the portal.
-
-On the left hand side of the page you should see a list, and at the top of the list it should say  `+ Create a resource`. Click on create a resource, and then select `AI + Machine Learning`. Scroll through the options, and select the `Bing Search v7` option, follow the instructions and register for the service. Make sure you select the `F0 Free` pricing tier, which enables you to make 3000 calls per month - which is more than enough for our purposes.
+В левой части страницы вы должны увидеть список, а в верхней части списка - ссылку `+ Create a resource`. Нажмите на неё и затем выберите `AI + Machine Learning`. Пролистайте вниз и выберите опцию `Bing Search v7`, следуйте инструкциям и зарегистрируйтесь для получения услуги. Убедитесь, что вы выбрали ценовой пакет `F0 Free`, который позволяет Вам совершать 3000 запросов в месяц - этого более чем достаточно для наших целей.
 
 
 {id="fig-bing-search"}
-![The Bing Search API services - sign up for the 3,000 transactions/month for free.
+![API сервисы поисковой системы Bing - зарегистрируйтесь для получения 3000 транзакций в месяц бесплатно.
 ](images/ch14-bing-search-api.png)
 
-
-Once you've signed up, and added the Bing Search v7 API, select the service, and click on the `Keys` tab. Here you will be able to access two keys - which you should not share with anyone.
+Как только Вы зарегистрировались и добавили Bing Search v7 API, выберите сервис и нажмите на вкладку `Keys`. Здесь Вы сможете получить доступ к двум ключам, которыми Вы не должны делиться ни с кем.
 
 
 {id="fig-bing-explore"}
-![The Account Information Page. In this screenshot, the *Primary Account Key* is deliberately obscured. You should make sure you keep your keys secret!
+![Информационная страница учетной записи. На этом снимке экрана, *Primary Account Key* (Первичный ключ учетной записи) скрыт специально. Вы тоже должны держать в тайне Ваш ключ!
 ](images/ch14-bing-account.png)
 
-Assuming this all works take a copy of your API key. We will need this when we make requests as part of the authentication process. 
+Предполагая, что у Вас всё получилось, скопируйте Ваш API ключ. Нам он понадобиться, когда мы будем создавать запросы как часть процесса аутентификации.
 
-## Adding Search Functionality
-Below we have provided the code that we can use to issue queries to the Bing search service. Create a file called `rango/bing_search.py` and import the following code. You will note that we need to import a package called `requests` so that we can make web requests. However, to use the `requests` package you will need to run, `pip install requests` to install it with your virtual environment, first.
+## Добавляем функцию поиска
+Ниже приведен код, который мы можем использовать для создания запросов, посылаемых службе поисковой системы Bing. Создайте файл `rango/bing_search.py` и импортируйте следующий код. Вы заметите, что нам нужно импортировать пакет под названием `requests`, чтобы мы могли осуществлять запросы по сети. Но, чтобы использовать этот пакет, Вам нужно сначала запустить  `pip install requests`, чтобы установить его в нашем виртуальном окружении.
 
 {lang="python",linenos=on}
 	import json
 	import requests
 
-	# Add your Microsoft Account Key to a file called bing.key
+	# Добавьте свой ключ учетной записи Microsoft в файл с названием bing.key
 	def read_bing_key():
 		"""
-		reads the BING API key from a file called 'bing.key'
-		returns: a string which is either None, i.e. no key found, or with a key
-		remember to put bing.key in your .gitignore file to avoid committing it to the repo.
+		считывает ключ BING API из файла 'bing.key'
+		возвращает: строку, которая равна или None, т. е., ключ не найден или ключу
+		не забудьте поместить bing.key в Ваш файл .gitignore, чтобы избежать его добавления в репозиторий.
 	
-		See Python Anti-Patterns - it is an awesome resource to improve your python code
+		Смотри Антипатерны Python - it is an awesome resource to improve your python code
 		Here we using "with" when opening documents
 		http://docs.quantifiedcode.com/python-anti-patterns/maintainability/not_using_with_to_open_files.html
 		"""
@@ -130,7 +128,7 @@ X>
 X> Update the `run_query()` method so that it handles network errors gracefully.
 
 
-T> ### Hint
+T> ### Подсказка
 T> Add the following code, so that when you run `python bing_search.py` it calls the `main()` function:
 T> 	
 T> {lang="python",linenos=off}
@@ -143,14 +141,14 @@ T>
 T> When you run the module explicitly via `python bing_search.py`, the `bing_search` module is treated as the `__main__` module, and thus triggers `main()`. However, when the module is imported by another module, then `__name__` will not equal `__main__`, and thus the `main()` function not be called. This way you can `import` it with your application without having to call `main()`.
 
 
-## Putting Search into Rango
+## Добавляем поиск в Rango
 Now that we have successfully implemented the search functionality module, we need to integrate it into our Rango app. There are two main steps that we need to complete for this to work.
 
 -  We must first create a `search.html` template that extends from our `base.html` template. The `search.html` template will include a HTML `<form>` to capture the user's query as well as template code to present any results.
 - We then create a view to handle the rendering of the `search.html` template for us, as well as calling the `run_query()` function we defined above.
 
-### Adding a Search Template
-Let's first create a template called, `rango/search.html`. Add the following HTML markup, Django template code, and Bootstrap classes.
+### Добавляем шаблон для поиска
+Давайте сначала создадим шаблон `rango/search.html`. Добавьте следующую HTML разметку, код шаблонов Django и Bootstrap классы.
 
 {lang="html",linenos=on}
 	{% extends 'rango/base.html' %}
@@ -192,7 +190,7 @@ Let's first create a template called, `rango/search.html`. Add the following HTM
 	</div>	
 	{% endblock %}
 
-The template code above performs two key tasks.
+Вышеприведенный код шаблона выполняет две основные задачи.
 
 - In all scenarios, the template presents a search box and a search buttons within a HTML `<form>` for users to enter and submit their search queries.
 - If a `results_list` object is passed to the template's context when being rendered, the template then iterates through the object displaying the results contained within.
@@ -203,7 +201,7 @@ To render the title and summary correctly, we have used the `safe` and `escape` 
 
 In the view code, in the next subsection, we will only pass through the results to the template, when the user issues a query. Initially, there will be no results to show.
 
-### Adding the View
+### Добавляем представление
 With our search template added, we can then add the view that prompts the rendering of our template. Add the following `search()` view to Rango's `views.py` module.
 
 {lang="python",linenos=off}	
@@ -234,7 +232,7 @@ Once you have put in the URL mapping and added a link to the search page, you sh
 {id="fig-bing-python-search"}
 ![Searching for "Python for Noobs".](images/ch14-bing-python-search.png)
 
-X> ### Additional Exercise
+X> ### Дополнительное упражнение
 X>
 X> You may notice that when you issue a query, the query disappears when the results are shown. This is not very user friendly. Update the view and template so that the user's query is displayed within the search box.
 X>

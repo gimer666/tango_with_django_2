@@ -1,21 +1,21 @@
-#Setting up your System {#chapter-system-setup}
-This supplementary chapter provides additional setup guides that complement the [initial setup chapter](#chapter-getting-ready). We provide setup guides for installing and configuring the various technologies that you will be using within Tango with Django. Refer to the section that is relevant to you; you do not need to work through all of this chapter if things are already working for you.
+#Настраиваем Вашу систему {#chapter-system-setup}
+Эта вспомогательная глава содержит руководства по настройке, дополняющие материал [главы, посвященной начальной настройке](#chapter-getting-ready). Мы приводим руководства для установки и настройки различных технологий, которые Вы будуте использовать в Танго с Django. Используйте тот раздел этой главы, который Вам нужен; нет необходимости в прочтении всей главы, если какая-то из описанных технологий уже установлена и работает у Вас.
 
-I> ### Common Guides
+I> ### Обобщенные рекомендации по настройке
 I>
-I> This chapter provides instructions on how to set up the various technologies that you'll be using throughout Tango with Django that we believe will work on the largest number of systems. However, every computer setup is different, with different versions of software installed. These differences make providing universal setup guides very difficult to do.
+I> В этой главе приведены инструкции по настройке различных технологий, которые Вы будете использовать по ходу чтения пособия Танго с Django, и как нам кажется их можно использовать при работе с большинством систем, с которыми Вы столкнетесь. Тем не мнее каждый компьютер обладает своим собственным набором аппратного и программного обеспечения, причём могут быть установлеными различные версии одного и того же программного обеспечения. Эти различия приводят к тому, что создать универсальное руководство по настройке очень сложно.
 I> 
-I> If you are using this book as part of a course, you may be provided with setup instructions unique to your lab computers. Follow these instructions instead -- a majority of the setup work will likely be taken care of for you already.
+I> Если Вы используете эту книгу при изучении нашего университетского курса, то возможно Вам были выданы инструкции по настройке Ваших лабораторных компьютеров. Используйте их, поскольку большая часть работы по настройке, скорее всего уже была выполнена за Вас.
 I>
-I> However, if you are working solo and you follow the instructions provided in this chapter without success, we recommend heading to your favourite search engine and entering the problem you're having. Typically, this will involve copying and pasting the error message you see at whatever step you're struggling at. By pasting in the message verbatim, chances are you'll find someone who suffered the same issue as you -- and from that point, you'll hopefully find a solution to resolve your problem.
+I> Тем не менее, если Вы работаете самостоятельно и безуспешно пытаетесь выполнить инструкции, приведенные в этой главе, мы рекомендуем Вам использовать Вашу любимую поисковую систему и найти решение проблемы в Интернете. Как правило достаточно скопировать и вставить сообщение об ошибке, с которой Вы столкнулись, при установке программного обеспечения. Вставив дословно сообщение, Вы скорее всего найдёте кого-то, кто столкнулся с той же проблемой -- используя причеденную в Интернете последовательность действий Вы вероятно решите свою проблему.
 
-## Installing Python 3 and `pip` {#section-system-setup-python}
-How do you go about installing Python 3.7 on your computer? This section answers that question. As we [discussed previously](#chapter-getting-ready-python3), you may find that you already have Python installed on your computer. If you are using a Linux distribution or macOS, you will definitely have it installed. Some of your operating system's functionality [is implemented in Python](http://en.wikipedia.org/wiki/Yellowdog_Updater,_Modified), hence the need for an interpreter! Unfortunately, most modern operating systems that come preloaded with Python use a version that is much older than what we require. Exceptions include Ubuntu, coming with version 3.6.5 which should be sufficient for your needs. If you do need to install 3.7, we must install this version of Python side-by-side with the old one.
+## Устанавливаем Python 3 и `pip` {#section-system-setup-python}
+Как установить Python 3.7 на Ваш компьютер? В этом разделе дается ответ на этот вопрос. Как мы [уже говорили ранее](#chapter-getting-ready-python3), возможно Вы обнаружите, что на Вашем компьютере уже установлен Python. Если Вы используете дистрибутив Linux или macOS, он обязательно будет установлен. Некоторые из функциональных возможностей Вашей операционной системы [реализованы на Python](http://en.wikipedia.org/wiki/Yellowdog_Updater,_Modified), поэтому необходим интерпретатор языка! К сожалению, большинство современных операционных систем, которые поставляются с предустановленной Python, используют версию, которая намного старее, чем нам требуется. Исключением является Ubuntu, поставляемая с версией 3.6.5, которой должно быть достаточно для ваших нужд. Если Вам нужно установить версию 3.7, её необходимо поставить так, чтобы она не конфликтовала с уже ранее установленной версией.
 
-There's many different ways in which you can install Python. We demonstrate here the most common approaches that you can use on Apple's macOS, various Linux distributions and Windows 10. Pick the section associated with your operating system to proceed. Note that we favour the use of [package managers](https://en.wikipedia.org/wiki/Package_manager) where appropriate to ensure that you have the means of maintaining and updating the software easily (when required).
+Существует множество способов установки Python. Здесь мы покажем наиболее распространенные методы, которые Вы можете использовать в macOS от Apple, различных дистрибутивах Linux и Windows 10. Выберите раздел, подходящий для вашей операционной системы и продолжайте чтение с него. ОБратите внимание, что мы поощеряем использование [менеждеров пакетов](https://en.wikipedia.org/wiki/Package_manager), где это возможно. Это позволяет легко поддерживать и обновлять программного обеспечение (при необходимости).
 
 ### Apple macOS
-The simplest way to acquire Python 3 for macOS is to download a `.dmg` image file from the [official Python website](https://www.python.org/downloads/mac-osx/). This will provide you with a step-by-step installation interface that makes setting everything up straightforward. If your development environment will be kept lightweight (i.e. Python only), this option makes sense. Simply download the installer, and Python 3 should then be available on your Mac's terminal!
+Простейший способ установить Python 3 для macOS - это загрузить файл образа `.dmg` с [официального сайта Python](https://www.python.org/downloads/mac-osx/). В этом случае Вам будет доступен пошаговый интерфейс установки, который упрощает процесс настройки. Если Ваша среда разработки не будет усложняться (т. е., будет использовать только Python), то стоит использовать эту возможность. Просто скачайте файл и после установки Python 3 должен быть доступен в терминале Вашего Mac!
 
 However, [package managers make life easier](https://softwareengineering.stackexchange.com/questions/372444/why-prefer-a-package-manager-over-a-library-folder) when development steps up and involves a greater number of software tools. Installing a package manager makes it easy to maintain and update software on your computer -- and even to install new software, too. macOS does not come preinstalled with a package manager, so you need to download and install one yourself. If you want to go down this route, we'll introduce you to *MacPorts*, a superb package manager offering a [large host of tools](https://www.macports.org/ports.php) for you to download and use. We recommend that you follow this route. Although more complex, the end result will be a complete development environment, ready for you to get coding.
 
@@ -88,7 +88,7 @@ I> MacPorts provides an extensive, preconfigured library of open-source software
 I>
 I> To view the packages MacPorts has already installed on your system, issue the command `$ port list installed`. You will see `python37` listed!
 
-### Linux Distributions
+### Дистрибутивы Linux
 There are many different ways in which you can download, install and run an updated version of Python on your Linux distribution. Methodologies unfortunately vary from distribution to distribution. To compound this, almost all distributions of Linux don't have a precompiled version of Python 3.7 ready for you to download and start using (at the time of writing), although the latest release of Ubuntu use Python 3.6 (which is sufficient).
 
 If you do choose to install a new version of Python, we've put together a series of steps that you can follow. These will allow you to install Python 3.7.2 from scratch. The steps have been tested thoroughly in Ubuntu 18.04 LTS; other distributions should also work with minor tweaks, especially in relation to the package manager being used in step 1. A cursory search on your favorite search engine should reveal the correct command to enter. For example, on a *Red Hat Enterprise Linux* installation, the system package manager is `yum` instead of `apt`.
@@ -166,43 +166,43 @@ W> In order to complete these steps, we assume you know the basics for Bash inte
 10. Restart your Terminal. Python 3.7.2 will now be setup and ready for you to use, along with the `pip` and `virtualenv` tools.
 
 
-### Windows {#section-system-setup-python-windows}
-By default, Microsoft Windows comes with no installation of Python. This means that you do not have to worry about leaving existing installations alone; installing from scratch should work just fine. You can download a 64-bit of 32-bit version of Python from [the official Python website](http://www.python.org/download/). If you aren't sure what one to download, you can determine if your computer is 32-bit or 64-bit by looking at the instructions provided [on the Microsoft website](https://support.microsoft.com/en-gb/help/13443/windows-which-operating-system).
+### ОС Windows {#section-system-setup-python-windows}
+По умолчанию, Microsoft Windows не имеет установленных в ней версий Python. Это означает, что не будет конфликтов с уже установленными версиями; достаточно просто осуществить установку с нуля. Вы можете загрузить 64-битную или 32-битную версию Python с [официального сайта Python](http://www.python.org/download/). Если Вы не уверены какую версию скачать, Вы можете определить является ли Ваш компьютер 32- или 64-разрядным, воспользовавшись инструкциями [на сайте Microsoft](https://support.microsoft.com/en-gb/help/13443/windows-which-operating-system).
 
-1. Download the appropriate installer from the [official Python website](http://www.python.org/download/). At the time of writing, the latest release was version 3.7.2.
-2. Run the installer. You'll want to make sure that you check the box saying that Python 3.7 is added to `PATH`. You'll want to install for all users, too. Choose the `Customize` option.
-3. Proceed with the currently selected check boxes, and choose `Next`.
-4. Make sure that the check box for installing Python for all users is checked. The installation location will change. Refer to [the figure below](#fig-ch4setup-pywin-3) for an example.
-5. Click `Next` to install Python. You will need to give the installer elevated privileges to install the software.
-6. Close the installer when completed, and delete the file you downloaded -- you no longer require it.
+1. Загрузите необходимый установщик с [официального сайта Python](http://www.python.org/download/). На момент написания - последней вышедшей версией была 3.7.2.
+2. Запустите установщик. Убедитесь, что Вы отметили флажок, добавляющий Python 3.7 в `PATH`. Скорее всего Вы захотите установить Python для всех пользователей компьютера. Для этого выберите опцию `Customize`.
+3. Продолжите установку с выбранными в настоящий момент флажками, выбрав `Next`.
+4. Убедитесь, что флажок позволяющий установить Python для всех пользователей выбран. Посмотрите как изменится место установки. На [рисунке ниже](#fig-ch4setup-pywin-3) приведен пример.
+5. Нажмите `Next`, чтобы установить Python. Вам нужно будет дать установщику необходимые привилегии для установки программного обеспечения.
+6. Закройте установщик после завершения установки и удалите загруженный файл - он Вам больше не нужен.
 
-Once the installer is complete, you should have a working version of Python 3.7 installed and ready to go. Following the instructions above, Python 3.7 is installed to the directory `C:\Program Files\Python37`. If you checked all of the options correctly, the `PATH` environment variable used by Windows should also have been updated to incorporate the new installation of Python. To test this, launch a Command Prompt window and type `$ python`. Execute the command. You should see the Python interpreter launch, as demonstrated in [the screenshot below](#fig-ch4setup-pywin-4). If this fails, check your `PATH` environment variable is set correctly by following [an online guide](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/).
+После того как установка будет завершена, Вы станете обладателем рабочей версии Python 3.7. Следуя приведенным выше инструкциям, Python 3.7 устанавливается в каталог `C:\Program Files\Python37`. Если Вы выбрали все настройки правильно, переменная окружения `PATH`, используемая Windows, также должна быть обновлена и включать путь к каталогу с только что установленной версией Python. Чтобы проверить это, запустите окно командной строки и введите `$ python`. Запустите команду на выполнение. Вы должны увидеть запуск интерпретатора Python, как показано на [скриншоте ниже](#fig-ch4setup-pywin-4). Если этого не произошло, проверьте, правильно ли установлена переменная окружения `PATH`, используя [онлайн-руководство](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/).
 
-Once you are sure that Python is installed correctly, you need to install virtual environment support. Issue the following two commands, and then restart all open Command Prompt windows.
+Как только Вы убедитесь, что Python установлен правильно, Вам нужно установить поддержку для виртуального окружения. Выполните следующие две команды, а затем перезапустите все открытые окна командной строки.
 
 {lang="bash",linenos=off}
     $ pip install virtualenv
     $ pip install virtualenvwrapper-win
 
-Once completed, everything should be set up and ready for you to use.
+После завершения установки всё должно быть настроено и готово к использованию.
 
 {id="fig-ch4setup-pywin-3"}
-![Configuring Python 3.7.2 on Windows 10 x64 -- allowing the installation to be run by all users.](images/chsetup-pywin-3.png)
+![Настраиваем Python 3.7.2 на Windows 10 x64 -- устанавливаем Python для всех пользователей.](images/chsetup-pywin-3.png)
 
-## Virtual Environments {#section-system-setup-virtualenv}
-By default, when you install software for Python, it is installed *system-wide*. All Python applications can see the new software and make use of it. However, issues can occur with this setup. [Earlier in the book](#chapter-getting-ready-venv), we discussed a scenario of two pieces of software requiring two different versions of the *same dependency*. This presents a headache; you cannot typically install two differing versions of the same software into your Python environment!
+## Виртуальные окружения {#section-system-setup-virtualenv}
+По умолчанию, когда Вы устанавливаете программное обеспечение для Python, оно устанавливается *для всей системы*. Все приложения Python могут видеть новое программное обеспечение и использовать его. Однако если устанавливать программное обеспечение могут возникнуть проблемы. [Ранее в книге](#chapter-getting-ready-venv), мы рассматривали случай, когда двум программам требовались две разные версии одной и той же зависимости. Эту проблему не так просто решить, поскольку Вы обычно не можете просто установить две различные версии одного и того же программного обеспечения в Вашу рабочую среду Python!
 
-The solution to this is to use a *virtual environment*. Using a virtual environment, each different piece of software that you wish to run can be given its own environment, and by definition, its own set of installed dependencies. If you have `ProjectA` requiring Django 1.11 and `ProjectB` requiring Django 2.1, you could create a virtual environment for each with their own packages installed.
+Решением этой проблемы является использование *виртуального окружения*. Используя виртуальное окружение, для каждой программы, которую Вы хотите запустить, может быть создана своё собственное окружение и по определению, собственный набор установленных зависимостей. Если у Вас есть `ProjectA`, требующий Django 1.11, и `ProjectB`, требующий Django 2.1, то Вы можете создать виртуальное окружение для каждого проекта с установленными пакетами.
 
-The four basic commands one would use to manipulate virtual environments are listed below.
+Для управления виртуальными окружениями мы будем использовать четыре основные команды, приденные ниже.
 
-* `mkvirtualenv <name>` creates and activates a new virtual environment of name `<name>`.
-* `workon <name>` switches on a virtual environment of name `<name>`.
-* `deactivate` switches off a virtual environment you are currently using.
-* `rmvirtualenv <name>` deletes a virtual environment of name `<name>`.
-* `lsvirtualenv` lists all user-created virtual environments.
+* `mkvirtualenv <name>` создаёт и активирует новое виртуальное окружение с названием `<name>`.
+* `workon <name>` включает виртуальное окружение с названием `<name>`.
+* `deactivate` отключает виртуальное окружение, которое Вы используете в настоящий момент.
+* `rmvirtualenv <name>` удаляет виртуальное окружение с названием `<name>`.
+* `lsvirtualenv` выводит все созданные пользователем виртуальные окружения.
 
-Following the examples above, we can then create an environment for each, installing the required software in the relevant environment. For `ProjectA`, the environment is called `projAENV`, with `projBENV` used for `ProjectB`. Note that to install software to the respective environments, we use `pip`. The commands used for `pip` [are discussed below.](#section-system-setup-pip)
+Следуя приведенными выше примерам, мы можем создать окружение для каждого проекта, установив необходимое программное обеспечение в соответствующее окружение. Для `ProjectA` окружение называется `projAENV`, а для `ProjectB` - `projBENV`. Обратите внимание, что для установки программного обеспечения в соответствующих окружениях, мы используем `pip`. Команды, используемые для `pip` [приведены ниже.](#section-system-setup-pip)
 
 {lang="bash",linenos=off}
     $ mkvirtualenv projAENV
@@ -222,9 +222,9 @@ Following the examples above, we can then create an environment for each, instal
     (projAENV) $ python manage.py runserver
     ...
 
-The code blocks above create the new virtual environment, `projAENV`. We then install Django 1.11 to that virtual environment, before issuing `pip freeze` to list the installed packages -- confirming that Django was installed. We then deactivate the virtual environment. `pip` then cannot be found as we are no longer in the virtual environment! By switching the virtual environment back on with `workon`, our Django package can once again be found. The final two commands launch the Django development server for `ProjectA`.
+Приведенные выше фрагменты кода создают новое виртуальное окружение, `projAENV`. Затем мы устанавливаем Django 1.11 в это виртуальное окружение прежде чем выполнить `pip freeze`, чтобы вывести список установленных пакетов, подтверждая, что Django был установлен. Затем мы деактивируем виртуальное окружение. После этого команда `pip` не может быть найдена, поскоьку мы больше не в виртуальном окружении! Снова включив виртуальное окружение, с помощью `workon`, мы можем опять найти наш пакет Django. Последние две команды запускают сервер разработки Django для `ProjectA`.
 
-We can then create a secondary virtual environment, `projBENV`.
+Затем мы можем создать второе виртуальное окружение, `projBENV`.
 
 {lang="bash",linenos=off}
     $ mkvirtualenv projBENV
@@ -244,17 +244,17 @@ We can then create a secondary virtual environment, `projBENV`.
     $ python manage.py runserver
     ...
 
-We create our new environment with the `mkvirtualenv` command. This creates and activates `projBENV`. However, when trying to launch the code for `ProjectA`, we get an error! We are using the wrong virtual environment. By switching to `projAENV` with `workon projAENV`, we can then launch the software correctly. This demonstrates the power of virtual environments, and the advantages that they can bring. [Further tutorials can be found online.](https://realpython.com/python-virtual-environments-a-primer/)
+Мы создаем наше новое окружение с помощью команды `mkvirtualenv`. При этом создаётся и активируется `projBENV`. Однако при попытке запустить код для `ProjectA`, мы получаем ошибку! Мы используем не то виртуальное окружение. Переключившись на `projAENV`, используя `workon projAENV`, мы сможем запустить программное обеспечение без ошибок. Это показывает возможности виртуальных окружений и преимущества при их использовании. [Дополнительную информацию по их использованию можно найти в Интернете](https://realpython.com/python-virtual-environments-a-primer/)
 
-T> ## `workon` and `deactivate`
+T> ## `workon` и `deactivate`
 T>
-T> Start your session by switching on your virtual environment with the `workon` command. Finish your session by closing it with `deactivate`.
+T> Начните сеанс работы с виртуальным окружением, выполнив команду `workon`. Чтобы завершить сеанс работы - зайкройте его с помощью `deactivate`.
 T>
-T> You can tell if a virtual environment is active by the brackets before your prompt, like `(envname) $`. This means that virtual environment `envname` is currently switched on, with its settings loaded. Turn it off with `deactivate` and the brackets will disappear.
+T> Вы можете определить, активна ли виртуальное окружение по скобкам перед приглашением командной строки, например, `(envname) $`. Это означает, что в настоящее время включено виртуальное окружение `envname` с загруженными для него настройками. Выключите его с помощью команды `deactivate` и скобки пропадут.
 
-T> ## Multiple Python Versions
+T> ## Несколько версий Python
 T>
-T> If you have multiple versions of Python installed, you can choose what version of Python to use when you create a virtual environment. If you have installations for `python` (which launches 2.7.15) and `python3` (which launches 3.7.2), you can issue the following command to create a Python 3 virtual environment.
+T> Если у Вас установлено несколько версий Python, Вы можете выбрать какую версию Python использовать при создании виртуального окружения. Если у Вас установлен `python` (который запускает версию 2.7.15) и `python3` (который запускает -- 3.7.2), Вы можете выполнить следующую команду для создания виртуального окружения Python 3.
 T>
 T> {lang="bash",linenos=off}
 T>  $ mkvirtualenv -p python3 someenv
@@ -262,14 +262,14 @@ T>  $ python
 T>  $ Python 3.7.2
 T>  >>>
 T>
-T> Note that when you enable your virtual environment, the command you enter to start Python is simply `python`. The same is applied for `pip` -- if you launch `pip3` outside a virtual environment, `pip` will be the command you use inside the virtual environment.
+T> Обратите внимание, что когда Вы включаете ваше виртуальное окружение, команда, которую Вы вводите для запуска Python -- просто `python`. То же самое относится к `pip` -- если Вы запускаете `pip3` вне виртуального окружения, то внутри виртуального окружения нужно использовать команду `pip`.
 
-## Using `pip` {#section-system-setup-pip}
-The Python package manager is very straightforward to use, and allows you to keep track of the various Python packages (software) that you have installed. We highly recommend that you use `pip` alongside a virtual environment, as packages installed using `pip` appear only within the said virtual environment.
+## Использование `pip` {#section-system-setup-pip}
+Менеджер пакетов Python очень прост в использовании и позволяет вам управлять различными пакетами (программным обеспечением) Python, которые Вы установили. Мы настоятельно рекомендуем Вам использовать `pip` вместе с виртуальным окружением, поскольку пакеты, установленные с помощью `pip` видны только внутри указанного виртуального окружения.
 
-When you find a package that you want to install, the command required is `$ pip install <packagename>==<version>`. Note that the version component is optional; omitting the version of a particular package will meant that the latest available version is installed.
+Когда Вы знаете какой пакет хотите установить, выполните команду `$ pip install <packagename>==<version>`. Обратите внимание, что версию указывать не обязательно; если Вы опустите версию для конкретного пакета, то будет установлена последняя доступная версия.
 
-You can find the name of a package by examining the [*PyPi package index*](https://pypi.org/), from which `pip` downloads software. Simply search or browse the index to find what you are looking for. Once you know the package's name, you can issue the installation command in your Terminal or Command Prompt.
+Вы можете найти имя нужного пакета, изучив [*список пакета PyPi*](https://pypi.org/), из которого `pip`загружает программное обеспечение. Воспользуйтесь поиском или просмотрите список, чтобы найти то, что Вы ищите. Как только Вы знаете название пакета, Вы можете ввести команду для установки в Вашем терминале или командной строке.
 
 `pip` is also super useful for listing packages that are installed in your environment. This can be achieved through the `pip freeze` command. Sample output is issued below.
 
@@ -293,14 +293,14 @@ If you find yourself in a situation like this, you run `pip` with the `-r` switc
 
 `pip install` installs packages from `requirements.txt`, and `pip freeze`, once everything has been installed, demonstrates that the packages have been installed correctly.
 
-## Version Control System
-When developing code, it's highly recommended that you house your codebase within a version controlled respository such as [SVN](http://subversion.tigris.org/) or [Git](http://git-scm.com/). We have provided a [chapter on how to use Git](#chapter-git) if you haven't used Git and GitHub before. We highly recommend that you set up a Git repository for your own projects. Doing so could save you from disaster.
+## Системы контроля версий
+При разработке кода настоятельно рекомендуется хранить его в репозитории с системой контроля версий, такой как [SVN](http://subversion.tigris.org/) или [Git](http://git-scm.com/). Мы написали [главу о том, как использовать Git](#chapter-git), если Вы раньше не использовали Git и GitHub. Мы настоятельно рекомендуем вам создавать Git-репозитории для Ваших собственных проектов. Это может спасти Вас от многих проблем.
 
-To use Git, we recommend that you use the command-line tool to interact with your repositories. This is done through the `git` command. On Windows, you'll need to [download Git from the Git website](https://git-scm.com/download/win). If using macOS or Linux, the [Git website also has downloadable installers for you to use](https://git-scm.com/downloads). However, why not get into the habit of using a package manager to install the software? This is generally the recommended way for downloading and using software developed on the UNIX design principles (including macOS).
+Для взаимодействия с Git репозиториями мы рекомендуем Вам использовать инструменты, доступные из командной строки. Они доступны с помощью команды `git`. В Windows Вам также нужно [загрузить Git с вебсайта Git](https://git-scm.com/download/win). Если Вы используете macOS or Linux, [на сайте Git есть установщики, которые Вы можете использоват для этих операционных систем](https://git-scm.com/downloads). Но лучше возьмите за привычку использовать менеджер пакетов для установки программного обеспечения. Как правило это рекомендуемый способ загрузки и использования программного обеспечения, разработанного используя принципы проектирования UNIX (включая macOS).
 
-For example, installing Git is as simple as typing `$ sudo apt install git`. Let the software download, and the `apt` package manager takes care of the rest. If you installed MacPorts on your macOS installation as described above, Git will already be present for you as it is part of the Apple XCode Command Line Developer Tools.
+Например, установить Git можно, введя команду `$ sudo apt install git`. Позвольте программному обеспечению загрузиться, и менеджер пакетов `apt` позаботится обо всем остальном. Если Вы установили MacPorts на Вашу macOS, как описано выше, у Вас уже будет установлен Git, поскольку он является частью инструментов разработчика для командной строки Apple XCode.
 
-Once installed, typing `git` will show the commands you can use, as shown in the example below.
+После установки, введите `git`, чтобы отобразить команды, которые Вы можете использовать, как показано в примере ниже.
 
 {lang="bash",linenos=off}
     $ git
