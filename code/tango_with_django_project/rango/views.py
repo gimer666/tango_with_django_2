@@ -129,7 +129,7 @@ def add_page(request, category_name_slug):
     context_dict = {'form': form, 'category': category}
     return render(request, 'rango/add_page.html', context_dict)
 
-'''
+
 def register(request):
     # A boolean value for telling the template
     # whether the registration was successful.
@@ -241,7 +241,7 @@ def user_logout(request):
     # Take the user back to the homepage.
     return HttpResponseRedirect(reverse('index'))
 
-'''
+
 
 @login_required
 def restricted(request):
